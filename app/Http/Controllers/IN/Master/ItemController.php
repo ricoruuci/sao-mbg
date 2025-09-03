@@ -58,8 +58,7 @@ class ItemController extends Controller
                     'productid' => $request->input('productid'),
                     'groupid' => $request->input('groupid'),
                     'upduser' => Auth::user()->currentAccessToken()['namauser'],
-                    'note' => $request->input('note') ?? '',
-                    'tahun' => $request->input('tahun')
+                    'note' => $request->input('note') ?? ''
                 ]);
 
                 if ($insert) {
@@ -156,8 +155,7 @@ class ItemController extends Controller
                     'productid' => $request->input('productid'),
                     'groupid' => $request->input('groupid'),
                     'upduser' => Auth::user()->currentAccessToken()['namauser'],
-                    'note' => $request->input('note') ?? '',
-                    'tahun' => $request->input('tahun')
+                    'note' => $request->input('note') ?? ''
                 ]);
 
                 if ($updated) {

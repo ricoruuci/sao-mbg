@@ -33,16 +33,15 @@ class INMsItem extends BaseModel
 
         $result = DB::insert(
             "INSERT INTO inmsitem
-            (itemid,itemname,productid,groupid,tahun,uomid,userprice,ctk,fgactive,note,upduser,upddate)
+            (itemid,itemname,productid,groupid,uomid,userprice,ctk,fgactive,note,upduser,upddate)
             VALUES
-            (:itemid,:itemname,:productid,:groupid,:tahun,'Unit',0,'Y','Y',:note,:upduser,getdate())",
+            (:itemid,:itemname,:productid,:groupid,'Unit',0,'Y','Y',:note,:upduser,getdate())",
             [
                 'itemid' => $param['itemid'],
                 'itemname' => $param['itemname'],
                 'productid' => $param['productid'],
                 'groupid' => $param['groupid'],
                 'upduser' => $param['upduser'],
-                'tahun' => $param['tahun'],
                 'note' => $param['note'],
                 'upduser' => $param['upduser']
             ]
@@ -59,7 +58,7 @@ class INMsItem extends BaseModel
             $order = 'a.itemname';
         }
         $result = DB::select(
-            "SELECT a.itemid,a.itemname,a.productid,c.productdesc,a.groupid,b.groupdesc,isnull(a.tahun,'') as tahun,a.uomid,isnull(a.note,'') as note
+            "SELECT a.itemid,a.itemname,a.productid,c.productdesc,a.groupid,b.groupdesc,a.uomid,isnull(a.note,'') as note
             from inmsitem a
             inner join inmsgroup b on a.groupid=b.groupid
             inner join inmsproduct c on c.productid=a.productid
@@ -83,7 +82,7 @@ class INMsItem extends BaseModel
     function getData($param)
     {
         $result = DB::selectOne(
-            "SELECT a.itemid,a.itemname,a.productid,c.productdesc,a.groupid,b.groupdesc,isnull(a.tahun,'') as tahun,a.uomid,isnull(a.note,'') as note
+            "SELECT a.itemid,a.itemname,a.productid,c.productdesc,a.groupid,b.groupdesc,a.uomid,isnull(a.note,'') as note
             from inmsitem a
             inner join inmsgroup b on a.groupid=b.groupid
             inner join inmsproduct c on c.productid=a.productid WHERE itemid = :itemid",
@@ -104,8 +103,7 @@ class INMsItem extends BaseModel
             groupid = :groupid,
             upddate = getdate(),
             upduser = :upduser,
-            note = :note,
-            tahun = :tahun
+            note = :note
             WHERE itemid = :itemid ',
             [
                 'itemid' => $param['itemid'],
@@ -113,8 +111,7 @@ class INMsItem extends BaseModel
                 'productid' => $param['productid'],
                 'groupid' => $param['groupid'],
                 'upduser' => $param['upduser'],
-                'note' => $param['note'],
-                'tahun' => $param['tahun']
+                'note' => $param['note']
             ]
         );
 
