@@ -188,7 +188,31 @@ class TxnKKBBController extends Controller
                     return $this->responseError('insert detail gagal', 400);
                 }
 
-            }                
+            } 
+            
+            if ($request->has('detailfoto')) {
+           
+            $deletefoto = $cfheader->deleteAllFoto([
+                'voucherid' => $hasilvoucherid
+            ]);
+            
+            $arrFoto = $request->input('detailfoto');
+
+            for ($i = 0; $i < sizeof($arrFoto); $i++) {
+                $insertAllFoto = $cfheader->insertAllFoto([
+                    'voucherid' => $hasilvoucherid,
+                    'foto'          => $arrFoto[$i]['foto'],
+                    'keterangan'    => $arrFoto[$i]['keterangan'] ?? '',
+                    'fgtrans'    => $request->input('fgtrans') ?? '',
+                    'upduser'       => Auth::user()->currentAccessToken()['namauser']
+                ]);
+
+                if ($insertAllFoto == false) {
+                    DB::rollBack();
+                    return $this->responseError('insert foto gagal', 400);
+                }
+            }
+        }
 
             $result = [
                 'success' => true
@@ -227,10 +251,23 @@ class TxnKKBBController extends Controller
                 ]
             );
 
-            $result = [
-                'header' => $resultheader,
-                'detail' => $resultdetail
-            ];
+            $resultfoto = $cfheader->getAllFoto([
+                'voucherid' => $request->input('voucherid')
+            ]);
+
+           if (empty($resultfoto)) {
+                $result = [
+                    'header' => $resultheader,
+                    'detail' => $resultdetail
+                ];
+
+            } else {
+                $result = [
+                    'header' => $resultheader,
+                    'detail' => $resultdetail,
+                    'detailfoto' => $resultfoto
+                ];
+            }
 
             return $this->responseData($result);    
         
@@ -434,7 +471,33 @@ class TxnKKBBController extends Controller
                     return $this->responseError('update detail gagal', 400);
                 }
 
-            }                
+            } 
+            
+            If ($request->has('detailfoto')) {
+                    
+                $deletefoto = $cfheader->deleteAllFoto([
+                    'voucherid' => $request->input('voucherid')
+                ]);
+                
+                $arrFoto = $request->input('detailfoto');
+
+                    for ($i = 0; $i < sizeof($arrFoto); $i++) {
+                    $insertAllFoto = $cfheader->insertAllFoto([
+                        'voucherid' => $request->input('voucherid'),
+                        'foto' => $arrFoto[$i]['foto'],
+                        'keterangan' => $arrFoto[$i]['keterangan'] ?? '',
+                        'fgtrans'    => $request->input('fgtrans') ?? '',
+                        'upduser' => Auth::user()->currentAccessToken()['namauser']
+                    ]);
+                }
+                if ($insertAllFoto == false) {
+
+                    DB::rollBack();
+
+                    return $this->responseError('update foto gagal', 400);
+                }
+
+            }
 
             $result = [
                 'success' => true
@@ -468,6 +531,10 @@ class TxnKKBBController extends Controller
 
         try 
         {
+            $deleteAllFoto= $cfheader->deleteAllFoto([
+                'voucherid' => $request->input('voucherid')
+            ]);
+
             $deleted = $cfheader->deleteData([
                 'voucherid' => $request->input('voucherid')
             ]);

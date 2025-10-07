@@ -183,4 +183,48 @@ class CFTrKKBBHd extends BaseModel //nama class
 
         return $autoNumber;
     }
+
+    public function insertAllFoto($param)
+    {
+        $result = DB::insert(
+            "INSERT allfoto (VoucherNo,Foto,note,FgTrans,UpdUser,UpdDate) 
+            VALUES (:voucherid,:foto,:keterangan,:fgtrans,:upduser,getdate())",
+            [
+                'voucherid' => $param['voucherid'],
+                'foto' => $param['foto'],
+                'keterangan' => $param['keterangan'],
+                'upduser' => $param['upduser'],
+                'fgtrans' => $param['fgtrans']
+            ]
+        );
+
+        return $result;
+    }
+
+    public function deleteAllFoto($param)
+    {
+        $result = DB::delete(
+            "DELETE FROM allfoto 
+            WHERE VoucherNo = :voucherid",
+            [
+                'voucherid' => $param['voucherid']
+            ]
+        );
+
+        return $result;
+    }
+
+    public function getAllFoto($param)
+    {
+        $result = DB::select(
+            "SELECT voucherno as voucherid,foto,isnull(note,'') as keterangan,upduser,upddate FROM allfoto 
+            WHERE VoucherNo = :voucherid
+            ORDER BY UpdDate DESC",
+            [
+                'voucherid' => $param['voucherid']
+            ]
+        );
+
+        return $result;
+    }
 }
