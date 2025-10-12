@@ -14,7 +14,7 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
-    protected $table = 'sysmsuser';
+    protected $table = 'msuser';
 
     public $timestamps = false;
 
@@ -63,16 +63,19 @@ class User extends Authenticatable
         $password = $this::myCrypt($password);
 
         $result = DB::selectOne(
-            'SELECT userid FROM sysmsuser WHERE userid = :userid AND passwd = :password',
+            'SELECT userid FROM msuser WHERE userid = :userid AND pass = :password',
             [
                 'userid' => $userid,
                 'password' => $password
             ]
         );
 
-        if ($result) {
+        if($result)
+        {
             return true;
-        } else {
+        }
+        else
+        {
             return false;
         }
     }
@@ -90,40 +93,161 @@ class User extends Authenticatable
     function updateData($id)
     {
         $updated = DB::update(
-            'update personal_access_tokens set expires_at=dateadd(day,1,created_at),namauser=(select userid from sysmsuser where id=tokenable_id ) where id=:id',
+            "UPDATE personal_access_tokens set 
+            expires_at=dateadd(day,1,created_at),
+            namauser=(select userid from msuser where id=tokenable_id ),
+            company_id=(select company_id from msuser where id=tokenable_id ),
+            company_code=(select b.company_code from msuser a left join mscabang b on a.company_id=b.company_id where a.id=tokenable_id )
+            where id=:id",
             [
                 'id' => $id
             ]
         );
     }
 
-    public function cekPassword($userid, $oldpassword)
+    public function insertData($param)
     {
-        $password = $this::myCrypt($oldpassword);
+
+        $result = DB::insert(
+            "INSERT INTO msuser 
+             (userid,pass,kdjabatan,company_id) 
+             VALUES 
+             (:userid,:password,:group_user,:company_id)", 
+            [
+                'userid' => $param['userid'],
+                'password' => $this->myCrypt($param['password']),
+                'group_user' => $param['group_user'],
+                'company_id' => $param['company_id']
+            ]
+        );        
+
+        return $result;
+    }
+
+    function getListData()
+    {
+        $result = DB::select(
+            "SELECT a.userid,a.kdjabatan as group_user,a.company_id,b.company_code,b.company_name 
+            from msuser a 
+            left join mscabang b on a.company_id=b.company_id
+            order by a.kdjabatan "
+        );
+
+        return $result;
+    }
+
+    function getDataById($id)
+    {
+        $result = DB::selectOne(
+            "SELECT a.userid,a.kdjabatan as group_user,a.company_id,b.company_code,b.company_name 
+            from msuser a 
+            left join mscabang b on a.company_id=b.company_id 
+            WHERE a.userid = :userid ",
+            [
+                'userid' => $id
+            ]
+        );
+
+        return $result;
+    }
+
+    function updateAllData($param)
+    {
+        $result = DB::update(
+            'UPDATE msuser SET 
+            kdjabatan = :group_user,
+            company_id = :company_id
+            WHERE userid = :userid',
+            [
+                'userid' => $param['userid'],
+                'group_user' => $param['group_user'],
+                'company_id' => $param['company_id']
+            ]
+        );
+
+        return $result;
+    }
+
+    function updatePassword($param)
+    {
+        $result = DB::update(
+            "UPDATE msuser SET pass = :password WHERE userid = :userid ",
+            [
+                'userid' => $param['userid'],
+                'password' => $this->myCrypt($param['password'])
+            ]
+        );
+
+        return $result;
+    }
+
+    function deleteUser($id)
+    {
+
+        $result = DB::delete(
+            'DELETE FROM msuser WHERE userid = :userid',
+            [
+                'userid' => $id
+            ]
+        );
+
+        return $result;
+    }
+
+    function cekUserId($userid)
+    {
 
         $result = DB::selectOne(
-            'SELECT userid FROM sysmsuser WHERE userid = :userid AND passwd = :password',
+            'SELECT * from msuser WHERE userid = :userid',
             [
-                'userid' => $userid,
-                'password' => $password
+                'userid' => $userid
             ]
         );
-
+        
         return $result;
     }
 
-    public function changePassword($userid, $newpassword)
+    function cekPassword($params)
     {
-        $password = $this::myCrypt($newpassword);
 
-        $result = DB::update(
-            "UPDATE sysmsuser set passwd=:password WHERE userid = :userid ",
+        $result = DB::selectOne(
+            'SELECT * from msuser WHERE userid = :userid and pass=:passwd ',
             [
-                'userid' => $userid,
-                'password' => $password
+                'userid' => $params['userid'],
+                'passwd' => $this->myCrypt($params['password'])
             ]
+        );
+        
+        return $result;
+    }
+
+    function cekLevel($userid)
+    {
+
+        $result = DB::selectOne(
+            "SELECT userid, pass, kdjabatan, id, company_id FROM msuser 
+            WHERE userid = :userid",
+            [   
+                'userid' => $userid
+            ] 
         );
 
         return $result;
     }
+
+    function getCabang($userid)
+    {
+
+        $result = DB::selectOne(
+            "SELECT a.company_id,b.company_code,b.company_name,b.company_address FROM msuser a
+            left join mscabang b on a.company_id=b.company_id
+            WHERE a.userid = :userid",
+            [   
+                'userid' => $userid
+            ] 
+        );
+
+        return $result;
+    }
+
 }

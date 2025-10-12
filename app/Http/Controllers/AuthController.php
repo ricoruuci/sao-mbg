@@ -11,27 +11,33 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use App\Traits\ArrayPaginator;
 use App\Traits\HttpResponse;
-use App\Http\Request\ChangePasswordRequest;
 
 class AuthController extends Controller
 {
     use ArrayPaginator, HttpResponse;
-    
+
     public function login(Request $request, User $user)
     {
+
         $isLoginSuccess = $user->isLoginValid($request->userid, $request->password);
 
         if ($isLoginSuccess == false)
         {
+            // return response()->json([
+            //     'success' => false,
+            //     'message' => 'Invalid username or password'
+            // ]);
+
             return $this->responseError('Invalid username or password', 400);
+            
         }
         else
         {
             $userData = User::where('userid', $request->userid)->first();
-            
+
             DB::beginTransaction();
 
-            try 
+            try
             {
 
                 $token = $userData->createToken('API Token');
@@ -41,12 +47,15 @@ class AuthController extends Controller
 
                 DB::commit();
 
+                $cabang = $user->getCabang($request->userid);
+
                 return response()->json([
                     'user_data' => $userData,
+                    'cabang' => $cabang,
                     'token' => $token->plainTextToken
                 ]);
 
-            } 
+            }
             catch (\Exception $e)
             {
                 DB::rollBack();
@@ -54,7 +63,7 @@ class AuthController extends Controller
                 return $this->responseError($e->getMessage(), 400);
             }
 
-            
+
 
         }
     }
@@ -66,8 +75,8 @@ class AuthController extends Controller
         $tokenableId = $currentAccessToken['tokenable_id'];
 
         DB::beginTransaction();
-        
-        try 
+
+        try
         {
 
             $user->deleteData(['tokenable_id' => $tokenableId]);
@@ -78,8 +87,8 @@ class AuthController extends Controller
                 'success' => true,
                 'message' => 'Logout success'
             ]);
-        
-        } 
+
+        }
         catch (\Exception $e)
         {
             DB::rollBack();
@@ -87,51 +96,6 @@ class AuthController extends Controller
             return $this->responseError($e->getMessage(), 400);
         }
 
-        
-    }
 
-    public function changePass(Request $request, User $user)
-    {
-
-        DB::beginTransaction();
-        
-        try 
-        {
-
-            $cek = $user->cekPassword($request->input('userid'),$request->input('oldpassword'));
-
-            if ($cek==false){
-                return $this->responseError('password lama tidak sesuai', 400);
-            }
-
-            $result = $user->changePassword($request->input('userid'),$request->input('newpassword'));
-
-            if ($result)
-            {
-                $result = [
-                    'success' => true,
-                    'updated' => $result
-                ];
-            }
-            else
-            {
-                DB::rollBack();
-
-                return $this->responseError('update password gagal', 400);
-            }
-
-            DB::commit();
-
-            return $result;
-        
-        } 
-        catch (\Exception $e)
-        {
-            DB::rollBack();
-
-            return $this->responseError($e->getMessage(), 400);
-        }
-
-        
     }
 }

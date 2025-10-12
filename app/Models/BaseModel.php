@@ -10,8 +10,8 @@ class BaseModel extends Model
     public function autoNumber($namatable, $namafield, $formatso, $formatnumber)
     {
         $autonumber = DB::selectOne(
-            "select '" . $formatso . "'+FORMAT(ISNULL((select top 1 RIGHT(" . $namafield . "," . strlen($formatnumber) . ") from " . $namatable . " 
-            where " . $namafield . " like '%" . $formatso . "%' order by " . $namafield . " desc),0)+1,'" . $formatnumber . "') as nomor "
+            "select '".$formatso."'+FORMAT(ISNULL((select top 1 RIGHT(".$namafield.",".strlen($formatnumber).") from ".$namatable."
+            where ".$namafield." like '%".$formatso."%' order by ".$namafield." desc),0)+1,'".$formatnumber."') as nomor "
 
             // from ".$namatable." where ".$namafield." like '%".$formatso."%'"
         );
@@ -19,34 +19,97 @@ class BaseModel extends Model
         return $autonumber->nomor;
     }
 
-    public function queryAccounting()
+    public function queryAccounting($params)
     {
+
+        $addCon1 = ''; // default kosong
+        $addCon2 = '';
+        $addCon3 = '';
+        $addCon4 = '';
+        $addCon5 = '';
+        $addCon6 = '';
+        $addCon7 = '';
+        $addCon8 = '';
+        $addCon9 = '';
+        $addCon10 = '';
+        $addCon11 = '';
+
+        if (!empty($params['company_id'])) 
+        {
+            $addCon1 = 'and b.company_id =:company_id1 ';
+            $addCon2 = 'and a.company_id =:company_id2 ';
+            $addCon3 = 'and a.company_id =:company_id3 ';
+            $addCon4 = 'and company_id =:company_id4 ';
+            $addCon5 = 'and company_id =:company_id5 ';
+            $addCon6 = 'and company_id =:company_id6 ';
+            $addCon7 = 'and a.company_id =:company_id7 ';
+            $addCon8 = 'and company_id =:company_id8 ';
+            $addCon9 = 'where company_id =:company_id9 ';
+            $addCon10 = 'where company_id =:company_id10 ';
+            $addCon11 = 'where company_id =:company_id11 ';
+
+            $binding = [
+                'company_id1' => $param['company_id'],
+                'company_id2' => $param['company_id'],
+                'company_id3' => $param['company_id'],
+                'company_id4' => $param['company_id'],
+                'company_id5' => $param['company_id'],
+                'company_id6' => $param['company_id'],
+                'company_id7' => $param['company_id'],
+                'company_id8' => $param['company_id'],
+                'company_id9' => $param['company_id'],
+                'company_id10' => $param['company_id'],
+                'company_id11' => $param['company_id'],
+            ];
+        }
+        
+        $default = DB::selectOne("select drkas,drar,drap,drtaxpb,drtaxpj,drpb,drpj,drlaba from setrekening");
+
+        $rek_kas = "'".$default->drkas."'" ?? '';
+        $rek_ar = "'".$default->drar."'" ?? '';
+        $rek_ap = "'".$default->drap."'" ?? '';
+        $rek_taxpb = "'".$default->drtaxpb."'" ?? '';
+        $rek_taxpj = "'".$default->drtaxpj."'" ?? '';
+        $rek_pb = "'".$default->drpb."'" ?? '';
+        $rek_pj = "'".$default->drpj."'" ?? '';
+        $rek_laba = "'".$default->drlaba."'" ?? '';
+
         $result =
-            "SELECT a.rekeningid,b.transdate,a.jenis,isnull(a.amount,0) as amount,b.currid,b.rate,a.voucherid,a.note from cftrkkbbdt a inner join cftrkkbbhd b on a.voucherid=b.voucherid and b.fgpayment='t' union all 
-            select b.rekeningid,a.transdate,case when a.flagkkbb in ('km','bm','ark','arb','arc') then 'd' 
-            when a.flagkkbb in ('kk','bk','apk','apb','apc') then 'k' 
-            when (select x.flagkkbb from cftrkkbbhd x where x.voucherid=a.idvoucher) in ('km','bm','ark','arb','arc') then 'd' 
-            when (select x.flagkkbb from cftrkkbbhd x where x.voucherid=a.idvoucher) in ('kk','bk','apk','apb','apc') then 'k' end,
-            isnull(case when a.flagkkbb in ('km','bm','ark','arb','arc') then jumlahd when a.flagkkbb in ('kk','bk','apk','apb','apc') then jumlahk 
-            when (select x.flagkkbb from cftrkkbbhd x where x.voucherid=a.idvoucher) in ('km','bm','ark','arb','arc') then jumlahd 
-            when (select x.flagkkbb from cftrkkbbhd x where x.voucherid=a.idvoucher) in ('kk','bk','apk','apb','apc') then jumlahk end,0),a.currid,a.rate,a.voucherid,a.note from cftrkkbbhd a 
-            inner join cfmsbank b on a.bankid=b.bankid where a.fgpayment='t' and a.fgpayment='t' union all 
-            select (select drkas from samsset),transdate,case when flagkkbb in ('km','bm','ark','arb','arc') then 'd' when flagkkbb in ('kk','bk','apk','apb','apc') then 'k' end,
-            isnull(case when flagkkbb in ('km','bm','ark','arb','arc') then jumlahd when flagkkbb in ('kk','bk','apk','apb','apc') then jumlahk end,0),currid,rate,voucherid,note from cftrkkbbhd 
-            where flagkkbb in ('km','kk','ark','apk') and fgpayment='t' union all 
+            "SELECT a.rekeningid,b.transdate,a.jenis,isnull(a.amount,0) as amount,'IDR' as currid,1 as rate,'T' as fgpayment,a.voucherid,a.note 
+            from cftrkkbbdt a 
+            inner join cftrkkbbhd b on a.voucherid=b.voucherid 
+            where b.FlagKKBB IN ('KM','KK','BM','BK','APB','APK','JU') 
+            $addCon1
+            union all 
 
-            select rekeningu,transdate,'d',isnull(ttlpj,0),currid,rate,saleid,saleid from artrpenjualanhd union all 
-            select rekeningk,transdate,'k',isnull(case when fgform='ar' then stpj-dp else dp end,0),currid,rate,saleid,saleid from artrpenjualanhd union all 
-            select rekeningp,transdate,'k',isnull(ppn,0),currid,rate,saleid,saleid from artrpenjualanhd union all 
-            select rekhpp,transdate,'d',isnull(hpp,0),currid,rate,saleid,saleid from artrpenjualanhd union all 
-            select rekpersediaan,transdate,'k',isnull(hpp,0),currid,rate,saleid,saleid from artrpenjualanhd union all 
+            select b.rekeningid,a.transdate,case when a.flagkkbb in ('BM') then 'D' else 'K' end,a.total,'IDR' as currid,1 as rate,'T' as fgpayment,a.voucherid,a.note 
+            from cftrkkbbhd a 
+            inner join cfmsbank b on a.bankid=b.bankid 
+            where a.FlagKKBB IN ('BM','BK','APB') 
+            $addCon2 
+            union all 
 
-            select rekeningu,transdate,'k',isnull(ttlpb,0),currid,rate,purchaseid,purchaseid from aptrpurchasehd union all 
-            select rekpersediaan,transdate,'d',case when fgtax='y' then isnull(ttlpb/(1+(rate*0.01)),0) else isnull(ttlpb,0) end,currid,rate,purchaseid,purchaseid from aptrpurchasehd union all 
-            select rekhpp,transdate,'k',case when fgtax='y' then isnull(ttlpb/(1+(rate*0.01)),0) else isnull(ttlpb,0) end,currid,rate,purchaseid,purchaseid from aptrpurchasehd union all 
-            select rekeningk,transdate,'d',isnull(ttlpb-ppn,0),currid,rate,purchaseid,purchaseid from aptrpurchasehd union all 
-            select rekeningp,transdate,'d',isnull(ppn,0),currid,rate,purchaseid,purchaseid from aptrpurchasehd ";
+            select $rek_kas,a.transdate,case when a.flagkkbb in ('KM') then 'D' else 'K' end,a.total,'IDR' as currid,1 as rate,'T' as fgpayment,a.voucherid,a.note 
+            from cftrkkbbhd a
+            where a.flagkkbb in ('KM','KK','APK') 
+            $addCon3
+            union all
+
+            select $rek_ar,tgljual,'d',isnull(TTLPj,0),'IDR',1,'T',nota,nota from TrJualHd where fgbatal='T' $addCon4 union all
+            select $rek_taxpj,tgljual,'k',isnull(TTLTax,0),'IDR',1,'T',nota,nota from TrJualHd where fgbatal='T' $addCon5 union all
+            select $rek_pj,tgljual,'k',isnull(STPj,0),'IDR',1,'T',nota,nota from TrJualHd where fgbatal='T' $addCon6 union all
+            /*
+            select case when a.PayType=3 then $rek_kas else b.RekeningID end,a.tgljual,'d',isnull(a.TTLPj,0),'IDR',1,'T',a.nota,a.nota from TrJualHd a 
+            left join CFMsBank b on a.BankId=b.bankid
+            where a.fgbayar='Y' and a.fgbatal='T' $addCon7 union all 
+            select $rek_ar,tgljual,'K',isnull(TTLPj,0),'IDR',1,'T',nota,nota from TrJualHd 
+            where fgbayar='Y' and fgbatal='T' $addCon8 union all
+            */
+            select $rek_pb,TglBeli,'d',isnull(STPb,0),'IDR',1,'T',nota,nota from TrBeliBBHd $addCon9 union all 
+            select $rek_taxpb,TglBeli,'d',isnull(TTLTax,0),'IDR',1,'T',nota,nota from TrBeliBBHd $addCon10 union all 
+            select $rek_ap,TglBeli,'k',isnull(TTLPb,0),'IDR',1,'T',nota,nota $addCon11 from TrBeliBBHd  ";
 
         return $result;
     }
+
 }
