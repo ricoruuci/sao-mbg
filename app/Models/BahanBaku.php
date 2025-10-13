@@ -19,7 +19,8 @@ class BahanBaku extends BaseModel
     function getAllData($params)
     {
         $result = DB::select(
-            "SELECT a.kdbb as bahan_baku_id, a.nmbb as bahan_baku_name, a.satkecil as satuan,
+            "SELECT a.kdbb as bahan_baku_id, a.nmbb as bahan_baku_name, 
+            a.satkecil as satuan, a.satbesar as satuan_besar, a.jumsat as konversi,
             b.kdgroupbb as group_bahan_baku_id, b.nmgroupbb as group_bahan_baku_name
             FROM msbahanbaku a
             inner join msgroupbb b on a.kdgroupbb = b.kdgroupbb
@@ -39,7 +40,8 @@ class BahanBaku extends BaseModel
     function getDataById($id)
     {
         $result = DB::selectOne(
-            "SELECT a.kdbb as bahan_baku_id, a.nmbb as bahan_baku_name, a.satkecil as satuan,
+            "SELECT a.kdbb as bahan_baku_id, a.nmbb as bahan_baku_name, 
+            a.satkecil as satuan, a.satbesar as satuan_besar, a.jumsat as konversi,
             b.kdgroupbb as group_bahan_baku_id, b.nmgroupbb as group_bahan_baku_name
             FROM msbahanbaku a
             inner join msgroupbb b on a.kdgroupbb = b.kdgroupbb
@@ -64,16 +66,34 @@ class BahanBaku extends BaseModel
         return $result;
     }
 
+    function cekDataSatuan($id)
+    {
+        $result = DB::selectOne(
+            "SELECT K.* from (
+            SELECT kdbb,satkecil as satuan from msbahanbaku UNION ALL
+            SELECT kdbb,satbesar as satuan from msbahanbaku 
+            ) as K            
+            WHERE kdbb = :id ",
+            [
+                'id' => $id
+            ]
+        );
+
+        return $result;
+    }
+
     function insertData($params)
     {
         $result = DB::insert(
-            "INSERT INTO msbahanbaku (kdbb, nmbb, satkecil, kdgroupbb)
-            VALUES (:kdbb, :nmbb, :satkecil, :kdgroupbb)",
+            "INSERT INTO msbahanbaku (kdbb, nmbb, satkecil, kdgroupbb, satbesar, jumsat)
+            VALUES (:kdbb, :nmbb, :satkecil, :kdgroupbb, :satbesar, :jumsat)",
             [
                 'kdbb' => $params['bahan_baku_id'],
                 'nmbb' => $params['bahan_baku_name'],
                 'satkecil' => $params['satuan'],
-                'kdgroupbb' => $params['group_bahan_baku_id']
+                'kdgroupbb' => $params['group_bahan_baku_id'],
+                'satbesar' => $params['satuan_besar'],
+                'jumsat' => $params['konversi']
             ]
         );
 
@@ -86,13 +106,17 @@ class BahanBaku extends BaseModel
             "UPDATE msbahanbaku SET 
             nmbb = :nmbb,
             satkecil = :satkecil,
-            kdgroupbb = :kdgroupbb
+            kdgroupbb = :kdgroupbb,
+            satbesar = :satbesar,
+            jumsat = :jumsat
             WHERE kdbb = :kdbb",
             [
                 'kdbb' => $params['bahan_baku_id'],
                 'nmbb' => $params['bahan_baku_name'],
                 'satkecil' => $params['satuan'],
-                'kdgroupbb' => $params['group_bahan_baku_id']
+                'kdgroupbb' => $params['group_bahan_baku_id'],
+                'satbesar' => $params['satuan_besar'],
+                'jumsat' => $params['konversi']
             ]
         );
 

@@ -23,6 +23,8 @@ class InsertRequest extends BaseRequest
             'detail.*.qty' => 'required|numeric|min:0',
             'detail.*.price' => 'required|numeric|min:0',
             'detail.*.satuan' => 'required|string',
+            'detailfoto' => 'nullable|array',
+            'detailfoto.*.foto' => 'required|string'
         ];
     }
 }

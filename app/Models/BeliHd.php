@@ -169,7 +169,7 @@ class BeliHd extends BaseModel
     {
         $tahunBulan = '/' . substr($transdate, 2, 2) . '/' . substr($transdate, 4, 2) . '/';
 
-        $autoNumber = $this->autoNumber($this->table, 'nota', 'B-'.$company_code.$tahunBulan, '0000');
+        $autoNumber = $this->autoNumber($this->table, 'nota', $company_code.$tahunBulan, '000');
 
         return $autoNumber;
     }

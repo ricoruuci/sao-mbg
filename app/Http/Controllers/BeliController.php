@@ -10,6 +10,7 @@ use App\Models\BeliHd;
 use App\Models\Satuan;
 use App\Models\BahanBaku;
 use App\Models\Supplier;
+use App\Models\AllFoto;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use App\Traits\ArrayPaginator;
@@ -32,6 +33,7 @@ class BeliController extends Controller
         $model_supplier = new Supplier();
         $model_satuan = new Satuan();
         $model_bb = new BahanBaku();
+        $model_allfoto = new AllFoto();
 
         $cek = $model_supplier->cekData($request->supplier_id ?? '');
 
@@ -90,6 +92,14 @@ class BeliController extends Controller
                     return $this->responseError('satuan tidak ada atau tidak ditemukan', 400);
                 }
 
+                $cek = $model_bb->cekDataSatuan($arrDetail[$i]['bahan_baku_id'] ?? '');
+
+                if ($cek == false) {
+                    DB::rollBack();
+
+                    return $this->responseError('satuan tidak terdaftar untuk bahan baku ini', 400);
+                }
+
                 $insertdetail = $model_detail->insertData([
                     'nota_beli' => $hasilpoid,
                     'supplier_id' => $request->supplier_id,
@@ -104,6 +114,30 @@ class BeliController extends Controller
                     DB::rollBack();
 
                     return $this->responseError('insert detail gagal', 400);
+                }
+            }
+
+            $arrDetailFoto = $request->input('detailfoto');
+
+            $deletefoto = $model_allfoto->deleteData($hasilpoid);
+
+            if (!empty($arrDetailFoto) && is_array($arrDetailFoto)) {
+
+                for ($j = 0; $j < sizeof($arrDetailFoto); $j++) {
+
+                    $insertfoto = $model_allfoto->insertData([
+                        'id' => $hasilpoid,
+                        'foto' => $arrDetailFoto[$j]['foto'],
+                        'keterangan' => 'Bukti Nota Beli '.$hasilpoid,
+                        'fgtrans' => 1,
+                        'upduser' => Auth::user()->currentAccessToken()['namauser']
+                    ]);
+
+                    if ($insertfoto == false) {
+                        DB::rollBack();
+
+                        return $this->responseError('insert foto gagal', 400);
+                    }
                 }
             }
 
@@ -145,6 +179,7 @@ class BeliController extends Controller
         $model_supplier = new Supplier();
         $model_satuan = new Satuan();
         $model_bb = new BahanBaku();
+        $model_allfoto = new AllFoto();
 
         $cek = $model_header->cekData($request->nota_beli ?? '');
 
@@ -209,6 +244,14 @@ class BeliController extends Controller
                     return $this->responseError('satuan tidak ada atau tidak ditemukan', 400);
                 }
 
+                $cek = $model_bb->cekDataSatuan($arrDetail[$i]['bahan_baku_id'] ?? '');
+
+                if ($cek == false) {
+                    DB::rollBack();
+
+                    return $this->responseError('satuan tidak terdaftar untuk bahan baku ini', 400);
+                }
+
                 $insertdetail = $model_detail->insertData([
                     'nota_beli' => $request->nota_beli,
                     'supplier_id' => $request->supplier_id,
@@ -226,6 +269,30 @@ class BeliController extends Controller
                 }
             }
 
+            $arrDetailFoto = $request->input('detailfoto');
+
+            $deletefoto = $model_allfoto->deleteData($request->nota_beli);
+
+            if (!empty($arrDetailFoto) && is_array($arrDetailFoto)) {
+
+                for ($j = 0; $j < sizeof($arrDetailFoto); $j++) {
+
+                    $insertfoto = $model_allfoto->insertData([
+                        'id' => $request->nota_beli,
+                        'foto' => $arrDetailFoto[$j]['foto'],
+                        'keterangan' => 'Bukti Nota Beli '.$request->nota_beli,
+                        'fgtrans' => 1,
+                        'upduser' => Auth::user()->currentAccessToken()['namauser']
+                    ]);
+
+                    if ($insertfoto == false) {
+                        DB::rollBack();
+
+                        return $this->responseError('insert foto gagal', 400);
+                    }
+                }
+            }
+            
             $hitung = $model_header->hitungTotal($request->nota_beli);
 
             $model_header->updateTotal([
@@ -296,6 +363,8 @@ class BeliController extends Controller
 
         $model_detail = new BeliDt();
 
+        $model_foto = new AllFoto();
+
         $result = $model_header->getDataById($request->nota_beli ?? '');
 
         if ($result) {
@@ -304,15 +373,21 @@ class BeliController extends Controller
             $detail_result = $model_detail->getDataById($result->nota_beli ?? '');
 
             $detail = !empty($detail_result) ? $detail_result : [];
+
+            $detail_foto_result = $model_foto->getDataById($result->nota_beli ?? '');
+
+            $detailfoto = !empty($detail_foto_result) ? $detail_foto_result : [];
         }
         else {
             $header = [];
             $detail = [];
+            $detailfoto = [];
         }
 
         $response = [
             'header' => $header,
             'detail' => $detail,
+            'detailfoto' => $detailfoto
         ];
 
         return $this->responseData($response);

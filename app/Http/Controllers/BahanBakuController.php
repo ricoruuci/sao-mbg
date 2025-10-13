@@ -49,7 +49,9 @@ class BahanBakuController extends Controller
                 'bahan_baku_id' => $autonumber,
                 'bahan_baku_name' => $request->bahan_baku_name,
                 'satuan' => $request->satuan,
-                'group_bahan_baku_id' => $request->group_bahan_baku_id
+                'group_bahan_baku_id' => $request->group_bahan_baku_id,
+                'satuan_besar' => $request->satuan_besar,
+                'konversi' => $request->konversi
             ];
 
             $insertResult = $model->insertData($params);
@@ -74,7 +76,9 @@ class BahanBakuController extends Controller
             'bahan_baku_id' => $request->bahan_baku_id,
             'bahan_baku_name' => $request->bahan_baku_name,
             'satuan' => $request->satuan,
-            'group_bahan_baku_id' => $request->group_bahan_baku_id
+            'group_bahan_baku_id' => $request->group_bahan_baku_id,
+            'satuan_besar' => $request->satuan_besar,
+            'konversi' => $request->konversi
         ];
 
         $cek = $model->cekData($request->bahan_baku_id);
