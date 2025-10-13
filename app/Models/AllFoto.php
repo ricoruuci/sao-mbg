@@ -18,7 +18,7 @@ class AllFoto extends BaseModel
 
     function getDataById($id)
     {
-        $result = DB::selectOne(
+        $result = DB::select(
             "SELECT a.voucherno as nota_beli,a.foto as foto, a.note as keterangan, a.fgtrans, a.upduser, a.upddate from allfoto a
             WHERE a.voucherno = :id",
             [
