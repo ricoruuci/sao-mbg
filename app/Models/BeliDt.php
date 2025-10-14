@@ -89,7 +89,8 @@ class BeliDt extends BaseModel
     {
         $result = DB::insert(
             "INSERT into allitem (transdate,voucherno,itemid,qty,price,fgtrans,warehouseid,actorid,reffid,hpp,upddate,upduser,company_id)
-            SELECT b.tglbeli,a.nota,a.kdbb,a.jml,a.harga,1,e.company_code,a.kdsupplier,a.nota,a.harga,getdate(),a.upduser,b.company_id
+            SELECT b.tglbeli,a.nota,a.kdbb,case when a.satuan=d.satkecil then a.jml else a.jml*d.jumsat end,a.harga,1,e.company_code,
+            a.kdsupplier,a.nota,a.harga,getdate(),a.upduser,b.company_id
             from trbelibbdt a
             inner join trbelibbhd b on a.nota=b.nota and a.kdsupplier=b.kdsupplier
             left join msbahanbaku d on a.kdbb=d.kdbb

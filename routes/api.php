@@ -25,6 +25,7 @@ use App\Http\Controllers\RptFinanceController;
 use App\Http\Controllers\RptInventoryController;
 use App\Http\Controllers\CabangController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\IssuedController;
 
 
 Route::post('login', [AuthController::class, 'login']);
@@ -115,6 +116,9 @@ Route::delete('beli', [BeliController::class, 'deleteData'])->middleware('auth:s
 
 Route::get('set-rekening', [SetRekeningController::class, 'getListData'])->middleware('auth:sanctum');
 Route::patch('set-rekening', [SetRekeningController::class, 'updateData'])->middleware('auth:sanctum');
+
+Route::get('issued', [IssuedController::class, 'getListData'])->middleware('auth:sanctum');
+Route::post('issued', [IssuedController::class, 'insertData'])->middleware('auth:sanctum');
 
 /*==============================================================================================================
  * Laporan 
