@@ -157,7 +157,7 @@ class RptFinance extends BaseModel
                     from cfmsrekening a
                     inner join cfmsgrouprek b on a.grouprekid=b.grouprekid
                     ) as k
-                    where k.kode=:kode and k.kode in (4,5) and k.jumlah<>0
+                    where k.kode=:kode and k.kode in (4,5,6,7,8) and k.jumlah<>0
                     group by k.kode,k.rekeningid,k.rekeningname
                     order by k.kode,k.rekeningid",
                     [
