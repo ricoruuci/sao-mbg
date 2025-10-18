@@ -25,12 +25,13 @@ class RptPenjualanController extends Controller
         $user = new User();
         $cek = $user->cekLevel(Auth::user()->currentAccessToken()['namauser']);
 
-        if ($cek->kdjabatan=='ADM')
+        if ($cek->kdjabatan=='USR')
         {
             $result = $model->getLapPenjualan([
                 'dari' => $request->input('dari'),
                 'sampai' => $request->input('sampai'),
-                'search_keyword' => $request->input('search_keyword', '')
+                'search_keyword' => $request->input('search_keyword', ''),
+                'company_id' => Auth::user()->currentAccessToken()['company_id']
             ]);
         }
         else
@@ -39,7 +40,6 @@ class RptPenjualanController extends Controller
                 'dari' => $request->input('dari'),
                 'sampai' => $request->input('sampai'),
                 'search_keyword' => $request->input('search_keyword', ''),
-                'company_id' => Auth::user()->currentAccessToken()['company_id']
             ]);
         }
 
@@ -54,17 +54,17 @@ class RptPenjualanController extends Controller
         $user = new User();
         $cek = $user->cekLevel(Auth::user()->currentAccessToken()['namauser']);
 
-        if ($cek->kdjabatan=='ADM')
+        if ($cek->kdjabatan=='USR')
         {
             $result = $model->getLapPenjualanHarian([
-                'transdate' => $request->input('transdate')
+                'transdate' => $request->input('transdate'),
+                'company_id' => Auth::user()->currentAccessToken()['company_id']
             ]);
         }
         else
         {
             $result = $model->getLapPenjualanHarian([
                 'transdate' => $request->input('transdate'),
-                'company_id' => Auth::user()->currentAccessToken()['company_id']
             ]);
         }
 

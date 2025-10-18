@@ -37,12 +37,13 @@ class RptFinanceController extends Controller
         $user = new User();
         $cek = $user->cekLevel(Auth::user()->currentAccessToken()['namauser']);
 
-        if ($cek->kdjabatan=='ADM')
+        if ($cek->kdjabatan=='USR')
         {
             $result = $model->getRptBukuBesar([
                 'dari' => $request->input('dari'),
                 'sampai' => $request->input('sampai'),
-                'rekening_id' => $request->input('rekening_id', '')
+                'rekening_id' => $request->input('rekening_id', ''),
+                'company_id' => Auth::user()->currentAccessToken()['company_id']
             ]);
         }
         else
@@ -51,7 +52,6 @@ class RptFinanceController extends Controller
                 'dari' => $request->input('dari'),
                 'sampai' => $request->input('sampai'),
                 'rekening_id' => $request->input('rekening_id', ''),
-                'company_id' => Auth::user()->currentAccessToken()['company_id']
             ]);
         }
 
@@ -65,11 +65,12 @@ class RptFinanceController extends Controller
         $user = new User();
         $cek = $user->cekLevel(Auth::user()->currentAccessToken()['namauser']);
 
-        if ($cek->kdjabatan=='ADM')
+        if ($cek->kdjabatan=='USR')
         {
             $result = $model->getRptLabaRugi([
                 'dari' => $request->input('dari'),
-                'sampai' => $request->input('sampai')
+                'sampai' => $request->input('sampai'),
+                'company_id' => Auth::user()->currentAccessToken()['company_id']
             ]);
         }
         else
@@ -77,7 +78,6 @@ class RptFinanceController extends Controller
             $result = $model->getRptLabaRugi([
                 'dari' => $request->input('dari'),
                 'sampai' => $request->input('sampai'),
-                'company_id' => Auth::user()->currentAccessToken()['company_id']
             ]); 
         }
 
@@ -91,17 +91,17 @@ class RptFinanceController extends Controller
         $user = new User();
         $cek = $user->cekLevel(Auth::user()->currentAccessToken()['namauser']);
 
-        if ($cek->kdjabatan=='ADM')
+        if ($cek->kdjabatan=='USR')
         {
             $result = $model->getRptNeraca([
-                'periode' => $request->input('periode')
+                'periode' => $request->input('periode'),
+                'company_id' => Auth::user()->currentAccessToken()['company_id']
             ]);
         }
         else
         {
             $result = $model->getRptNeraca([
                 'periode' => $request->input('periode'),
-                'company_id' => Auth::user()->currentAccessToken()['company_id']
             ]); 
         }
 

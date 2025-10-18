@@ -15,6 +15,7 @@ class InsertRequest extends BaseRequest
     {
         return [
             'tanggal' => 'required|string',
+            'company_id' => 'required|integer',
             'detail' => 'nullable|array',
             'detail.*.bahan_baku_id' => 'required|string',
             'detail.*.jumlah' => 'required|numeric|min:0',

@@ -93,7 +93,7 @@ class TxnKKBBController extends Controller
 
         try 
         {
-            $hasilvoucherid = $cfheader->beforeAutoNumber($request->input('flagkkbb'), $request->input('transdate'),Auth::user()->currentAccessToken()['company_code']);
+            $hasilvoucherid = $cfheader->beforeAutoNumber($request->input('flagkkbb'), $request->input('transdate'),$request->input('company_code'));
 
             $insertheader = $cfheader->insertData([
                 'voucherid' => $hasilvoucherid,
@@ -105,7 +105,7 @@ class TxnKKBBController extends Controller
                 'currid' => $request->input('currid') ?? 'IDR',
                 'total' => $request->input('total'),
                 'upduser' => Auth::user()->currentAccessToken()['namauser'],
-                'company_id' => Auth::user()->currentAccessToken()['company_id']
+                'company_id' => $request->input('company_id')
             ]);
 
             if ($insertheader == false) {

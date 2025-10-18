@@ -27,7 +27,7 @@ class IssuedController extends Controller
 
         $params = [
             'tanggal' => $request->tanggal,
-            'company_id' => Auth::user()->currentAccessToken()['company_id'],
+            'company_id' => $request->company_id,
         ];
 
         DB::beginTransaction();
@@ -96,8 +96,8 @@ class IssuedController extends Controller
 
         $params = [
             'tanggal' => $request->tanggal,
-            'company_id' => Auth::user()->currentAccessToken()['company_id'],
-        ];
+            'company_id' => $request->company_id
+        ];       
 
         $result = $model_detail->getAllData($params);
 

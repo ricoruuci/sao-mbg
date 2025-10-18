@@ -48,13 +48,13 @@ class BeliController extends Controller
             'ppn' => $request->ppn ?? 0,
             'note' => $request->note ?? '',
             'upduser' => Auth::user()->currentAccessToken()['namauser'],
-            'company_id' => Auth::user()->currentAccessToken()['company_id'],
+            'company_id' => $request->company_id,
         ];
 
         DB::beginTransaction();
 
         try {
-            $hasilpoid = $model_header->beforeAutoNumber($request->transdate,Auth::user()->currentAccessToken()['company_code']);
+            $hasilpoid = $model_header->beforeAutoNumber($request->transdate,$request->company_code);
 
             $params['nota_beli'] = $hasilpoid;
 
@@ -331,13 +331,14 @@ class BeliController extends Controller
 
         $level = $user->cekLevel(Auth::user()->currentAccessToken()['namauser']);
 
-        if ($level->kdjabatan=='ADM')
+        if ($level->kdjabatan=='USR')
         {
             $result = $model->getAllData([
                 'dari' => $request->dari,
                 'sampai' => $request->sampai,
                 'search_keyword' => $request->search_keyword,
                 'supplier_keyword' => $request->supplier_keyword,
+                'company_id' => $level->company_id
             ]);
         }
         else
@@ -347,7 +348,6 @@ class BeliController extends Controller
                 'sampai' => $request->sampai,
                 'search_keyword' => $request->search_keyword,
                 'supplier_keyword' => $request->supplier_keyword,
-                'company_id' => $level->company_id
             ]);
         }
 

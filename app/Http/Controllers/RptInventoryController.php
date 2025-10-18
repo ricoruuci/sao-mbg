@@ -24,12 +24,13 @@ class RptInventoryController extends Controller
         $user = new User();
         $cek = $user->cekLevel(Auth::user()->currentAccessToken()['namauser']);
 
-        if ($cek->kdjabatan=='ADM')
+        if ($cek->kdjabatan=='USR')
         {
             $result = $model->getLapStock([
                 'transdate' => $request->input('transdate'),
                 'search_keyword' => $request->input('search_keyword', ''),
-                'show_zero' => $request->input('show_zero', 'T')
+                'show_zero' => $request->input('show_zero', 'T'),
+                'company_id' => Auth::user()->currentAccessToken()['company_id']
             ]);
         }
         else
@@ -38,7 +39,6 @@ class RptInventoryController extends Controller
                 'transdate' => $request->input('transdate'),
                 'search_keyword' => $request->input('search_keyword', ''),
                 'show_zero' => $request->input('show_zero', 'T'),
-                'company_id' => Auth::user()->currentAccessToken()['namauser']
             ]);
         }
 
@@ -51,12 +51,13 @@ class RptInventoryController extends Controller
         $user = new User();
         $cek = $user->cekLevel(Auth::user()->currentAccessToken()['namauser']);
 
-        if ($cek->kdjabatan=='ADM')
+        if ($cek->kdjabatan=='USR')
         {
             $result = $model->getLapKartuStock([
                 'dari' => $request->input('dari'),
                 'sampai' => $request->input('sampai'),
-                'search_keyword' => $request->input('search_keyword', '')
+                'search_keyword' => $request->input('search_keyword', ''),
+                'company_id' => Auth::user()->currentAccessToken()['company_id']
             ]);
         }
         else
@@ -65,7 +66,6 @@ class RptInventoryController extends Controller
                 'dari' => $request->input('dari'),
                 'sampai' => $request->input('sampai'),
                 'search_keyword' => $request->input('search_keyword', ''),
-                'company_id' => Auth::user()->currentAccessToken()['namauser']
             ]);
         }
 
