@@ -19,6 +19,7 @@ class InsertRequest extends BaseRequest
             'ppn' => 'required|numeric|min:0',
             'note' => 'nullable|string',
             'company_id' => 'required|integer',
+            'company_code' => 'required|string',
             'detail' => 'nullable|array',
             'detail.*.bahan_baku_id' => 'required|string',
             'detail.*.qty' => 'required|numeric|min:0',

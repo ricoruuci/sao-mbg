@@ -19,6 +19,7 @@ class InsertRequest extends BaseRequest
             'note' => 'nullable|string|max:255',
             'flagkkbb' => 'required|string|in:KM,KK,BM,BK,JU,APK,APB',
             'company_id' => 'required|integer',
+            'company_code' => 'required|string',
             'bank_id' => 'nullable|required_if:flagkkbb,BM,BK,APB|string',
             'total' => 'required|numeric',
             'detail' => 'required|array',
