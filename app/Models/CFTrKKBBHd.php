@@ -167,7 +167,7 @@ class CFTrKKBBHd extends BaseModel //nama class
     function cekVoucher($voucherid)
     {
         $result = DB::selectOne(
-            'SELECT * from cftrkkbbhd WHERE voucherid = :voucherid',
+            'SELECT voucherid,company_id from cftrkkbbhd WHERE voucherid = :voucherid',
             [
                 'voucherid' => $voucherid
             ]

@@ -156,7 +156,7 @@ class BeliHd extends BaseModel
     function cekData($id)
     {
         $result = DB::selectOne(
-            'SELECT * from trbelibbhd WHERE nota = :id',
+            'SELECT nota,company_id from trbelibbhd WHERE nota = :id',
             [
                 'id' => $id
             ]

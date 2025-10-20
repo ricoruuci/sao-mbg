@@ -239,7 +239,16 @@ class TxnKKBBController extends Controller
                 return $this->responseError('kode supplier tidak terdaftar dalam master', 400);
             }
         }
-        
+
+        $cek = $cfheader->cekVoucher($request->input('voucher_id') ?? '');
+
+        if ($cek == false) {
+
+            return $this->responseError('nomor voucher tidak ada atau tidak ditemukan', 400);
+        }
+
+        $company_id = $cek->company_id ?? '';
+
         $arrDetail = $request->input('detail');
         $sum = 0.00;
         for ($i = 0; $i < sizeof($arrDetail); $i++)
@@ -321,7 +330,7 @@ class TxnKKBBController extends Controller
             }                
 
             DB::commit();
-            return $this->responseSuccess('Data Transaksi berhasil diupdate', 200, ['Voucher' => $request->input('voucher_id')]);
+            return $this->responseSuccess('Data Transaksi berhasil diupdate', 200, ['Voucher' => $company_id]);
 
         } 
         catch (\Exception $e)

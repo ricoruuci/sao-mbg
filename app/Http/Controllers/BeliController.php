@@ -152,13 +152,13 @@ class BeliController extends Controller
 
             $model_detail->deleteAllItem($hasilpoid);
 
-            $model_detail->insertAllItem($hasilpoid,Auth::user()->currentAccessToken()['company_id']);
+            $model_detail->insertAllItem($hasilpoid,$request->company_id);
 
             $model_detail->updateAllTransaction([
                 'id' => $hasilpoid,
                 'transdate' => $request->transdate,
                 'fgtrans' => 1,
-                'company_id' => Auth::user()->currentAccessToken()['company_id']
+                'company_id' => $request->company_id
             ]);
 
             DB::commit();
@@ -187,6 +187,8 @@ class BeliController extends Controller
 
             return $this->responseError('nota beli tidak ada atau tidak ditemukan', 400);
         }
+
+        $company_id = $cek->company_id ?? '';
 
         $cek = $model_supplier->cekData($request->supplier_id ?? '');
 
@@ -304,13 +306,13 @@ class BeliController extends Controller
 
             $model_detail->deleteAllItem($request->nota_beli);
 
-            $model_detail->insertAllItem($request->nota_beli,Auth::user()->currentAccessToken()['company_id']);
+            $model_detail->insertAllItem($request->nota_beli,$company_id);
 
             $model_detail->updateAllTransaction([
                 'id' => $request->nota_beli,
                 'transdate' => $request->transdate,
                 'fgtrans' => 1,
-                'company_id' => Auth::user()->currentAccessToken()['company_id']
+                'company_id' => $company_id
             ]);
 
             DB::commit();
