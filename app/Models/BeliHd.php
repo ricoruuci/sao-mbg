@@ -88,8 +88,11 @@ class BeliHd extends BaseModel
         $result = DB::select(
             "SELECT a.nota as nota_beli,a.kdsupplier as supplier_id,b.nmsupplier as supplier_name,
             a.tglbeli as transdate,a.tax as ppn,keterangan as note,a.upddate,a.upduser,
-            a.stpb as sub_total,a.ttltax as total_ppn,a.ttlpb as grand_total from trbelibbhd a
+            a.stpb as sub_total,a.ttltax as total_ppn,a.ttlpb as grand_total,
+            a.company_id,c.company_code,c.company_name,c.company_address
+            from trbelibbhd a
             inner join mssupplier b on a.kdsupplier=b.kdsupplier
+            left join mscabang c on a.company_id = c.company_id
             where convert(varchar(10),a.tglbeli,112) between :dari and :sampai 
             $addCon
             and isnull(a.nota,'') like :searchkeyword and isnull(b.nmsupplier,'') like :supplierkeyword 
@@ -105,8 +108,11 @@ class BeliHd extends BaseModel
         $result = DB::selectOne(
             "SELECT a.nota as nota_beli,a.kdsupplier as supplier_id,b.nmsupplier as supplier_name,
             a.tglbeli as transdate,a.tax as ppn,keterangan as note,a.upddate,a.upduser,
-            a.stpb as sub_total,a.ttltax as total_ppn,a.ttlpb as grand_total from trbelibbhd a
+            a.stpb as sub_total,a.ttltax as total_ppn,a.ttlpb as grand_total,
+            a.company_id,c.company_code,c.company_name,c.company_address
+            from trbelibbhd a
             inner join mssupplier b on a.kdsupplier=b.kdsupplier
+            left join mscabang c on a.company_id = c.company_id
             where a.nota = :id",
             [
                 'id' => $id

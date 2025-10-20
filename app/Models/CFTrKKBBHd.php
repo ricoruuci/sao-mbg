@@ -87,9 +87,11 @@ class CFTrKKBBHd extends BaseModel //nama class
             case when a.FlagKKBB in ('ark','arb','arc') then (select x.custname from MsCustomer x where x.custid=a.actor)
                  when a.FlagKKBB in ('apk','apb','apc') then (select x.NmSupplier from MsSupplier x where x.KdSupplier=a.actor)
                  else a.actor end as actor_name,
-            a.bankid as bank_id,b.bankname as bank_name,a.note,a.upddate,a.upduser,a.total
+            a.bankid as bank_id,b.bankname as bank_name,a.note,a.upddate,a.upduser,a.total,
+            a.company_id,c.company_code,c.company_name,c.company_address
             from cftrkkbbhd a 
             left join cfmsbank b on a.bankid = b.bankid
+            left join mscabang c on a.company_id = c.company_id
 			where 
 			convert(varchar(10),a.transdate,112) between :dari and :sampai and a.flagkkbb=:flagkkbb 
             $addCon
@@ -113,9 +115,11 @@ class CFTrKKBBHd extends BaseModel //nama class
             case when a.FlagKKBB in ('ark','arb','arc') then (select x.custname from MsCustomer x where x.custid=a.actor)
                  when a.FlagKKBB in ('apk','apb','apc') then (select x.NmSupplier from MsSupplier x where x.KdSupplier=a.actor)
                  else a.actor end as actor_name,
-            a.bankid as bank_id,b.bankname as bank_name,a.note,a.upddate,a.upduser,a.total
+            a.bankid as bank_id,b.bankname as bank_name,a.note,a.upddate,a.upduser,a.total,
+            a.company_id,c.company_code,c.company_name,c.company_address
             from cftrkkbbhd a 
             left join cfmsbank b on a.bankid = b.bankid
+            left join mscabang c on a.company_id = c.company_id
 			WHERE a.voucherid = :voucherid ",
             [
                 'voucherid' => $param['voucher_id']
