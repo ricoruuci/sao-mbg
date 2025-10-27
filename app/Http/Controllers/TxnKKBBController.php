@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers; 
+namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -57,29 +57,29 @@ class TxnKKBBController extends Controller
         for ($i = 0; $i < sizeof($arrDetail); $i++)
         {
             $cek = $msrekening->cekData($arrDetail[$i]['rekeningid']);
-            if($cek==false){ 
+            if($cek==false){
                 return $this->responseError('kode rekening tidak terdaftar dalam master', 400);
             }
 
             if ($request->input('flagkkbb')=='KK' or $request->input('flagkkbb')=='BK' or $request->input('flagkkbb')=='APB' or $request->input('flagkkbb')=='APK')
             {
-                if ($arrDetail[$i]['jenis']=='D') 
+                if ($arrDetail[$i]['jenis']=='D')
                 {
                     $sum = $sum + $arrDetail[$i]['amount'];
                 }
                 else
-                {   
+                {
                     $sum = $sum - $arrDetail[$i]['amount'];
                 }
             }
             else
             {
-                if ($arrDetail[$i]['jenis']=='K') 
+                if ($arrDetail[$i]['jenis']=='K')
                 {
                     $sum = $sum + $arrDetail[$i]['amount'];
                 }
                 else
-                {   
+                {
                     $sum = $sum - $arrDetail[$i]['amount'];
                 }
             }
@@ -91,7 +91,7 @@ class TxnKKBBController extends Controller
 
         DB::beginTransaction();
 
-        try 
+        try
         {
             $hasilvoucherid = $cfheader->beforeAutoNumber($request->input('flagkkbb'), $request->input('transdate'),$request->input('company_code'));
 
@@ -112,7 +112,7 @@ class TxnKKBBController extends Controller
                 DB::rollBack();
                 return $this->responseError('Gagal menyimpan data Transaksi', 500);
             }
-            
+
             for ($i = 0; $i < sizeof($arrDetail); $i++)
             {
 
@@ -129,13 +129,13 @@ class TxnKKBBController extends Controller
                     DB::rollBack();
                     return $this->responseError('Gagal menyimpan data detail Transaksi', 500);
                 }
-            }                
-            
+            }
+
             DB::commit();
             return $this->responseSuccess('Data Transaksi berhasil disimpan', 200, ['Voucher' => $hasilvoucherid]);
 
 
-        } 
+        }
         catch (\Exception $e)
         {
             DB::rollBack();
@@ -147,13 +147,13 @@ class TxnKKBBController extends Controller
     {
         $cfheader = new CFTrKKBBHd();
         $cfdetail = new CFTrKKBBDt();
-        
+
         $user = new User();
 
         $level = $user->cekLevel(Auth::user()->currentAccessToken()['namauser']);
 
         if ($level->kdjabatan=='ADM')
-        {    
+        {
             $result = $cfheader->getListData(
                 [
                     'dari' => $request->input('dari'),
@@ -179,7 +179,7 @@ class TxnKKBBController extends Controller
                     'sortby' => $request->input('sortby') ?? 'old',
                     'company_id' => Auth::user()->currentAccessToken()['company_id']
                 ]
-            ); 
+            );
         }
 
         $resultPaginated = $this->arrayPaginator($request, $result);
@@ -210,7 +210,7 @@ class TxnKKBBController extends Controller
             'detail' => $resultdetail
         ];
 
-        return $this->responseData($result);    
+        return $this->responseData($result);
 
     }
 
@@ -255,29 +255,29 @@ class TxnKKBBController extends Controller
         {
             $cek = $msrekening->cekData($arrDetail[$i]['rekeningid']);
 
-            if($cek==false){ 
+            if($cek==false){
                 return $this->responseError('kode rekening tidak terdaftar dalam master', 400);
             }
-            
+
             if ($request->input('flagkkbb')=='KK' or $request->input('flagkkbb')=='BK' or $request->input('flagkkbb')=='APB' or $request->input('flagkkbb')=='APK')
             {
-                if ($arrDetail[$i]['jenis']=='D') 
+                if ($arrDetail[$i]['jenis']=='D')
                 {
                     $sum = $sum + $arrDetail[$i]['amount'];
                 }
                 else
-                {   
+                {
                     $sum = $sum - $arrDetail[$i]['amount'];
                 }
             }
             else
             {
-                if ($arrDetail[$i]['jenis']=='K') 
+                if ($arrDetail[$i]['jenis']=='K')
                 {
                     $sum = $sum + $arrDetail[$i]['amount'];
                 }
                 else
-                {   
+                {
                     $sum = $sum - $arrDetail[$i]['amount'];
                 }
             }
@@ -289,7 +289,7 @@ class TxnKKBBController extends Controller
 
         DB::beginTransaction();
 
-        try 
+        try
         {
             $insertheader = $cfheader->updateAllData([
                 'voucherid' => $request->input('voucher_id'),
@@ -310,7 +310,7 @@ class TxnKKBBController extends Controller
             $deletedetail = $cfdetail->deleteData([
                 'voucherid' => $request->input('voucher_id')
             ]);
-            
+
             for ($i = 0; $i < sizeof($arrDetail); $i++)
             {
                 $insertdetail = $cfdetail->insertData([
@@ -327,12 +327,12 @@ class TxnKKBBController extends Controller
                     return $this->responseError('Gagal mengupdate data detail Transaksi', 500);
                 }
 
-            }                
+            }
 
             DB::commit();
             return $this->responseSuccess('Data Transaksi berhasil diupdate', 200, ['Voucher' => $company_id]);
 
-        } 
+        }
         catch (\Exception $e)
         {
             DB::rollBack();
@@ -353,7 +353,7 @@ class TxnKKBBController extends Controller
 
         DB::beginTransaction();
 
-        try 
+        try
         {
             $deleted = $cfheader->deleteData($id);
 
@@ -363,7 +363,7 @@ class TxnKKBBController extends Controller
 
             DB::commit();
             return $this->responseSuccess('Data Transaksi berhasil dihapus', 200, ['Voucher' => $id]);
-        } 
+        }
         catch (\Exception $e)
         {
             DB::rollBack();
@@ -387,7 +387,7 @@ class TxnKKBBController extends Controller
             [
                 'transdate' => $request->input('transdate'),
                 'actor' => $request->input('actor'),
-                'company_id' => Auth::user()->currentAccessToken()['company_id']
+                'company_id' => $request->input('company_id') ?? Auth::user()->currentAccessToken()['company_id']
             ]
         );
 
