@@ -144,9 +144,9 @@ class BeliController extends Controller
             $hitung = $model_header->hitungTotal($hasilpoid);
 
             $model_header->updateTotal([
-                'grand_total' => $hitung->grand_total,
-                'sub_total' => $hitung->sub_total,
-                'total_ppn' => $hitung->total_ppn,
+                'grand_total' => (float) $hitung->grand_total,
+                'sub_total' => (float) $hitung->sub_total,
+                'total_ppn' => (float) $hitung->total_ppn,
                 'nota_beli' => $hasilpoid,
             ]);
 
@@ -204,7 +204,7 @@ class BeliController extends Controller
             'ppn' => $request->ppn ?? 0,
             'note' => $request->note ?? '',
             'upduser' => Auth::user()->currentAccessToken()['namauser'],
-        ];    
+        ];
 
         DB::beginTransaction();
 
@@ -294,13 +294,14 @@ class BeliController extends Controller
                     }
                 }
             }
-            
+
             $hitung = $model_header->hitungTotal($request->nota_beli);
 
+            //dd(var_dump($hitung));
             $model_header->updateTotal([
-                'grand_total' => $hitung->grand_total,
-                'sub_total' => $hitung->sub_total,
-                'total_ppn' => $hitung->total_ppn,
+                'grand_total' => (float) $hitung->grand_total,
+                'sub_total' => (float) $hitung->sub_total,
+                'total_ppn' => (float) $hitung->total_ppn,
                 'nota_beli' => $request->nota_beli,
             ]);
 
