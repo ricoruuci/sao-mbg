@@ -52,6 +52,7 @@ class RptFinanceController extends Controller
                 'dari' => $request->input('dari'),
                 'sampai' => $request->input('sampai'),
                 'rekening_id' => $request->input('rekening_id', ''),
+                'company_id' => $request->input('company_id', Auth::user()->currentAccessToken()['company_id'])
             ]);
         }
 
@@ -78,7 +79,8 @@ class RptFinanceController extends Controller
             $result = $model->getRptLabaRugi([
                 'dari' => $request->input('dari'),
                 'sampai' => $request->input('sampai'),
-            ]); 
+                'company_id' => $request->input('company_id', Auth::user()->currentAccessToken()['company_id'])
+            ]);
         }
 
         return $this->responseData($result);
@@ -102,7 +104,8 @@ class RptFinanceController extends Controller
         {
             $result = $model->getRptNeraca([
                 'periode' => $request->input('periode'),
-            ]); 
+                'company_id' => $request->input('company_id', Auth::user()->currentAccessToken()['company_id'])
+            ]);
         }
 
         return $this->responseData($result);

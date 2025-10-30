@@ -21,7 +21,7 @@ class RptFinance extends BaseModel
             $addCon = '';
         }
 
-        if (!empty($params['company_id'])) 
+        if (!empty($params['company_id']))
         {
             $addquery = $this->queryAccounting([
                 'company_id' => $params['company_id']
@@ -65,7 +65,7 @@ class RptFinance extends BaseModel
                 from (
                 $addquery
                 ) as k
-                where convert(varchar(8),k.transdate,112) between :dari and :sampai and k.rekeningid=:rekeningid 
+                where convert(varchar(8),k.transdate,112) between :dari and :sampai and k.rekeningid=:rekeningid
                 order by k.transdate,k.jenis,k.voucherid",
                 [
                     'dari' => $param['dari'],
@@ -94,7 +94,7 @@ class RptFinance extends BaseModel
     function getRptLabaRugi($param)
     {
 
-        if (!empty($params['company_id'])) 
+        if (!empty($params['company_id']))
         {
             $addquery = $this->queryAccounting([
                 'company_id' => $params['company_id']
@@ -126,7 +126,10 @@ class RptFinance extends BaseModel
         foreach ($result as $row) {
 
             $cekdata = DB::select(
-                "SELECT k.kode,case when k.kode in (4) then 'PENDAPATAN' else 'PEMBELIAN & PENGELUARAN' end as keterangan,isnull(sum(case when k.kode=4 then k.jumlah else k.jumlah*-1 end),0) as total
+                "SELECT k.kode,case when k.kode in (4) then 'PENDAPATAN'
+                when k.kode in (5) then 'PEMBELIAN'
+                when k.kode in (6) then 'BIAYA & BEBAN'
+                else 'LAIN-LAIN' end as keterangan,isnull(sum(case when k.kode=4 then k.jumlah else k.jumlah*-1 end),0) as total
                 from (
                 select a.rekeningid,a.rekeningname,b.fgtipe as kode,
                 isnull((select sum(case when x.jenis='k' then x.amount else x.amount*-1 end) from (
@@ -179,7 +182,7 @@ class RptFinance extends BaseModel
     function getRptNeraca($param)
     {
 
-        if (!empty($params['company_id'])) 
+        if (!empty($params['company_id']))
         {
             $addquery = $this->queryAccounting([
                 'company_id' => $params['company_id']
@@ -191,77 +194,77 @@ class RptFinance extends BaseModel
         }
 
         $result = DB::select(
-            "SELECT k.fgtipe,k.subkomponen as keterangan,l.total as total from 
+            "SELECT k.fgtipe,k.subkomponen as keterangan,l.total as total from
             (
-                select 'A' as fgtipe,'TOTAL AKTIVA' as subkomponen union all 
-                select 'P','TOTAL PASSIVA' 
-            ) as K 
-            inner join 
+                select 'A' as fgtipe,'TOTAL AKTIVA' as subkomponen union all
+                select 'P','TOTAL PASSIVA'
+            ) as K
+            inner join
             (
             select p.fgtipe,case when p.fgtipe='a' then sum(p.jumlah) else sum(p.jumlah*-1) end as total from (
             select y.grouprekid,case when z.fgtipe in (4,5,6,7,8) then 3 else z.fgtipe end as tipe,case when z.fgtipe in (1,9) then 'A' else 'P' end as fgtipe,
             isnull((select sum(case when x.jenis='d' then x.amount else x.amount*-1 end) from (
             $addquery
-            ) as x 
-            where x.rekeningid=y.rekeningid and convert(varchar(8),x.transdate,112) <= :periode),0) as jumlah 
+            ) as x
+            where x.rekeningid=y.rekeningid and convert(varchar(8),x.transdate,112) <= :periode),0) as jumlah
             from cfmsrekening y
             left join cfmsgrouprek z on y.grouprekid=z.grouprekid
-            ) as P group by p.fgtipe 
-            ) as L on k.fgtipe=l.fgtipe 
+            ) as P group by p.fgtipe
+            ) as L on k.fgtipe=l.fgtipe
             order by k.fgtipe",
             [
                 'periode' => $param['periode']
             ]
         );
 
-        
+
         foreach ($result as $row) {
 
             $cekdata = DB::select(
-                "SELECT K.fgtipe,K.SubKomponen as komponen,K.Tipe as tipe,L.Total as total FROM 
+                "SELECT K.fgtipe,K.SubKomponen as komponen,K.Tipe as tipe,L.Total as total FROM
                 (
-                SELECT 'A' as FgTipe,'CURRENT ASSET' as SubKomponen,1 as Tipe UNION ALL 
-                SELECT 'A','FIXED ASSET',9 UNION ALL 
-                SELECT 'P','LIABILITIES',2 UNION ALL 
+                SELECT 'A' as FgTipe,'CURRENT ASSET' as SubKomponen,1 as Tipe UNION ALL
+                SELECT 'A','FIXED ASSET',9 UNION ALL
+                SELECT 'P','LIABILITIES',2 UNION ALL
                 SELECT 'P','CAPITAL',3
-                ) as K 
-                INNER JOIN 
+                ) as K
+                INNER JOIN
                 (
                 SELECT P.Tipe,P.FgTipe,CASE WHEN P.FgTipe='A' THEN SUM(P.Jumlah) ELSE SUM(P.Jumlah*-1) END as Total FROM (
                 SELECT Y.GroupRekID,CASE WHEN z.fgTipe IN (4,5,6,7,8) THEN 3 ELSE z.fgTipe END as Tipe,case when z.fgtipe in (1,9) then 'A' else 'P' end as FgTipe,
                 ISNULL((SELECT SUM(CASE WHEN X.Jenis='D' THEN X.Amount ELSE X.Amount*-1 END) FROM (
                 $addquery
-                ) as X 
-                WHERE X.RekeningID=Y.RekeningID AND CONVERT(VARCHAR(8),X.Transdate,112) <= :periode),0) as Jumlah 
+                ) as X
+                WHERE X.RekeningID=Y.RekeningID AND CONVERT(VARCHAR(8),X.Transdate,112) <= :periode),0) as Jumlah
                 FROM CFMsRekening Y
-                Left JOIN CFMsGroupRek Z ON Y.GroupRekID=Z.GroupRekID 
+                Left JOIN CFMsGroupRek Z ON Y.GroupRekID=Z.GroupRekID
                 ) as P GROUP BY P.Tipe,P.FgTipe
-                ) as L ON K.Tipe=L.Tipe AND K.FgTipe=L.FgTipe 
-                WHERE K.FgTipe=:fgtipe 
+                ) as L ON K.Tipe=L.Tipe AND K.FgTipe=L.FgTipe
+                WHERE K.FgTipe=:fgtipe
                 ORDER BY K.FgTipe,K.Tipe",
                 [
                     'periode' => $param['periode'],
                     'fgtipe' => $row->fgtipe,
                 ]
             );
-        
+
             foreach ($cekdata as $hasil)
             {
-            
+
                 $cekdetail = DB::select(
                     "SELECT X.GroupRekID as grouprekid,X.GroupRekName as grouprekname,X.Total as amount FROM (
                     SELECT P.GroupRekID,Q.GroupRekName,CASE WHEN P.FgTipe='A' THEN SUM(P.Jumlah) ELSE SUM(P.Jumlah*-1) END as Total FROM (
-                    SELECT CASE WHEN z.fgtipe IN (4,5,6,7,8) THEN (select grouprekid from cfmsrekening where rekeningid =(select drlaba from setrekening)) 
+                    SELECT CASE WHEN z.fgtipe IN (4,5,6,7,8) THEN (select grouprekid from cfmsrekening where rekeningid =(select drlaba from setrekening))
                     ELSE Y.GroupRekID END as GroupRekID,
                     CASE WHEN z.fgTipe IN (4,5,6,7,8) THEN 3 ELSE z.fgTipe END as Tipe,case when z.fgtipe in (1,9) then 'A' else 'P' end as FgTipe,
                     ISNULL((SELECT SUM(CASE WHEN X.Jenis='D' THEN X.Amount ELSE X.Amount*-1 END) FROM (
                     $addquery
-                    ) as X 
-                    WHERE X.RekeningID=Y.RekeningID AND CONVERT(VARCHAR(8),X.Transdate,112) <= :periode),0) as Jumlah 
+                    ) as X
+                    WHERE X.RekeningID=Y.RekeningID AND CONVERT(VARCHAR(8),X.Transdate,112) <= :periode),0) as Jumlah
                     FROM CFMsRekening Y
-                    left join CFMsGroupRek Z on Y.GroupRekID=Z.GroupRekID 
-                    
-                    ) as P INNER JOIN CFMsGroupRek Q ON P.GroupRekID=Q.GroupRekID 
+                    left join CFMsGroupRek Z on Y.GroupRekID=Z.GroupRekID
+
+                    ) as P INNER JOIN CFMsGroupRek Q ON P.GroupRekID=Q.GroupRekID
                     WHERE P.Tipe=:tipe AND P.FgTipe=:fgtipe
                     GROUP BY P.GroupRekID,Q.GroupRekName,P.FgTipe ) as X WHERE X.Total <> 0 ORDER BY X.GroupRekID ",
                     [
@@ -272,7 +275,7 @@ class RptFinance extends BaseModel
                 );
 
                 $hasil->detail = $cekdetail;
-                
+
             }
 
             $row->header = $cekdata;

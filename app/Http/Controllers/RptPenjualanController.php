@@ -40,6 +40,7 @@ class RptPenjualanController extends Controller
                 'dari' => $request->input('dari'),
                 'sampai' => $request->input('sampai'),
                 'search_keyword' => $request->input('search_keyword', ''),
+                'company_id' => $request->input('company_id', Auth::user()->currentAccessToken()['company_id'])
             ]);
         }
 
@@ -65,6 +66,7 @@ class RptPenjualanController extends Controller
         {
             $result = $model->getLapPenjualanHarian([
                 'transdate' => $request->input('transdate'),
+                'company_id' => $request->input('company_id', Auth::user()->currentAccessToken()['company_id'])
             ]);
         }
 

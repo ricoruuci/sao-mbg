@@ -39,6 +39,7 @@ class RptInventoryController extends Controller
                 'transdate' => $request->input('transdate'),
                 'search_keyword' => $request->input('search_keyword', ''),
                 'show_zero' => $request->input('show_zero', 'T'),
+                'company_id' => $request->input('company_id', Auth::user()->currentAccessToken()['company_id'])
             ]);
         }
 
@@ -66,10 +67,9 @@ class RptInventoryController extends Controller
                 'dari' => $request->input('dari'),
                 'sampai' => $request->input('sampai'),
                 'search_keyword' => $request->input('search_keyword', ''),
+                'company_id' => $request->input('company_id', Auth::user()->currentAccessToken()['company_id'])
             ]);
         }
-
-        
 
         return $this->responseData($result);
     }
