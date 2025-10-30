@@ -13,10 +13,10 @@ class RptPembelian extends BaseModel
     use HasFactory;
 
     function getLapPembelian($params)
-    {   
+    {
         $condition = '';
 
-        if (!empty($params['company_id'])) 
+        if (!empty($params['company_id']))
         {
             $condition = " and a.company_id=:company_id";
             $bindings = [
@@ -26,6 +26,7 @@ class RptPembelian extends BaseModel
                 'supplier_keyword' => '%'.$params['supplier_keyword'].'%',
                 'company_id' => $params['company_id']
             ];
+            // dd(var_dump($params['company_id']));
         }
         else
         {
@@ -43,6 +44,7 @@ class RptPembelian extends BaseModel
             from TrBeliBBHd a inner join MsSupplier b on a.KdSupplier=b.KdSupplier
             where convert(varchar(10),a.tglbeli,112) between :dari and :sampai and a.nota like :search_keyword
             and isnull(b.nmSupplier,'') like :supplier_keyword
+            $condition
             order by a.tglbeli,a.nota ",
             $bindings
         );
@@ -53,8 +55,8 @@ class RptPembelian extends BaseModel
     function getLapHutang($params)
     {
         $condition = '';
-        
-        if (!empty($params['company_id'])) 
+
+        if (!empty($params['company_id']))
         {
             $condition = " and a.company_id=:company_id";
             $bindings = [
@@ -78,28 +80,28 @@ class RptPembelian extends BaseModel
         }
 
         $result = DB::select(
-            "SELECT k.*, k.total - k.bayar AS sisa 
+            "SELECT k.*, k.total - k.bayar AS sisa
             FROM (
-                SELECT 
+                SELECT
                     a.nota AS nota_beli,
                     a.kdsupplier AS supplier_id,
                     b.nmsupplier AS supplier_name,
                     a.tglbeli AS transdate,
                     ISNULL((
-                        SELECT SUM(CASE WHEN x.jenis = 'D' THEN x.amount ELSE x.amount * -1 END) 
-                        FROM cftrkkbbdt x 
-                        INNER JOIN cftrkkbbhd y ON x.voucherid = y.voucherid 
+                        SELECT SUM(CASE WHEN x.jenis = 'D' THEN x.amount ELSE x.amount * -1 END)
+                        FROM cftrkkbbdt x
+                        INNER JOIN cftrkkbbhd y ON x.voucherid = y.voucherid
                         WHERE x.note = a.nota AND CONVERT(VARCHAR(10), y.transdate, 112) <= :tgl1
                     ), 0) AS bayar,
                     a.ttlpb AS total
-                FROM trbelibbhd a 
+                FROM trbelibbhd a
                 INNER JOIN mssupplier b ON a.kdsupplier = b.kdsupplier
                 WHERE CONVERT(VARCHAR(10), a.tglbeli, 112) <= :tgl2 $condition
             ) AS k
-            WHERE k.total - k.bayar <> 0 
+            WHERE k.total - k.bayar <> 0
             AND k.nota_beli LIKE :search_keyword
             AND (
-                ISNULL(k.supplier_id, '') LIKE :supplier_keyword 
+                ISNULL(k.supplier_id, '') LIKE :supplier_keyword
                 OR ISNULL(k.supplier_name, '') LIKE :supplier_keyword2
             )
             ORDER BY k.transdate, k.nota_beli ",

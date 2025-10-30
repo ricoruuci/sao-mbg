@@ -35,15 +35,16 @@ class RptPembelianController extends Controller
             ]);
         }
         else
-        {
-            $result = $model->getLapPembelian([
-                'dari' => $request->input('dari'),
-                'sampai' => $request->input('sampai'),
-                'search_keyword' => $request->input('search_keyword', ''),
-                'supplier_keyword' => $request->input('supplier_keyword', ''),
-                'company_id' => $request->input('company_id', Auth::user()->currentAccessToken()['company_id'])
-            ]);
-        }
+            {
+                // dd(var_dump($request->company_id));
+                $result = $model->getLapPembelian([
+                    'dari' => $request->input('dari'),
+                    'sampai' => $request->input('sampai'),
+                    'search_keyword' => $request->input('search_keyword', ''),
+                    'supplier_keyword' => $request->input('supplier_keyword', ''),
+                    'company_id' => $request->input('company_id', Auth::user()->currentAccessToken()['company_id'])
+                ]);
+            }
 
         $resultPaginated = $this->arrayPaginator($request, $result);
 
