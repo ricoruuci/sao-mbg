@@ -121,13 +121,15 @@ Route::get('issued', [IssuedController::class, 'getListData'])->middleware('auth
 Route::post('issued', [IssuedController::class, 'insertData'])->middleware('auth:sanctum');
 
 /*==============================================================================================================
- * Laporan 
+ * Laporan
  *==============================================================================================================*/
 
 Route::get('rpt-penjualan', [RptPenjualanController::class, 'getLapPenjualan'])->middleware('auth:sanctum');
 Route::get('rpt-penjualan-harian', [RptPenjualanController::class, 'getLapPenjualanHarian'])->middleware('auth:sanctum');
 Route::get('rpt-pembelian', [RptPembelianController::class, 'getLapPembelian'])->middleware('auth:sanctum');
 Route::get('rpt-hutang', [RptPembelianController::class, 'getLapHutang'])->middleware('auth:sanctum');
+Route::get('rpt-beli-adjustment', [RptPembelianController::class, 'getLaporanBeliAdjustment'])->middleware('auth:sanctum');
+Route::patch('update-nota-beli', [RptPembelianController::class, 'updateFgUpload'])->middleware('auth:sanctum');
 
 Route::get('rpt-buku-besar', [RptFinanceController::class, 'getRptBukuBesar'])->middleware('auth:sanctum');
 Route::get('rpt-laba-rugi', [RptFinanceController::class, 'getRptLabaRugi'])->middleware('auth:sanctum');

@@ -19,8 +19,8 @@ class BeliHd extends BaseModel
     function insertData($params)
     {
         $result = DB::insert(
-            "INSERT trbelibbhd (nota,kdsupplier,tglbeli,tax,keterangan,upddate,upduser,ttlpb,stpb,ttltax,company_id)
-            VALUES (:nota, :kdsupplier, :transdate, :tax, :note, getdate(), :upduser, 0, 0, 0,:company_id)",
+            "INSERT trbelibbhd (nota,kdsupplier,tglbeli,tax,keterangan,upddate,upduser,ttlpb,stpb,ttltax,company_id,interest,fg_upload)
+            VALUES (:nota, :kdsupplier, :transdate, :tax, :note, getdate(), :upduser, 0, 0, 0,:company_id, :interest, :fgupload)",
             [
                 'nota' => $params['nota_beli'],
                 'kdsupplier' => $params['supplier_id'],
@@ -28,7 +28,9 @@ class BeliHd extends BaseModel
                 'tax' => $params['ppn'],
                 'note' => $params['note'],
                 'upduser' => $params['upduser'],
-                'company_id' => $params['company_id']
+                'company_id' => $params['company_id'],
+                'interest' => 0,
+                'fgupload' => 'T'
             ]
         );
 
@@ -64,7 +66,7 @@ class BeliHd extends BaseModel
     {
         $addCon = ''; // default kosong
 
-        if (!empty($params['company_id'])) 
+        if (!empty($params['company_id']))
         {
             $addCon = 'and a.company_id =:company_id ';
             $binding = [
@@ -93,9 +95,9 @@ class BeliHd extends BaseModel
             from trbelibbhd a
             inner join mssupplier b on a.kdsupplier=b.kdsupplier
             left join mscabang c on a.company_id = c.company_id
-            where convert(varchar(10),a.tglbeli,112) between :dari and :sampai 
+            where convert(varchar(10),a.tglbeli,112) between :dari and :sampai
             $addCon
-            and isnull(a.nota,'') like :searchkeyword and isnull(b.nmsupplier,'') like :supplierkeyword 
+            and isnull(a.nota,'') like :searchkeyword and isnull(b.nmsupplier,'') like :supplierkeyword
             order by a.nota ",
             $binding
         );
@@ -143,7 +145,7 @@ class BeliHd extends BaseModel
     {
         $result = DB::update(
             "UPDATE trbelibbhd
-            SET 
+            SET
             stpb = :subtotal,
             ttlpb = :grandtotal,
             ttltax = :pajak
@@ -162,7 +164,7 @@ class BeliHd extends BaseModel
     function cekData($id)
     {
         $result = DB::selectOne(
-            'SELECT nota,company_id from trbelibbhd WHERE nota = :id',
+            "SELECT nota,company_id,isnull(fg_upload,'T') as fg_upload from trbelibbhd WHERE nota = :id ",
             [
                 'id' => $id
             ]

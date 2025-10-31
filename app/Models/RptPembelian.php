@@ -111,6 +111,56 @@ class RptPembelian extends BaseModel
         return $result;
     }
 
+
+    public function getLaporanBeliAdjustment($params)
+    {
+        if (empty($params['adjustment']))
+        {
+            $adjustment = 0;
+        }
+        else
+        {
+            $adjustment = $params['adjustment'];
+        }
+
+        $result = DB::select(
+            "SELECT b.company_id,e.company_code,e.company_name,e.company_address,b.tglbeli as transdate,b.nota as nota_beli,b.kdsupplier as supplier_id,
+            c.nmsupplier as supplier_name,a.kdbb as bahan_baku_id,d.nmbb as bahan_baku_name,a.jml as qty,a.kdsat as satuan,a.harga as price,
+            isnull(a.jml*a.harga,0) as total,
+            (case when isnull(b.fg_upload,'T')='T' then $adjustment else isnull(b.interest,0) end) as adjustment,
+            (a.jml+round(a.jml*((case when isnull(b.fg_upload,'T')='T' then $adjustment else isnull(b.interest,0) end)*0.01),0) ) as qty_adjustment,
+            (a.jml+round(a.jml*((case when isnull(b.fg_upload,'T')='T' then $adjustment else isnull(b.interest,0) end)*0.01),0) )*a.harga as total_adjustment
+            from trbelibbdt a
+            inner join trbelibbhd b on a.nota=b.nota
+            inner join mssupplier c on b.kdsupplier=c.kdsupplier
+            inner join msbahanbaku d on a.kdbb=d.kdbb
+            inner join mscabang e on b.company_id=e.company_id
+            where convert(varchar(10),b.tglbeli,112) between :dari and :sampai
+            and b.company_id=:company_id
+            order by b.tglbeli,b.nota,d.nmbb ",
+            [
+                'dari' => $params['dari'],
+                'sampai' => $params['sampai'],
+                'company_id' => $params['company_id']
+            ]
+        );
+
+        return $result;
+    }
+
+    public function updateFgUploadNota($params)
+    {
+        $result = DB::update(
+            "UPDATE trbelibbhd set fg_upload='Y', interest=:adjustment where nota=:nota_beli ",
+            [
+                'nota_beli' => $params['nota_beli'],
+                'adjustment' => $params['adjustment']
+            ]
+        );
+
+        return $result;
+    }
+
 }
 
 ?>

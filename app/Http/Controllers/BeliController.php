@@ -409,6 +409,10 @@ class BeliController extends Controller
             return $this->responseError('Nota beli tidak ditemukan', 404);
         }
 
+        if ($cek->fg_upload == 'Y') {
+            return $this->responseError('Nota sudah pernah di-upload, tidak bisa dihapus', 404);
+        }
+
         DB::beginTransaction();
 
         try {
