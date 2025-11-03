@@ -76,6 +76,7 @@ class RptFinanceController extends Controller
         }
         else
         {
+
             $result = $model->getRptLabaRugi([
                 'dari' => $request->input('dari'),
                 'sampai' => $request->input('sampai'),

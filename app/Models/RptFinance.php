@@ -13,10 +13,10 @@ class RptFinance extends BaseModel
 {
     use HasFactory;
 
-    function getRptBukuBesar($param)
+    function getRptBukuBesar($params)
     {
-        if ($param['rekening_id']<>'') {
-            $addCon = "and K.rekeningid='" . $param['rekening_id'] . "'";
+        if ($params['rekening_id']<>'') {
+            $addCon = "and K.rekeningid='" . $params['rekening_id'] . "'";
         } else {
             $addCon = '';
         }
@@ -47,13 +47,13 @@ class RptFinance extends BaseModel
             group by m.fgtipe,k.rekeningid,l.rekeningname,l.grouprekid
             order by m.fgtipe,l.grouprekid,k.rekeningid",
             [
-                'dari1' => $param['dari'],
-                'dari2' => $param['dari'],
-                'dari3' => $param['dari'],
-                'sampai1' => $param['sampai'],
-                'sampai2' => $param['sampai'],
-                'sampai3' => $param['sampai'],
-                'sampai' => $param['sampai']
+                'dari1' => $params['dari'],
+                'dari2' => $params['dari'],
+                'dari3' => $params['dari'],
+                'sampai1' => $params['sampai'],
+                'sampai2' => $params['sampai'],
+                'sampai3' => $params['sampai'],
+                'sampai' => $params['sampai']
             ]
         );
 
@@ -68,8 +68,8 @@ class RptFinance extends BaseModel
                 where convert(varchar(8),k.transdate,112) between :dari and :sampai and k.rekeningid=:rekeningid
                 order by k.transdate,k.jenis,k.voucherid",
                 [
-                    'dari' => $param['dari'],
-                    'sampai' => $param['sampai'],
+                    'dari' => $params['dari'],
+                    'sampai' => $params['sampai'],
                     'rekeningid' => $row->rekeningid,
                 ]
             );
@@ -91,7 +91,7 @@ class RptFinance extends BaseModel
         return $result;
     }
 
-    function getRptLabaRugi($param)
+    function getRptLabaRugi($params)
     {
 
         if (!empty($params['company_id']))
@@ -118,8 +118,8 @@ class RptFinance extends BaseModel
             ) as k
             where k.kode in (4,5,6,7,8) and k.jumlah<>0 ",
             [
-                'dari' => $param['dari'],
-                'sampai' => $param['sampai']
+                'dari' => $params['dari'],
+                'sampai' => $params['sampai']
             ]
         );
 
@@ -142,8 +142,8 @@ class RptFinance extends BaseModel
                 ) as k
                 where k.kode in (4,5,6,7,8) and k.jumlah<>0 group by k.kode order by k.kode",
                 [
-                    'dari' => $param['dari'],
-                    'sampai' => $param['sampai']
+                    'dari' => $params['dari'],
+                    'sampai' => $params['sampai']
                 ]
             );
 
@@ -164,8 +164,8 @@ class RptFinance extends BaseModel
                     group by k.kode,k.rekeningid,k.rekeningname
                     order by k.kode,k.rekeningid",
                     [
-                        'dari' => $param['dari'],
-                        'sampai' => $param['sampai'],
+                        'dari' => $params['dari'],
+                        'sampai' => $params['sampai'],
                         'kode' => $baris->kode
                     ]
                 );
@@ -179,7 +179,7 @@ class RptFinance extends BaseModel
         return $result;
     }
 
-    function getRptNeraca($param)
+    function getRptNeraca($params)
     {
 
         if (!empty($params['company_id']))
@@ -213,7 +213,7 @@ class RptFinance extends BaseModel
             ) as L on k.fgtipe=l.fgtipe
             order by k.fgtipe",
             [
-                'periode' => $param['periode']
+                'periode' => $params['periode']
             ]
         );
 
@@ -243,7 +243,7 @@ class RptFinance extends BaseModel
                 WHERE K.FgTipe=:fgtipe
                 ORDER BY K.FgTipe,K.Tipe",
                 [
-                    'periode' => $param['periode'],
+                    'periode' => $params['periode'],
                     'fgtipe' => $row->fgtipe,
                 ]
             );
@@ -268,7 +268,7 @@ class RptFinance extends BaseModel
                     WHERE P.Tipe=:tipe AND P.FgTipe=:fgtipe
                     GROUP BY P.GroupRekID,Q.GroupRekName,P.FgTipe ) as X WHERE X.Total <> 0 ORDER BY X.GroupRekID ",
                     [
-                        'periode' => $param['periode'],
+                        'periode' => $params['periode'],
                         'tipe' => $hasil->tipe,
                         'fgtipe' => $hasil->fgtipe
                     ]
