@@ -34,7 +34,7 @@ class BaseModel extends Model
         $addCon10 = '';
         $addCon11 = '';
 
-        if (!empty($params['company_id']))
+        if (!empty($params['company_id']) && $params['company_id'] != 0)
         {
             $companyId = $params['company_id'];
 

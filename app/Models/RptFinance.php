@@ -21,16 +21,7 @@ class RptFinance extends BaseModel
             $addCon = '';
         }
 
-        if (!empty($params['company_id']))
-        {
-            $addquery = $this->queryAccounting([
-                'company_id' => $params['company_id']
-            ]);
-        }
-        else
-        {
-            $addquery = $this->queryAccounting([]);
-        }
+        $addquery = $this->queryAccounting([]);
 
         $result = DB::select(
             "SELECT m.fgtipe as tipe,k.rekeningid,l.grouprekid,l.rekeningname,
@@ -182,16 +173,7 @@ class RptFinance extends BaseModel
     function getRptNeraca($params)
     {
 
-        if (!empty($params['company_id']))
-        {
-            $addquery = $this->queryAccounting([
-                'company_id' => $params['company_id']
-            ]);
-        }
-        else
-        {
-            $addquery = $this->queryAccounting([]);
-        }
+        $addquery = $this->queryAccounting([]);
 
         $result = DB::select(
             "SELECT k.fgtipe,k.subkomponen as keterangan,l.total as total from

@@ -34,27 +34,11 @@ class RptFinanceController extends Controller
             }
         }
 
-        $user = new User();
-        $cek = $user->cekLevel(Auth::user()->currentAccessToken()['namauser']);
-
-        if ($cek->kdjabatan=='USR')
-        {
-            $result = $model->getRptBukuBesar([
-                'dari' => $request->input('dari'),
-                'sampai' => $request->input('sampai'),
-                'rekening_id' => $request->input('rekening_id', ''),
-                'company_id' => Auth::user()->currentAccessToken()['company_id']
-            ]);
-        }
-        else
-        {
-            $result = $model->getRptBukuBesar([
-                'dari' => $request->input('dari'),
-                'sampai' => $request->input('sampai'),
-                'rekening_id' => $request->input('rekening_id', ''),
-                'company_id' => $request->input('company_id', Auth::user()->currentAccessToken()['company_id'])
-            ]);
-        }
+        $result = $model->getRptBukuBesar([
+            'dari' => $request->input('dari'),
+            'sampai' => $request->input('sampai'),
+            'rekening_id' => $request->input('rekening_id', ''),
+        ]);
 
         return $this->responseData($result);
     }
@@ -76,7 +60,6 @@ class RptFinanceController extends Controller
         }
         else
         {
-
             $result = $model->getRptLabaRugi([
                 'dari' => $request->input('dari'),
                 'sampai' => $request->input('sampai'),
@@ -91,23 +74,9 @@ class RptFinanceController extends Controller
     {
         $model = new RptFinance();
 
-        $user = new User();
-        $cek = $user->cekLevel(Auth::user()->currentAccessToken()['namauser']);
-
-        if ($cek->kdjabatan=='USR')
-        {
-            $result = $model->getRptNeraca([
-                'periode' => $request->input('periode'),
-                'company_id' => Auth::user()->currentAccessToken()['company_id']
-            ]);
-        }
-        else
-        {
-            $result = $model->getRptNeraca([
-                'periode' => $request->input('periode'),
-                'company_id' => $request->input('company_id', Auth::user()->currentAccessToken()['company_id'])
-            ]);
-        }
+        $result = $model->getRptNeraca([
+            'periode' => $request->input('periode'),
+        ]);
 
         return $this->responseData($result);
     }
