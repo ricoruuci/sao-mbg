@@ -40,7 +40,7 @@ class RptPembelian extends BaseModel
 
         $result = DB::select(
             "SELECT a.nota as nota_beli,a.KdSupplier as supplier_id,b.NmSupplier as supplier_name,a.tglbeli as transdate,
-            a.Tax as ppn,a.stpb as sub_total,a.ttltax as total_ppn,a.TTLPb as grand_total,a.upddate,a.upduser
+            a.Tax as ppn,a.stpb as sub_total,isnull(a.discamount,0) as disc_amount,a.ttltax as total_ppn,a.TTLPb as grand_total,a.upddate,a.upduser
             from TrBeliBBHd a inner join MsSupplier b on a.KdSupplier=b.KdSupplier
             where convert(varchar(10),a.tglbeli,112) between :dari and :sampai and a.nota like :search_keyword
             and isnull(b.nmSupplier,'') like :supplier_keyword
