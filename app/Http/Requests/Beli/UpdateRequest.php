@@ -17,6 +17,7 @@ class UpdateRequest extends BaseRequest
             'nota_beli' => 'required|string',
             'transdate' => 'required',
             'supplier_id' => 'required|string',
+            'disc_amount' => 'required|numeric|min:0',
             'ppn' => 'required|numeric|min:0',
             'note' => 'nullable|string',
             'detail' => 'nullable|array',

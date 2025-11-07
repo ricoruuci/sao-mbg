@@ -19,8 +19,8 @@ class BeliHd extends BaseModel
     function insertData($params)
     {
         $result = DB::insert(
-            "INSERT trbelibbhd (nota,kdsupplier,tglbeli,tax,keterangan,upddate,upduser,ttlpb,stpb,ttltax,company_id,interest,fg_upload)
-            VALUES (:nota, :kdsupplier, :transdate, :tax, :note, getdate(), :upduser, 0, 0, 0,:company_id, :interest, :fgupload)",
+            "INSERT trbelibbhd (nota,kdsupplier,tglbeli,tax,keterangan,upddate,upduser,ttlpb,stpb,ttltax,company_id,interest,fg_upload,discamount)
+            VALUES (:nota, :kdsupplier, :transdate, :tax, :note, getdate(), :upduser, 0, 0, 0,:company_id, :interest, :fgupload, :discamount)",
             [
                 'nota' => $params['nota_beli'],
                 'kdsupplier' => $params['supplier_id'],
@@ -30,7 +30,8 @@ class BeliHd extends BaseModel
                 'upduser' => $params['upduser'],
                 'company_id' => $params['company_id'],
                 'interest' => 0,
-                'fgupload' => 'T'
+                'fgupload' => 'T',
+                'discamount' => $params['discamount']
             ]
         );
 
@@ -47,7 +48,8 @@ class BeliHd extends BaseModel
             keterangan = :note,
             upddate = getdate(),
             upduser = :upduser,
-            kdsupplier = :kdsupplier
+            kdsupplier = :kdsupplier,
+            discamount = :discamount
             WHERE nota = :nota",
             [
                 'nota' => $params['nota_beli'],
@@ -55,7 +57,8 @@ class BeliHd extends BaseModel
                 'tax' => $params['ppn'],
                 'note' => $params['note'],
                 'upduser' => $params['upduser'],
-                'kdsupplier' => $params['supplier_id']
+                'kdsupplier' => $params['supplier_id'],
+                'discamount' => $params['discamount']
             ]
         );
 
@@ -90,7 +93,7 @@ class BeliHd extends BaseModel
         $result = DB::select(
             "SELECT a.nota as nota_beli,a.kdsupplier as supplier_id,b.nmsupplier as supplier_name,
             a.tglbeli as transdate,a.tax as ppn,keterangan as note,a.upddate,a.upduser,
-            a.stpb as sub_total,a.ttltax as total_ppn,a.ttlpb as grand_total,
+            a.stpb as sub_total,isnull(a.discamount,0) as disc_amount,a.ttltax as total_ppn,a.ttlpb as grand_total,
             a.company_id,c.company_code,c.company_name,c.company_address
             from trbelibbhd a
             inner join mssupplier b on a.kdsupplier=b.kdsupplier
@@ -110,7 +113,7 @@ class BeliHd extends BaseModel
         $result = DB::selectOne(
             "SELECT a.nota as nota_beli,a.kdsupplier as supplier_id,b.nmsupplier as supplier_name,
             a.tglbeli as transdate,a.tax as ppn,keterangan as note,a.upddate,a.upduser,
-            a.stpb as sub_total,a.ttltax as total_ppn,a.ttlpb as grand_total,
+            a.stpb as sub_total,isnull(a.discamount,0) as disc_amount,a.ttltax as total_ppn,a.ttlpb as grand_total,
             a.company_id,c.company_code,c.company_name,c.company_address
             from trbelibbhd a
             inner join mssupplier b on a.kdsupplier=b.kdsupplier
@@ -127,10 +130,11 @@ class BeliHd extends BaseModel
     function hitungTotal($id)
     {
         $result = DB::selectOne(
-            "SELECT k.nota,k.kdsupplier,k.total as sub_total,k.total*k.tax*0.01 as total_ppn,k.total*(1+(k.tax*0.01)) as grand_total from (
-            select a.Nota,b.KdSupplier,isnull(sum(a.jml*a.harga),0) as total,b.tax
+            "SELECT k.nota,k.kdsupplier,k.total as sub_total,(k.total-k.discamount)*k.tax*0.01 as total_ppn,
+            (k.total-k.discamount)*(1+(k.tax*0.01)) as grand_total from (
+            select a.Nota,b.KdSupplier,isnull(sum(a.jml*a.harga),0) as total,b.tax,isnull(b.discamount,0) as discamount
             from TrBeliBBDt a inner join TrBeliBBHd b on a.Nota=b.Nota and a.KdSupplier=b.KdSupplier
-            group by a.nota,b.KdSupplier,b.tax
+            group by a.nota,b.KdSupplier,b.tax,b.discamount
             ) as K
             where k.nota=:id ",
             [

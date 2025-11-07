@@ -19,11 +19,13 @@ class SetRekening extends BaseModel
     function getAllData($params)
     {
         $result = DB::selectOne(
-            "SELECT 
+            "SELECT
                 a.drpb as rek_pembelian,
                 (select x.rekeningname from cfmsrekening x where x.rekeningid=a.drpb) as rek_name_pembelian,
                 a.drtaxpb as rek_ppn_beli,
                 (select x.rekeningname from cfmsrekening x where x.rekeningid=a.drtaxpb) as rek_name_ppn_beli,
+                a.drdiscap as rek_disc_beli,
+                (select x.rekeningname from cfmsrekening x where x.rekeningid=a.drdiscap) as rek_name_disc_beli,
                 a.drap as rek_hutang,
                 (select x.rekeningname from cfmsrekening x where x.rekeningid=a.drap) as rek_name_hutang,
                 a.drpj as rek_penjualan,
@@ -44,9 +46,10 @@ class SetRekening extends BaseModel
     function updateData($param)
     {
         $result = DB::update(
-            "UPDATE setrekening SET 
+            "UPDATE setrekening SET
             drpb = :drpb,
             drtaxpb = :drtaxpb,
+            drdiscap = :drdiscap,
             drap = :drap,
             drpj = :drpj,
             drtaxpj = :drtaxpj,
@@ -56,6 +59,7 @@ class SetRekening extends BaseModel
             [
                 'drpb' => $param['rek_pembelian'],
                 'drtaxpb' => $param['rek_ppn_beli'],
+                'drdiscap' => $param['rek_disc_beli'],
                 'drap' => $param['rek_hutang'],
                 'drpj' => $param['rek_penjualan'],
                 'drtaxpj' => $param['rek_ppn_jual'],

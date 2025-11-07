@@ -16,6 +16,7 @@ class UpdateRequest extends BaseRequest
         return [
             'rek_pembelian' => 'required|string',
             'rek_penjualan' => 'required|string',
+            'rek_disc_beli' => 'required|string',
             'rek_ppn_beli' => 'required|string',
             'rek_ppn_jual' => 'required|string',
             'rek_hutang' => 'required|string',

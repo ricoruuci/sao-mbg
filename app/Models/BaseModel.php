@@ -33,6 +33,7 @@ class BaseModel extends Model
         $addCon9 = '';
         $addCon10 = '';
         $addCon11 = '';
+        $addCon12 = '';
 
         if (!empty($params['company_id']) && $params['company_id'] != 0)
         {
@@ -49,9 +50,10 @@ class BaseModel extends Model
             $addCon9 = "where company_id = $companyId ";
             $addCon10 = "where company_id = $companyId ";
             $addCon11 = "where company_id = $companyId ";
+            $addCon12 = "where company_id = $companyId ";
         }
 
-        $default = DB::selectOne("select drkas,drar,drap,drtaxpb,drtaxpj,drpb,drpj,drlaba from setrekening");
+        $default = DB::selectOne("select drkas,drar,drap,drtaxpb,drtaxpj,drpb,drpj,drlaba,drdiscap from setrekening");
 
         $rek_kas = "'".$default->drkas."'" ?? '';
         $rek_ar = "'".$default->drar."'" ?? '';
@@ -61,6 +63,7 @@ class BaseModel extends Model
         $rek_pb = "'".$default->drpb."'" ?? '';
         $rek_pj = "'".$default->drpj."'" ?? '';
         $rek_laba = "'".$default->drlaba."'" ?? '';
+        $rek_discap = "'".$default->drdiscap."'" ?? '';
 
         $result =
             "SELECT a.rekeningid,b.transdate,a.jenis,isnull(a.amount,0) as amount,'IDR' as currid,1 as rate,'T' as fgpayment,a.voucherid,a.note
@@ -95,7 +98,9 @@ class BaseModel extends Model
             */
             select $rek_pb,TglBeli,'d',isnull(STPb,0),'IDR',1,'T',nota,nota from TrBeliBBHd $addCon9 union all
             select $rek_taxpb,TglBeli,'d',isnull(TTLTax,0),'IDR',1,'T',nota,nota from TrBeliBBHd $addCon10 union all
-            select $rek_ap,TglBeli,'k',isnull(TTLPb,0),'IDR',1,'T',nota,nota from TrBeliBBHd $addCon11 ";
+            select $rek_ap,TglBeli,'k',isnull(TTLPb,0),'IDR',1,'T',nota,nota from TrBeliBBHd $addCon11 union all
+            select $rek_discap,TglBeli,'k',isnull(DiscAmount,0),'IDR',1,'T',nota,nota from TrBeliBBHd $addCon12
+            ";
 
         return $result;
     }

@@ -31,6 +31,7 @@ class AllFoto extends BaseModel
 
     function insertData($params)
     {
+        //fgtrans 1 = pembelian, 2 = keuangan
         $result = DB::insert(
             "INSERT INTO allfoto (voucherno,foto,note,fgtrans,upduser,upddate)
             VALUES (:voucherid, :foto, :keterangan, :fgtrans, :upduser, getdate())",

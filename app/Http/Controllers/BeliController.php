@@ -45,6 +45,7 @@ class BeliController extends Controller
         $params = [
             'transdate' => $request->transdate,
             'supplier_id' => $request->supplier_id,
+            'discamount' => $request->disc_amount ?? 0,
             'ppn' => $request->ppn ?? 0,
             'note' => $request->note ?? '',
             'upduser' => Auth::user()->currentAccessToken()['namauser'],
@@ -200,6 +201,7 @@ class BeliController extends Controller
         $params = [
             'nota_beli' => $request->nota_beli,
             'transdate' => $request->transdate,
+            'discamount' => $request->disc_amount ?? 0,
             'supplier_id' => $request->supplier_id,
             'ppn' => $request->ppn ?? 0,
             'note' => $request->note ?? '',
@@ -401,6 +403,7 @@ class BeliController extends Controller
     {
         $model = new BeliHd();
         $model_detail = new BeliDt();
+        $model_foto = new AllFoto();
 
         $id = $request->nota_beli;
 
@@ -423,6 +426,8 @@ class BeliController extends Controller
             if ($deleteResult == false) {
                 return $this->responseError('Gagal menghapus data Nota Beli', 500);
             }
+
+            $deletefoto = $model_foto->deleteData($id);
 
             DB::commit();
             return $this->responseSuccess('Data Nota Beli berhasil dihapus', 200, ['nota_beli' => $id]);
