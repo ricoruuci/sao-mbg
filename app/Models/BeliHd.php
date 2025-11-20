@@ -133,6 +133,65 @@ class BeliHd extends BaseModel
         return $result;
     }
 
+    function getDataByIdAdjustment($id)
+    {
+        $result = DB::selectOne(
+            "SELECT
+                a.nota as nota_beli,
+                a.kdsupplier as supplier_id,
+                b.nmsupplier as supplier_name,
+                isnull(b.hp,'') as supplier_phone,
+                isnull(b.cp,'') as supplier_pic,
+                a.tglbeli as transdate,
+                a.tax as ppn,
+                a.keterangan as note,
+                a.upddate,
+                a.upduser,
+
+                -- TOTAL SUBTOTAL SETELAH ADJUSTMENT
+                SUM(
+                    (CASE WHEN ISNULL(a.fg_upload,'T')='T'
+                        THEN d.jml + ROUND(d.jml * ISNULL(a.interest,0) * 0.01, 0)
+                        ELSE d.jml END) * d.harga
+                ) as sub_total,
+
+                isnull(a.discamount,0) as disc_amount,
+                a.ttltax as total_ppn,
+
+                -- GRAND TOTAL SETELAH ADJUSTMENT
+                SUM(
+                    (CASE WHEN ISNULL(a.fg_upload,'T')='T'
+                        THEN d.jml + ROUND(d.jml * ISNULL(a.interest,0) * 0.01, 0)
+                        ELSE d.jml END) * d.harga
+                )
+                - isnull(a.discamount,0)
+                + a.ttltax as grand_total,
+
+                isnull(a.fg_upload,'T') as fg_upload,
+                CASE WHEN isnull(a.fg_upload,'T')='T' THEN 'Belum Upload' ELSE 'Sudah Upload' END as status_upload,
+
+                a.company_id,
+                c.company_code,
+                c.company_name,
+                c.company_address
+
+            FROM trbelibbhd a
+            INNER JOIN mssupplier b ON a.kdsupplier=b.kdsupplier
+            LEFT JOIN mscabang c ON a.company_id = c.company_id
+            LEFT JOIN trbelibbdt d ON a.nota = d.nota AND a.kdsupplier = d.kdsupplier
+
+            WHERE a.nota = :id
+            GROUP BY
+                a.nota,a.kdsupplier,b.nmsupplier,b.hp,b.cp,a.tglbeli,a.tax,
+                a.keterangan,a.upddate,a.upduser,a.discamount,a.ttltax,
+                a.fg_upload,a.company_id,c.company_code,c.company_name,c.company_address",
+            ['id' => $id]
+        );
+
+        return $result;
+    }
+
+
     function hitungTotal($id)
     {
         $result = DB::selectOne(

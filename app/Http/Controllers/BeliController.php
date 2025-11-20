@@ -407,7 +407,7 @@ class BeliController extends Controller
 
         $model_foto = new AllFoto();
 
-        $result = $model_header->getDataById($request->nota_beli ?? '');
+        $result = $model_header->getDataByIdAdjustment($request->nota_beli ?? '');
 
         if ($result) {
             $header = $result;
