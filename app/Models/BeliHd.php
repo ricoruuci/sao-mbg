@@ -92,8 +92,11 @@ class BeliHd extends BaseModel
 
         $result = DB::select(
             "SELECT a.nota as nota_beli,a.kdsupplier as supplier_id,b.nmsupplier as supplier_name,
+            isnull(b.hp,'') as supplier_phone,isnull(b.cp,'') as supplier_pic,
             a.tglbeli as transdate,a.tax as ppn,keterangan as note,a.upddate,a.upduser,
             a.stpb as sub_total,isnull(a.discamount,0) as disc_amount,a.ttltax as total_ppn,a.ttlpb as grand_total,
+            isnull(a.fg_upload,'T') as fg_upload,
+            case when isnull(a.fg_upload,'T')='T' then 'Belum Upload' else 'Sudah Upload' end as status_upload,
             a.company_id,c.company_code,c.company_name,c.company_address
             from trbelibbhd a
             inner join mssupplier b on a.kdsupplier=b.kdsupplier
@@ -112,8 +115,11 @@ class BeliHd extends BaseModel
     {
         $result = DB::selectOne(
             "SELECT a.nota as nota_beli,a.kdsupplier as supplier_id,b.nmsupplier as supplier_name,
+            isnull(b.hp,'') as supplier_phone,isnull(b.cp,'') as supplier_pic,
             a.tglbeli as transdate,a.tax as ppn,keterangan as note,a.upddate,a.upduser,
             a.stpb as sub_total,isnull(a.discamount,0) as disc_amount,a.ttltax as total_ppn,a.ttlpb as grand_total,
+            isnull(a.fg_upload,'T') as fg_upload,
+            case when isnull(a.fg_upload,'T')='T' then 'Belum Upload' else 'Sudah Upload' end as status_upload,
             a.company_id,c.company_code,c.company_name,c.company_address
             from trbelibbhd a
             inner join mssupplier b on a.kdsupplier=b.kdsupplier

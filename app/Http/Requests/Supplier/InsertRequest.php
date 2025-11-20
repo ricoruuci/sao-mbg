@@ -15,6 +15,8 @@ class InsertRequest extends BaseRequest
     {
         return [
             'supplier_name' => 'required|string|max:30',
+            'supplier_phone' => 'nullable|string|max:15',
+            'supplier_pic' => 'nullable|string|max:50',
         ];
     }
 }

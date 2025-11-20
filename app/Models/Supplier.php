@@ -19,8 +19,8 @@ class Supplier extends BaseModel
     function getAllData($params)
     {
         $result = DB::select(
-            "SELECT kdsupplier as supplier_id,nmsupplier as supplier_name,upddate,upduser 
-            from mssupplier 
+            "SELECT kdsupplier as supplier_id,nmsupplier as supplier_name,isnull(hp,'') as phone,isnull(cp,'') as pic,upddate,upduser
+            from mssupplier
             where nmsupplier like :search_keyword
             order by nmsupplier ",
             [
@@ -34,8 +34,8 @@ class Supplier extends BaseModel
     function getDataById($id)
     {
         $result = DB::selectOne(
-            "SELECT kdsupplier as supplier_id,nmsupplier as supplier_name,upddate,upduser 
-            from mssupplier 
+            "SELECT kdsupplier as supplier_id,nmsupplier as supplier_name,isnull(hp,'') as phone,isnull(cp,'') as pic,upddate,upduser
+            from mssupplier
             where kdsupplier = :id",
             [
                 'id' => $id
@@ -60,12 +60,14 @@ class Supplier extends BaseModel
     function insertData($params)
     {
         $result = DB::insert(
-            "INSERT INTO mssupplier (kdsupplier,nmsupplier,upddate,upduser) 
-            VALUES (:kdsupplier, :nmsupplier, getdate(), :upduser)",
+            "INSERT INTO mssupplier (kdsupplier,nmsupplier,upddate,upduser, hp, cp)
+            VALUES (:kdsupplier, :nmsupplier, getdate(), :upduser, :hp, :cp)",
             [
                 'kdsupplier' => $params['supplier_id'],
                 'nmsupplier' => $params['supplier_name'],
-                'upduser' => $params['upduser']
+                'upduser' => $params['upduser'],
+                'hp' => $params['phone'],
+                'cp' => $params['pic']
             ]
         );
 
@@ -75,15 +77,19 @@ class Supplier extends BaseModel
     function updateData($params)
     {
         $result = DB::update(
-            "UPDATE mssupplier SET 
-            nmsupplier = :nmsupplier, 
-            upddate = getdate(), 
-            upduser = :upduser 
+            "UPDATE mssupplier SET
+            nmsupplier = :nmsupplier,
+            upddate = getdate(),
+            upduser = :upduser,
+            hp = :hp,
+            cp = :cp
             WHERE kdsupplier = :kdsupplier",
             [
                 'kdsupplier' => $params['supplier_id'],
                 'nmsupplier' => $params['supplier_name'],
-                'upduser' => $params['upduser']
+                'upduser' => $params['upduser'],
+                'hp' => $params['phone'],
+                'cp' => $params['pic']
             ]
         );
 

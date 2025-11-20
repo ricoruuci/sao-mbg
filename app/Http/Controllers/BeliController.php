@@ -399,6 +399,43 @@ class BeliController extends Controller
 
     }
 
+    public function getDataByIdAdjustment(GetRequestById $request)
+    {
+        $model_header = new BeliHd();
+
+        $model_detail = new BeliDt();
+
+        $model_foto = new AllFoto();
+
+        $result = $model_header->getDataById($request->nota_beli ?? '');
+
+        if ($result) {
+            $header = $result;
+
+            $detail_result = $model_detail->getDataByIdAdjustment($result->nota_beli ?? '');
+
+            $detail = !empty($detail_result) ? $detail_result : [];
+
+            $detail_foto_result = $model_foto->getDataById($result->nota_beli ?? '');
+
+            $detailfoto = !empty($detail_foto_result) ? $detail_foto_result : [];
+        }
+        else {
+            $header = [];
+            $detail = [];
+            $detailfoto = [];
+        }
+
+        $response = [
+            'header' => $header,
+            'detail' => $detail,
+            'detailfoto' => $detailfoto
+        ];
+
+        return $this->responseData($response);
+
+    }
+
     public function deleteData(DeleteRequest $request)
     {
         $model = new BeliHd();

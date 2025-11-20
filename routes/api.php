@@ -110,6 +110,7 @@ Route::delete('rekening', [RekeningController::class, 'deleteData'])->middleware
 
 Route::get('beli', [BeliController::class, 'getListData'])->middleware('auth:sanctum');
 Route::get('beli-by-id', [BeliController::class, 'getDataById'])->middleware('auth:sanctum');
+Route::get('beli-by-id-adjustment', [BeliController::class, 'getDataByIdAdjustment'])->middleware('auth:sanctum');
 Route::post('beli', [BeliController::class, 'insertData'])->middleware('auth:sanctum');
 Route::patch('beli', [BeliController::class, 'updateData'])->middleware('auth:sanctum');
 Route::delete('beli', [BeliController::class, 'deleteData'])->middleware('auth:sanctum');

@@ -22,9 +22,9 @@ class CFTrKKBBHd extends BaseModel //nama class
 
         $result = DB::insert(
             "INSERT INTO cftrkkbbhd
-            (voucherid,transdate,actor,bankid,note,flagkkbb,upddate,upduser,currid,total,company_id) 
-            VALUES 
-            (:voucherid,:transdate,:actor,:bankid,:note,:flagkkbb,getDate(),:upduser,:currid,:total,:company_id)", 
+            (voucherid,transdate,actor,bankid,note,flagkkbb,upddate,upduser,currid,total,company_id)
+            VALUES
+            (:voucherid,:transdate,:actor,:bankid,:note,:flagkkbb,getDate(),:upduser,:currid,:total,:company_id)",
             [
             'voucherid' => $param['voucherid'],
             'transdate' => $param['transdate'],
@@ -37,7 +37,7 @@ class CFTrKKBBHd extends BaseModel //nama class
             'total' => $param['total'],
             'company_id' => $param['company_id']
             ]
-        );        
+        );
 
         return $result;
     }
@@ -52,10 +52,11 @@ class CFTrKKBBHd extends BaseModel //nama class
 
         $addCon = ''; // default kosong
 
-        if (!empty($params['company_id'])) 
+        if (!empty($params['company_id']))
         {
             $addCon = 'and a.company_id =:company_id ';
-            $binding = [
+            $binding =
+            [
                 'dari' => $param['dari'],
                 'sampai' => $param['sampai'],
                 'flagkkbb' => $param['flagkkbb'],
@@ -67,7 +68,8 @@ class CFTrKKBBHd extends BaseModel //nama class
         }
         else
         {
-            $binding = [
+            $binding =
+            [
                 'dari' => $param['dari'],
                 'sampai' => $param['sampai'],
                 'flagkkbb' => $param['flagkkbb'],
@@ -78,24 +80,24 @@ class CFTrKKBBHd extends BaseModel //nama class
         }
 
         $result = DB::select(
-            "SELECT 
+           "SELECT
             case when a.flagkkbb in ('apb','arb','bm','bk') then 'Y' else 'T' end as txnbank,
             case when a.FlagKKBB in ('ark','arc','arb','apk','apb','apc') then 'T'
 	        when a.FlagKKBB in ('ju') then 'X' else 'Y' end as userinput,
-            case when a.FlagKKBB in ('arc','apc') then 'Y' else 'T' end as dualtgl, 
+            case when a.FlagKKBB in ('arc','apc') then 'Y' else 'T' end as dualtgl,
             a.voucherid as voucher_id,a.transdate,a.actor,
             case when a.FlagKKBB in ('ark','arb','arc') then (select x.custname from MsCustomer x where x.custid=a.actor)
                  when a.FlagKKBB in ('apk','apb','apc') then (select x.NmSupplier from MsSupplier x where x.KdSupplier=a.actor)
                  else a.actor end as actor_name,
             a.bankid as bank_id,b.bankname as bank_name,a.note,a.upddate,a.upduser,a.total,
             a.company_id,c.company_code,c.company_name,c.company_address
-            from cftrkkbbhd a 
+            from cftrkkbbhd a
             left join cfmsbank b on a.bankid = b.bankid
             left join mscabang c on a.company_id = c.company_id
-			where 
-			convert(varchar(10),a.transdate,112) between :dari and :sampai and a.flagkkbb=:flagkkbb 
+			where
+			convert(varchar(10),a.transdate,112) between :dari and :sampai and a.flagkkbb=:flagkkbb
             $addCon
-            and isnull(a.bankid,'') like :bankid and isnull(a.actor,'') like :actorkeyword and a.voucherid like :voucherkeyword 
+            and isnull(a.bankid,'') like :bankid and isnull(a.actor,'') like :actorkeyword and a.voucherid like :voucherkeyword
             order by a.transdate $order",
             $binding
         );
@@ -106,18 +108,18 @@ class CFTrKKBBHd extends BaseModel //nama class
     function getData($param)
     {
         $result = DB::selectOne(
-            "SELECT 
+            "SELECT
             case when a.flagkkbb in ('apb','arb','bm','bk') then 'Y' else 'T' end as txnbank,
             case when a.FlagKKBB in ('ark','arc','arb','apk','apb','apc') then 'T'
 	        when a.FlagKKBB in ('ju') then 'X' else 'Y' end as userinput,
-            case when a.FlagKKBB in ('arc','apc') then 'Y' else 'T' end as dualtgl, 
+            case when a.FlagKKBB in ('arc','apc') then 'Y' else 'T' end as dualtgl,
             a.voucherid as voucher_id,a.transdate,a.actor,
             case when a.FlagKKBB in ('ark','arb','arc') then (select x.custname from MsCustomer x where x.custid=a.actor)
                  when a.FlagKKBB in ('apk','apb','apc') then (select x.NmSupplier from MsSupplier x where x.KdSupplier=a.actor)
                  else a.actor end as actor_name,
             a.bankid as bank_id,b.bankname as bank_name,a.note,a.upddate,a.upduser,a.total,
             a.company_id,c.company_code,c.company_name,c.company_address
-            from cftrkkbbhd a 
+            from cftrkkbbhd a
             left join cfmsbank b on a.bankid = b.bankid
             left join mscabang c on a.company_id = c.company_id
 			WHERE a.voucherid = :voucherid ",
@@ -132,22 +134,25 @@ class CFTrKKBBHd extends BaseModel //nama class
     function updateAllData($param)
     {
         $result = DB::update(
-            'UPDATE cftrkkbbhd SET 
+            'UPDATE cftrkkbbhd SET
                 transdate = :transdate,
                 actor = :actor,
                 bankid = :bankid,
                 note = :note,
                 currid = :currid,
-                total = :total
+                total = :total,
+                upddate = getDate(),
+                upduser = :upduser
             WHERE voucherid = :voucherid ',
             [
-            'voucherid' => $param['voucherid'],
-            'transdate' => $param['transdate'],
-            'actor' => $param['actor'],
-            'bankid' => $param['bankid'],
-            'note' => $param['note'],
-            'currid' => $param['currid'],
-            'total' => $param['total']
+                'voucherid' => $param['voucherid'],
+                'transdate' => $param['transdate'],
+                'actor' => $param['actor'],
+                'bankid' => $param['bankid'],
+                'note' => $param['note'],
+                'currid' => $param['currid'],
+                'total' => $param['total'],
+                'upduser' => $param['upduser'],
             ]
         );
 

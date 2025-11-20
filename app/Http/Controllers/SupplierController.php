@@ -41,13 +41,15 @@ class SupplierController extends Controller
         $model = new Supplier();
 
         DB::beginTransaction();
-        
+
         try {
             $autonumber = $model->beforeAutoNumber();
-            
+
             $params = [
                 'supplier_id' => $autonumber,
                 'supplier_name' => $request->supplier_name,
+                'phone' => $request->supplier_phone,
+                'pic' => $request->supplier_pic,
                 'upduser' => Auth::user()->currentAccessToken()['namauser'],
             ];
 
@@ -72,6 +74,8 @@ class SupplierController extends Controller
         $params = [
             'supplier_id' => $request->supplier_id,
             'supplier_name' => $request->supplier_name,
+            'phone' => $request->supplier_phone,
+            'pic' => $request->supplier_pic,
             'upduser' => Auth::user()->currentAccessToken()['namauser'],
         ];
 
@@ -124,7 +128,7 @@ class SupplierController extends Controller
             return $this->responseError('Terjadi kesalahan: ' . $e->getMessage(), 500);
         }
     }
-    
+
     public function getListData(GetRequest $request)
     {
         $group_model = new Supplier();

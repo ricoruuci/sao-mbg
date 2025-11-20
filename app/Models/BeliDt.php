@@ -74,6 +74,31 @@ class BeliDt extends BaseModel
         return $result;
     }
 
+    function getDataByIdAdjustment($id)
+    {
+        $result = DB::select(
+            "SELECT
+            a.nota as nota_beli,
+            a.kdbb as bahan_baku_id,
+            b.nmbb as bahan_baku_name,
+            (case when isnull(c.fg_upload,'T')='T' then a.jml+round(a.jml*isnull(c.interest,0)*0.01,0) else a.jml end) as qty,
+            a.harga as price,
+            (case when isnull(c.fg_upload,'T')='T' then a.jml+round(a.jml*isnull(c.interest,0)*0.01,0) else a.jml end)*a.harga as total,
+            a.kdsat as satuan,
+            a.upddate,
+            a.upduser
+            from trbelibbdt a
+            left join trbelibbhd c on a.nota = c.nota and a.kdsupplier=c.kdsupplier
+            left join msbahanbaku b on a.kdbb=b.kdbb
+            where a.nota = :id",
+            [
+                'id' => $id
+            ]
+        );
+
+        return $result;
+    }
+
     function deleteAllItem($id) : void
     {
         $result = DB::delete(
@@ -103,7 +128,7 @@ class BeliDt extends BaseModel
         );
 
     }
-    
+
     function updateAllTransaction($params) : void
     {
         $result = DB::delete(

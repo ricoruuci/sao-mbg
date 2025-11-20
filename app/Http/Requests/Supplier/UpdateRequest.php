@@ -16,6 +16,8 @@ class UpdateRequest extends BaseRequest
         return [
             'supplier_id' => 'required|string',
             'supplier_name' => 'required|string|max:255',
+            'supplier_phone' => 'nullable|string|max:15',
+            'supplier_pic' => 'nullable|string|max:50',
         ];
     }
 }
