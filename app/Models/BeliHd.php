@@ -150,7 +150,7 @@ class BeliHd extends BaseModel
 
                 -- TOTAL SUBTOTAL SETELAH ADJUSTMENT
                 SUM(
-                    (CASE WHEN ISNULL(a.fg_upload,'T')='T'
+                    (CASE WHEN ISNULL(a.fg_upload,'T')='Y'
                         THEN d.jml + ROUND(d.jml * ISNULL(a.interest,0) * 0.01, 0)
                         ELSE d.jml END) * d.harga
                 ) as sub_total,
@@ -160,7 +160,7 @@ class BeliHd extends BaseModel
 
                 -- GRAND TOTAL SETELAH ADJUSTMENT
                 SUM(
-                    (CASE WHEN ISNULL(a.fg_upload,'T')='T'
+                    (CASE WHEN ISNULL(a.fg_upload,'T')='Y'
                         THEN d.jml + ROUND(d.jml * ISNULL(a.interest,0) * 0.01, 0)
                         ELSE d.jml END) * d.harga
                 )

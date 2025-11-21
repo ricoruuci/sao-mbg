@@ -81,9 +81,9 @@ class BeliDt extends BaseModel
             a.nota as nota_beli,
             a.kdbb as bahan_baku_id,
             b.nmbb as bahan_baku_name,
-            (case when isnull(c.fg_upload,'T')='T' then a.jml+round(a.jml*isnull(c.interest,0)*0.01,0) else a.jml end) as qty,
+            (case when isnull(c.fg_upload,'T')='Y' then a.jml+round(a.jml*isnull(c.interest,0)*0.01,0) else a.jml end) as qty,
             a.harga as price,
-            (case when isnull(c.fg_upload,'T')='T' then a.jml+round(a.jml*isnull(c.interest,0)*0.01,0) else a.jml end)*a.harga as total,
+            (case when isnull(c.fg_upload,'T')='Y' then a.jml+round(a.jml*isnull(c.interest,0)*0.01,0) else a.jml end)*a.harga as total,
             a.kdsat as satuan,
             a.upddate,
             a.upduser
