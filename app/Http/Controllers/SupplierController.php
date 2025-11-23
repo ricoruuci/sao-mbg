@@ -51,6 +51,9 @@ class SupplierController extends Controller
                 'phone' => $request->supplier_phone,
                 'pic' => $request->supplier_pic,
                 'upduser' => Auth::user()->currentAccessToken()['namauser'],
+                'bank_branch' => $request->bank_branch,
+                'bank_account' => $request->bank_account,
+                'bank_holder' => $request->bank_holder
             ];
 
             $insertResult = $model->insertData($params);
@@ -77,6 +80,9 @@ class SupplierController extends Controller
             'phone' => $request->supplier_phone,
             'pic' => $request->supplier_pic,
             'upduser' => Auth::user()->currentAccessToken()['namauser'],
+            'bank_branch' => $request->bank_branch,
+            'bank_account' => $request->bank_account,
+            'bank_holder' => $request->bank_holder
         ];
 
         $cek = $model->cekData($request->supplier_id);

@@ -19,7 +19,8 @@ class Supplier extends BaseModel
     function getAllData($params)
     {
         $result = DB::select(
-            "SELECT kdsupplier as supplier_id,nmsupplier as supplier_name,isnull(hp,'') as phone,isnull(cp,'') as pic,upddate,upduser
+            "SELECT kdsupplier as supplier_id,nmsupplier as supplier_name,isnull(hp,'') as phone,isnull(cp,'') as pic,upddate,upduser,
+            isnull(bank_branch,'') as bank_branch, isnull(bank_account,'') as bank_account, isnull(bank_holder,'') as bank_holder
             from mssupplier
             where nmsupplier like :search_keyword
             order by nmsupplier ",
@@ -34,7 +35,8 @@ class Supplier extends BaseModel
     function getDataById($id)
     {
         $result = DB::selectOne(
-            "SELECT kdsupplier as supplier_id,nmsupplier as supplier_name,isnull(hp,'') as phone,isnull(cp,'') as pic,upddate,upduser
+            "SELECT kdsupplier as supplier_id,nmsupplier as supplier_name,isnull(hp,'') as phone,isnull(cp,'') as pic,upddate,upduser,
+            isnull(bank_branch,'') as bank_branch, isnull(bank_account,'') as bank_account, isnull(bank_holder,'') as bank_holder
             from mssupplier
             where kdsupplier = :id",
             [
@@ -60,14 +62,17 @@ class Supplier extends BaseModel
     function insertData($params)
     {
         $result = DB::insert(
-            "INSERT INTO mssupplier (kdsupplier,nmsupplier,upddate,upduser, hp, cp)
-            VALUES (:kdsupplier, :nmsupplier, getdate(), :upduser, :hp, :cp)",
+            "INSERT INTO mssupplier (kdsupplier,nmsupplier,upddate,upduser, hp, cp, bank_branch, bank_account, bank_holder)
+            VALUES (:kdsupplier, :nmsupplier, getdate(), :upduser, :hp, :cp, :bank_branch, :bank_account, :bank_holder)",
             [
                 'kdsupplier' => $params['supplier_id'],
                 'nmsupplier' => $params['supplier_name'],
                 'upduser' => $params['upduser'],
                 'hp' => $params['phone'],
-                'cp' => $params['pic']
+                'cp' => $params['pic'],
+                'bank_branch' => $params['bank_branch'],
+                'bank_account' => $params['bank_account'],
+                'bank_holder' => $params['bank_holder']
             ]
         );
 
@@ -78,18 +83,24 @@ class Supplier extends BaseModel
     {
         $result = DB::update(
             "UPDATE mssupplier SET
-            nmsupplier = :nmsupplier,
-            upddate = getdate(),
-            upduser = :upduser,
-            hp = :hp,
-            cp = :cp
+                nmsupplier = :nmsupplier,
+                upddate = getdate(),
+                upduser = :upduser,
+                hp = :hp,
+                cp = :cp,
+                bank_branch = :bank_branch,
+                bank_account = :bank_account,
+                bank_holder = :bank_holder
             WHERE kdsupplier = :kdsupplier",
             [
                 'kdsupplier' => $params['supplier_id'],
                 'nmsupplier' => $params['supplier_name'],
                 'upduser' => $params['upduser'],
                 'hp' => $params['phone'],
-                'cp' => $params['pic']
+                'cp' => $params['pic'],
+                'bank_branch' => $params['bank_branch'],
+                'bank_account' => $params['bank_account'],
+                'bank_holder' => $params['bank_holder']
             ]
         );
 

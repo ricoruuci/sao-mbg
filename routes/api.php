@@ -26,7 +26,8 @@ use App\Http\Controllers\RptInventoryController;
 use App\Http\Controllers\CabangController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\IssuedController;
-
+use App\Http\Controllers\EmployeeController;
+use App\Http\Controllers\PayrollController;
 
 Route::post('login', [AuthController::class, 'login']);
 Route::post('logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
@@ -85,6 +86,12 @@ Route::post('supplier', [SupplierController::class, 'insertData'])->middleware('
 Route::patch('supplier', [SupplierController::class, 'updateData'])->middleware('auth:sanctum');
 Route::delete('supplier', [SupplierController::class, 'deleteData'])->middleware('auth:sanctum');
 
+Route::get('employee', [EmployeeController::class, 'getListData'])->middleware('auth:sanctum');
+Route::get('employee-by-id', [EmployeeController::class, 'getDataById'])->middleware('auth:sanctum');
+Route::post('employee', [EmployeeController::class, 'insertData'])->middleware('auth:sanctum');
+Route::patch('employee', [EmployeeController::class, 'updateData'])->middleware('auth:sanctum');
+Route::delete('employee', [EmployeeController::class, 'deleteData'])->middleware('auth:sanctum');
+
 Route::get('penjualan', [JualController::class, 'getListData'])->middleware('auth:sanctum');
 Route::post('penjualan', [JualController::class, 'insertData'])->middleware('auth:sanctum');
 Route::patch('penjualan', [JualController::class, 'updateData'])->middleware('auth:sanctum');
@@ -120,6 +127,12 @@ Route::patch('set-rekening', [SetRekeningController::class, 'updateData'])->midd
 
 Route::get('issued', [IssuedController::class, 'getListData'])->middleware('auth:sanctum');
 Route::post('issued', [IssuedController::class, 'insertData'])->middleware('auth:sanctum');
+
+Route::get('payroll', [PayrollController::class, 'getListData'])->middleware('auth:sanctum');
+Route::get('payroll-by-id', [PayrollController::class, 'getDataById'])->middleware('auth:sanctum');
+Route::post('payroll', [PayrollController::class, 'insertData'])->middleware('auth:sanctum');
+Route::patch('payroll', [PayrollController::class, 'updateData'])->middleware('auth:sanctum');
+Route::delete('payroll', [PayrollController::class, 'deleteData'])->middleware('auth:sanctum');
 
 /*==============================================================================================================
  * Laporan

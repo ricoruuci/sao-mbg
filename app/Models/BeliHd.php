@@ -93,6 +93,7 @@ class BeliHd extends BaseModel
         $result = DB::select(
             "SELECT a.nota as nota_beli,a.kdsupplier as supplier_id,b.nmsupplier as supplier_name,
             isnull(b.hp,'') as supplier_phone,isnull(b.cp,'') as supplier_pic,
+            isnull(b.bank_branch,'') as bank_branch, isnull(b.bank_account,'') as bank_account, isnull(b.bank_holder,'') as bank_holder,
             a.tglbeli as transdate,a.tax as ppn,keterangan as note,a.upddate,a.upduser,
             a.stpb as sub_total,isnull(a.discamount,0) as disc_amount,a.ttltax as total_ppn,a.ttlpb as grand_total,
             isnull(a.fg_upload,'T') as fg_upload,
@@ -116,6 +117,7 @@ class BeliHd extends BaseModel
         $result = DB::selectOne(
             "SELECT a.nota as nota_beli,a.kdsupplier as supplier_id,b.nmsupplier as supplier_name,
             isnull(b.hp,'') as supplier_phone,isnull(b.cp,'') as supplier_pic,
+            isnull(b.bank_branch,'') as bank_branch, isnull(b.bank_account,'') as bank_account, isnull(b.bank_holder,'') as bank_holder,
             a.tglbeli as transdate,a.tax as ppn,keterangan as note,a.upddate,a.upduser,
             a.stpb as sub_total,isnull(a.discamount,0) as disc_amount,a.ttltax as total_ppn,a.ttlpb as grand_total,
             isnull(a.fg_upload,'T') as fg_upload,
@@ -142,6 +144,9 @@ class BeliHd extends BaseModel
                 b.nmsupplier as supplier_name,
                 isnull(b.hp,'') as supplier_phone,
                 isnull(b.cp,'') as supplier_pic,
+                isnull(b.bank_branch,'') as bank_branch,
+                isnull(b.bank_account,'') as bank_account,
+                isnull(b.bank_holder,'') as bank_holder,
                 a.tglbeli as transdate,
                 a.tax as ppn,
                 a.keterangan as note,
