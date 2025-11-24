@@ -189,8 +189,12 @@ class BeliHd extends BaseModel
             GROUP BY
                 a.nota,a.kdsupplier,b.nmsupplier,b.hp,b.cp,a.tglbeli,a.tax,
                 a.keterangan,a.upddate,a.upduser,a.discamount,a.ttltax,
-                a.fg_upload,a.company_id,c.company_code,c.company_name,c.company_address",
-            ['id' => $id]
+                a.fg_upload,a.company_id,c.company_code,c.company_name,c.company_address,
+                b.bank_branch,b.bank_account,b.bank_holder
+                ",
+            [
+                'id' => $id
+            ]
         );
 
         return $result;
