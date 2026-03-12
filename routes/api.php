@@ -28,6 +28,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\IssuedController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\PayrollController;
+use App\Http\Controllers\InvoiceController;
 
 Route::post('login', [AuthController::class, 'login']);
 Route::post('logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
@@ -133,6 +134,12 @@ Route::get('payroll-by-id', [PayrollController::class, 'getDataById'])->middlewa
 Route::post('payroll', [PayrollController::class, 'insertData'])->middleware('auth:sanctum');
 Route::patch('payroll', [PayrollController::class, 'updateData'])->middleware('auth:sanctum');
 Route::delete('payroll', [PayrollController::class, 'deleteData'])->middleware('auth:sanctum');
+
+Route::get('invoice', [InvoiceController::class, 'getListData'])->middleware('auth:sanctum');
+Route::get('invoice-by-id', [InvoiceController::class, 'getDataById'])->middleware('auth:sanctum');
+Route::post('invoice', [InvoiceController::class, 'insertData'])->middleware('auth:sanctum');
+Route::patch('invoice', [InvoiceController::class, 'updateData'])->middleware('auth:sanctum');
+Route::delete('invoice', [InvoiceController::class, 'deleteData'])->middleware('auth:sanctum');
 
 /*==============================================================================================================
  * Laporan
