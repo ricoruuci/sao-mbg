@@ -186,7 +186,16 @@ class InvoiceHd extends BaseModel
 
     public function beforeAutoNumber($invoice_date,$company_code = 'MBG')
     {
-        $tahunBulan = '/' . $company_code . '/' . substr($invoice_date, 2, 2) . '/' . substr($invoice_date, 4, 2) . '/';
+        $timestamp = strtotime($invoice_date);
+
+        if ($timestamp === false) {
+            $timestamp = time();
+        }
+
+        $tahun = date('y', $timestamp);
+        $bulan = date('m', $timestamp);
+
+        $tahunBulan = '/' . $company_code . '/' . $tahun . '/' . $bulan . '/';
         
         $autoNumber = $this->autoNumber($this->table, 'invoice_code', 'INV'.$tahunBulan, '000');
 
