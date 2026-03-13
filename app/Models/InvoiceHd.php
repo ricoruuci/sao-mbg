@@ -195,7 +195,7 @@ class InvoiceHd extends BaseModel
         $tahun = date('y', $timestamp);
         $bulan = date('m', $timestamp);
 
-        $tahunBulan = '/' . $company_code . '/' . $tahun . '/' . $bulan . '/';
+        $tahunBulan = '/MBG/' . $tahun . '/' . $bulan . '/';
         
         $autoNumber = $this->autoNumber($this->table, 'invoice_code', 'INV'.$tahunBulan, '000');
 
