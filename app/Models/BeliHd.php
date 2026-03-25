@@ -251,6 +251,18 @@ class BeliHd extends BaseModel
         return $result;
     }
 
+    function cekBayar($id)
+    {
+        $result = DB::selectOne(
+            "SELECT note from cftrkkbbdt WHERE note = :id ",
+            [
+                'id' => $id
+            ]
+        );
+
+        return $result;
+    }
+
     public function beforeAutoNumber($transdate,$company_code)
     {
         $tahunBulan = '/' . substr($transdate, 2, 2) . '/' . substr($transdate, 4, 2) . '/';

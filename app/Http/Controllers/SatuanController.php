@@ -12,6 +12,7 @@ use App\Traits\HttpResponse;
 use App\Http\Requests\Satuan\InsertRequest;
 use App\Http\Requests\Satuan\DeleteRequest;
 use App\Http\Requests\Satuan\GetRequest;
+use App\Http\Requests\Satuan\GetAllSatuanRequest;
 use App\Http\Requests\Satuan\GetRequestById;
 use Illuminate\Support\Facades\Auth;
 
@@ -40,8 +41,8 @@ class SatuanController extends Controller
         $model = new Satuan();
 
         DB::beginTransaction();
-        
-        try { 
+
+        try {
             $params = [
                 'satuan' => $request->satuan
             ];
@@ -93,7 +94,7 @@ class SatuanController extends Controller
             return $this->responseError('Terjadi kesalahan: ' . $e->getMessage(), 500);
         }
     }
-    
+
     public function getListData(GetRequest $request)
     {
         $group_model = new Satuan();
@@ -103,6 +104,22 @@ class SatuanController extends Controller
         ];
 
         $result = $group_model->getAllData($params);
+
+        $resultPaginated = $this->arrayPaginator($request, $result);
+
+        return $this->responsePagination($resultPaginated);
+
+    }
+
+    public function getAllSatuan(GetAllSatuanRequest $request)
+    {
+        $group_model = new Satuan();
+
+        $params = [
+            'search_keyword' => $request->search_keyword ?? '',
+        ];
+
+        $result = $group_model->getAllSatuanBarang($params);
 
         $resultPaginated = $this->arrayPaginator($request, $result);
 

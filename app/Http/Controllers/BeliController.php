@@ -198,6 +198,11 @@ class BeliController extends Controller
             return $this->responseError('supplier tidak ada atau tidak ditemukan', 400);
         }
 
+        $cek = $model->cekBayar($request->nota_beli);
+        if ($cek == true) {
+            return $this->responseError('Nota beli sudah dibayar, tidak bisa dihapus', 404);
+        }
+
         $params = [
             'nota_beli' => $request->nota_beli,
             'transdate' => $request->transdate,
@@ -451,6 +456,11 @@ class BeliController extends Controller
 
         if ($cek->fg_upload == 'Y') {
             return $this->responseError('Nota sudah pernah di-upload, tidak bisa dihapus', 404);
+        }
+
+        $cek = $model->cekBayar($request->nota_beli);
+        if ($cek == true) {
+            return $this->responseError('Nota beli sudah dibayar, tidak bisa dihapus', 404);
         }
 
         DB::beginTransaction();

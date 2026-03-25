@@ -3,6 +3,7 @@
 namespace App\Http\Requests\BahanBaku;
 
 use App\Http\Requests\BaseRequest;
+use Illuminate\Validation\Validator;
 
 class UpdateRequest extends BaseRequest
 {
@@ -21,5 +22,14 @@ class UpdateRequest extends BaseRequest
             'konversi' => 'required|numeric',
             'group_bahan_baku_id' => 'required|string',
         ];
+    }
+
+    public function withValidator(Validator $validator)
+    {
+        $validator->after(function ($validator) {
+            if ($this->satuan === $this->satuan_besar && $this->konversi != 1) {
+                $validator->errors()->add('konversi', 'Konversi harus bernilai 1 jika satuan kecil sama dengan satuan besar.');
+            }
+        });
     }
 }

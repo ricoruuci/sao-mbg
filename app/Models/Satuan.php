@@ -16,6 +16,22 @@ class Satuan extends BaseModel
 
     public $timestamps = false;
 
+    function getAllSatuanBarang($params)
+    {
+        $result = DB::select(
+            "SELECT * from (
+            select kdbb as bahan_baku_id,satbesar as satuan from MsBahanBaku union all
+            select kdbb,satkecil from MsBahanBaku
+            ) as K where isnull(satuan,'')<>'' and satuan like :search_keyword
+            order by satuan ",
+            [
+                'search_keyword' => '%' . $params['search_keyword'] . '%'
+            ]
+        );
+
+        return $result;
+    }
+
     function getAllData($params)
     {
         $result = DB::select(
@@ -68,7 +84,7 @@ class Satuan extends BaseModel
     function insertData($params)
     {
         $result = DB::insert(
-            "INSERT INTO mssatuan (kdsat) 
+            "INSERT INTO mssatuan (kdsat)
             VALUES (:kdsat)",
             [
                 'kdsat' => $params['satuan']

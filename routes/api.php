@@ -64,6 +64,7 @@ Route::post('group-menu', [GroupMenuController::class, 'insertData'])->middlewar
 Route::patch('group-menu', [GroupMenuController::class, 'updateData'])->middleware('auth:sanctum');
 Route::delete('group-menu', [GroupMenuController::class, 'deleteData'])->middleware('auth:sanctum');
 
+Route::get('satuan-barang', [SatuanController::class, 'getAllSatuan'])->middleware('auth:sanctum');
 Route::get('satuan', [SatuanController::class, 'getListData'])->middleware('auth:sanctum');
 Route::get('satuan-by-id', [SatuanController::class, 'getDataById'])->middleware('auth:sanctum');
 Route::post('satuan', [SatuanController::class, 'insertData'])->middleware('auth:sanctum');

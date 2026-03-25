@@ -102,6 +102,7 @@ class BaseModel extends Model
             select $rek_discap,TglBeli,'k',isnull(DiscAmount,0),'IDR',1,'T',nota,nota from TrBeliBBHd $addCon12
             ";
 
+        //var_dump($result); die;
         return $result;
     }
 
