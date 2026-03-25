@@ -19,9 +19,9 @@ class BahanBaku extends BaseModel
     function getAllData($params)
     {
         $result = DB::select(
-            "SELECT a.kdbb as bahan_baku_id, a.nmbb as bahan_baku_name, 
+            "SELECT a.kdbb as bahan_baku_id, a.nmbb as bahan_baku_name,
             a.satkecil as satuan, a.satbesar as satuan_besar, a.jumsat as konversi,
-            b.kdgroupbb as group_bahan_baku_id, b.nmgroupbb as group_bahan_baku_name
+            b.kdgroupbb as group_bahan_baku_id, b.nmgroupbb as group_bahan_baku_name,a.upddate,a.upduser
             FROM msbahanbaku a
             inner join msgroupbb b on a.kdgroupbb = b.kdgroupbb
             WHERE a.nmbb LIKE :search_keyword
@@ -40,12 +40,24 @@ class BahanBaku extends BaseModel
     function getDataById($id)
     {
         $result = DB::selectOne(
-            "SELECT a.kdbb as bahan_baku_id, a.nmbb as bahan_baku_name, 
+            "SELECT a.kdbb as bahan_baku_id, a.nmbb as bahan_baku_name,
             a.satkecil as satuan, a.satbesar as satuan_besar, a.jumsat as konversi,
-            b.kdgroupbb as group_bahan_baku_id, b.nmgroupbb as group_bahan_baku_name
+            b.kdgroupbb as group_bahan_baku_id, b.nmgroupbb as group_bahan_baku_name,a.upddate,a.upduser
             FROM msbahanbaku a
             inner join msgroupbb b on a.kdgroupbb = b.kdgroupbb
             WHERE a.kdbb = :id",
+            [
+                'id' => $id
+            ]
+        );
+
+        return $result;
+    }
+
+    function cekTerpakai($id)
+    {
+        $result = DB::selectOne(
+            'SELECT * from TrBeliBBDt WHERE kdbb = :id',
             [
                 'id' => $id
             ]
@@ -71,8 +83,8 @@ class BahanBaku extends BaseModel
         $result = DB::selectOne(
             "SELECT K.* from (
             SELECT kdbb,satkecil as satuan from msbahanbaku UNION ALL
-            SELECT kdbb,satbesar as satuan from msbahanbaku 
-            ) as K            
+            SELECT kdbb,satbesar as satuan from msbahanbaku
+            ) as K
             WHERE kdbb = :id ",
             [
                 'id' => $id
@@ -85,15 +97,16 @@ class BahanBaku extends BaseModel
     function insertData($params)
     {
         $result = DB::insert(
-            "INSERT INTO msbahanbaku (kdbb, nmbb, satkecil, kdgroupbb, satbesar, jumsat)
-            VALUES (:kdbb, :nmbb, :satkecil, :kdgroupbb, :satbesar, :jumsat)",
+            "INSERT INTO msbahanbaku (kdbb, nmbb, satkecil, kdgroupbb, satbesar, jumsat,upddate,upduser)
+            VALUES (:kdbb, :nmbb, :satkecil, :kdgroupbb, :satbesar, :jumsat, getdate(), :upduser)",
             [
                 'kdbb' => $params['bahan_baku_id'],
                 'nmbb' => $params['bahan_baku_name'],
                 'satkecil' => $params['satuan'],
                 'kdgroupbb' => $params['group_bahan_baku_id'],
                 'satbesar' => $params['satuan_besar'],
-                'jumsat' => $params['konversi']
+                'jumsat' => $params['konversi'],
+                'upduser' => $params['upduser']
             ]
         );
 
@@ -103,12 +116,14 @@ class BahanBaku extends BaseModel
     function updateData($params)
     {
         $result = DB::update(
-            "UPDATE msbahanbaku SET 
-            nmbb = :nmbb,
-            satkecil = :satkecil,
-            kdgroupbb = :kdgroupbb,
-            satbesar = :satbesar,
-            jumsat = :jumsat
+            "UPDATE msbahanbaku SET
+                nmbb = :nmbb,
+                satkecil = :satkecil,
+                kdgroupbb = :kdgroupbb,
+                satbesar = :satbesar,
+                jumsat = :jumsat,
+                upddate = getdate(),
+                upduser = :upduser
             WHERE kdbb = :kdbb",
             [
                 'kdbb' => $params['bahan_baku_id'],
@@ -116,7 +131,8 @@ class BahanBaku extends BaseModel
                 'satkecil' => $params['satuan'],
                 'kdgroupbb' => $params['group_bahan_baku_id'],
                 'satbesar' => $params['satuan_besar'],
-                'jumsat' => $params['konversi']
+                'jumsat' => $params['konversi'],
+                'upduser' => $params['upduser']
             ]
         );
 

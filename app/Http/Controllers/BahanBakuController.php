@@ -41,17 +41,18 @@ class BahanBakuController extends Controller
         $model = new BahanBaku();
 
         DB::beginTransaction();
-        
+
         try {
             $autonumber = $model->beforeAutoNumber();
-            
+
             $params = [
                 'bahan_baku_id' => $autonumber,
                 'bahan_baku_name' => $request->bahan_baku_name,
                 'satuan' => $request->satuan,
                 'group_bahan_baku_id' => $request->group_bahan_baku_id,
                 'satuan_besar' => $request->satuan_besar,
-                'konversi' => $request->konversi
+                'konversi' => $request->konversi,
+                'upduser' => Auth::user()->currentAccessToken()['namauser'],
             ];
 
             $insertResult = $model->insertData($params);
@@ -78,7 +79,8 @@ class BahanBakuController extends Controller
             'satuan' => $request->satuan,
             'group_bahan_baku_id' => $request->group_bahan_baku_id,
             'satuan_besar' => $request->satuan_besar,
-            'konversi' => $request->konversi
+            'konversi' => $request->konversi,
+            'upduser' => Auth::user()->currentAccessToken()['namauser'],
         ];
 
         $cek = $model->cekData($request->bahan_baku_id);
@@ -113,6 +115,11 @@ class BahanBakuController extends Controller
             return $this->responseError('Bahan baku tidak ditemukan', 404);
         }
 
+         $cek = $model->cekTerpakai($request->bahan_baku_id);
+         if ($cek != false) {
+             return $this->responseError('Bahan baku sedang digunakan', 400);
+         }
+
         DB::beginTransaction();
 
         try {
@@ -130,7 +137,7 @@ class BahanBakuController extends Controller
             return $this->responseError('Terjadi kesalahan: ' . $e->getMessage(), 500);
         }
     }
-    
+
     public function getListData(GetRequest $request)
     {
         $bahan_baku_model = new BahanBaku();

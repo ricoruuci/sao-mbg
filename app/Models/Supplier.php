@@ -20,7 +20,8 @@ class Supplier extends BaseModel
     {
         $result = DB::select(
             "SELECT kdsupplier as supplier_id,nmsupplier as supplier_name,isnull(hp,'') as phone,isnull(cp,'') as pic,upddate,upduser,
-            isnull(bank_branch,'') as bank_branch, isnull(bank_account,'') as bank_account, isnull(bank_holder,'') as bank_holder
+            isnull(bank_branch,'') as bank_branch, isnull(bank_account,'') as bank_account, isnull(bank_holder,'') as bank_holder,
+            upddate,upduser
             from mssupplier
             where nmsupplier like :search_keyword
             order by nmsupplier ",
@@ -36,7 +37,8 @@ class Supplier extends BaseModel
     {
         $result = DB::selectOne(
             "SELECT kdsupplier as supplier_id,nmsupplier as supplier_name,isnull(hp,'') as phone,isnull(cp,'') as pic,upddate,upduser,
-            isnull(bank_branch,'') as bank_branch, isnull(bank_account,'') as bank_account, isnull(bank_holder,'') as bank_holder
+            isnull(bank_branch,'') as bank_branch, isnull(bank_account,'') as bank_account, isnull(bank_holder,'') as bank_holder,
+            upddate,upduser
             from mssupplier
             where kdsupplier = :id",
             [

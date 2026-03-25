@@ -198,7 +198,7 @@ class BeliController extends Controller
             return $this->responseError('supplier tidak ada atau tidak ditemukan', 400);
         }
 
-        $cek = $model->cekBayar($request->nota_beli);
+        $cek = $model_header->cekBayar($request->nota_beli);
         if ($cek == true) {
             return $this->responseError('Nota beli sudah dibayar, tidak bisa dihapus', 404);
         }

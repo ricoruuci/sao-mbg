@@ -35,7 +35,7 @@ class Satuan extends BaseModel
     function getAllData($params)
     {
         $result = DB::select(
-            "SELECT kdsat as satuan from mssatuan where kdsat like :search_keyword
+            "SELECT kdsat as satuan,upduser,upddate from mssatuan where kdsat like :search_keyword
             order by kdsat ",
             [
                 'search_keyword' => '%' . $params['search_keyword'] . '%'
@@ -48,7 +48,7 @@ class Satuan extends BaseModel
     function getDataById($id)
     {
         $result = DB::selectOne(
-            "SELECT kdsat as satuan from mssatuan where kdsat = :id",
+            "SELECT kdsat as satuan,upduser,upddate from mssatuan where kdsat = :id",
             [
                 'id' => $id
             ]
@@ -84,10 +84,11 @@ class Satuan extends BaseModel
     function insertData($params)
     {
         $result = DB::insert(
-            "INSERT INTO mssatuan (kdsat)
-            VALUES (:kdsat)",
+            "INSERT INTO mssatuan (kdsat,upddate,upduser)
+            VALUES (:kdsat, GETDATE(), :upduser)",
             [
-                'kdsat' => $params['satuan']
+                'kdsat' => $params['satuan'],
+                'upduser' => $params['upduser']
             ]
         );
 

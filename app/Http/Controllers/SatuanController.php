@@ -44,7 +44,8 @@ class SatuanController extends Controller
 
         try {
             $params = [
-                'satuan' => $request->satuan
+                'satuan' => $request->satuan,
+                'upduser' => Auth::user()->currentAccessToken()['namauser'],
             ];
 
             $insertResult = $model->insertData($params);
