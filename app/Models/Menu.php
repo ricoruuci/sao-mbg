@@ -21,7 +21,8 @@ class Menu extends BaseModel
         $result = DB::select(
             "SELECT a.kdmenu as menu_id, a.nmmenu as menu_name, a.harga as price, a.jenis as fg_item,
             case when a.jenis='a' then 'makanan' else 'minuman' end as fg_item_name,
-            a.kdgroupmenu as group_menu_id, b.nmgroupmenu as group_menu_name, a.filecontent as item_picture
+            a.kdgroupmenu as group_menu_id, b.nmgroupmenu as group_menu_name, a.filecontent as item_picture,
+            a.upddate,a.upduser
             from msmenuhd a
             left join msgroupmenu b on a.kdgroupmenu=b.kdgroupmenu
             where a.nmmenu like :search_keyword
@@ -39,7 +40,8 @@ class Menu extends BaseModel
         $result = DB::selectOne(
             "SELECT a.kdmenu as menu_id, a.nmmenu as menu_name, a.harga as price, a.jenis as fg_item,
             case when a.jenis='a' then 'makanan' else 'minuman' end as fg_item_name,
-            a.kdgroupmenu as group_menu_id, b.nmgroupmenu as group_menu_name, a.filecontent as item_picture
+            a.kdgroupmenu as group_menu_id, b.nmgroupmenu as group_menu_name, a.filecontent as item_picture,
+            a.upddate,a.upduser
             from msmenuhd a
             left join msgroupmenu b on a.kdgroupmenu=b.kdgroupmenu
             where a.kdmenu = :id",
@@ -56,7 +58,8 @@ class Menu extends BaseModel
         $result = DB::select(
             "SELECT a.kdmenu as menu_id,a.nmmenu as menu_name,a.harga as price,a.jenis as fg_item,
             case when a.jenis='a' then 'makanan' else 'minuman' end as fg_item_name,
-            a.kdgroupmenu as group_menu_id,b.nmgroupmenu as group_menu_name,a.filecontent as item_picture
+            a.kdgroupmenu as group_menu_id,b.nmgroupmenu as group_menu_name,a.filecontent as item_picture,
+            a.upddate,a.upduser
             from msmenuhd a
             left join msgroupmenu b on a.kdgroupmenu=b.kdgroupmenu
             where a.kdgroupmenu = :id
@@ -98,7 +101,7 @@ class Menu extends BaseModel
     function insertData($params)
     {
         $result = DB::insert(
-            "INSERT INTO msmenuhd (kdmenu, nmmenu, harga, jenis, kdgroupmenu, filecontent, upddate, upduser) 
+            "INSERT INTO msmenuhd (kdmenu, nmmenu, harga, jenis, kdgroupmenu, filecontent, upddate, upduser)
             VALUES (:kdmenu, :nmmenu, :harga, :jenis, :kdgroupmenu, :filecontent, getdate(), :upduser)",
             [
                 'kdmenu' => $params['menu_id'],
@@ -117,14 +120,14 @@ class Menu extends BaseModel
     function updateData($params)
     {
         $result = DB::update(
-            "UPDATE msmenuhd SET 
-            nmmenu = :nmmenu, 
-            harga = :harga, 
-            jenis = :jenis, 
-            kdgroupmenu = :kdgroupmenu, 
-            filecontent = :filecontent, 
-            upddate = getdate(), 
-            upduser = :upduser 
+            "UPDATE msmenuhd SET
+            nmmenu = :nmmenu,
+            harga = :harga,
+            jenis = :jenis,
+            kdgroupmenu = :kdgroupmenu,
+            filecontent = :filecontent,
+            upddate = getdate(),
+            upduser = :upduser
             WHERE kdmenu = :kdmenu",
             [
                 'kdmenu' => $params['menu_id'],
