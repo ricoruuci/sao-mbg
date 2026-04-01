@@ -29,6 +29,7 @@ use App\Http\Controllers\IssuedController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\PayrollController;
 use App\Http\Controllers\InvoiceController;
+use App\Http\Controllers\CustomerController;
 
 Route::post('login', [AuthController::class, 'login']);
 Route::post('logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
@@ -87,6 +88,12 @@ Route::get('supplier-by-id', [SupplierController::class, 'getDataById'])->middle
 Route::post('supplier', [SupplierController::class, 'insertData'])->middleware('auth:sanctum');
 Route::patch('supplier', [SupplierController::class, 'updateData'])->middleware('auth:sanctum');
 Route::delete('supplier', [SupplierController::class, 'deleteData'])->middleware('auth:sanctum');
+
+Route::get('customer', [CustomerController::class, 'getListData'])->middleware('auth:sanctum');
+Route::get('customer-by-id', [CustomerController::class, 'getDataById'])->middleware('auth:sanctum');
+Route::post('customer', [CustomerController::class, 'insertData'])->middleware('auth:sanctum');
+Route::patch('customer', [CustomerController::class, 'updateData'])->middleware('auth:sanctum');
+Route::delete('customer', [CustomerController::class, 'deleteData'])->middleware('auth:sanctum');
 
 Route::get('employee', [EmployeeController::class, 'getListData'])->middleware('auth:sanctum');
 Route::get('employee-by-id', [EmployeeController::class, 'getDataById'])->middleware('auth:sanctum');
