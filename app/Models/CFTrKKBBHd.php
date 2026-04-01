@@ -86,8 +86,8 @@ class CFTrKKBBHd extends BaseModel //nama class
 	        when a.FlagKKBB in ('ju') then 'X' else 'Y' end as userinput,
             case when a.FlagKKBB in ('arc','apc') then 'Y' else 'T' end as dualtgl,
             a.voucherid as voucher_id,a.transdate,a.actor,
-            case when a.FlagKKBB in ('ark','arb','arc') then (select x.custname from MsCustomer x where x.custid=a.actor)
-                 when a.FlagKKBB in ('apk','apb','apc') then (select x.NmSupplier from MsSupplier x where x.KdSupplier=a.actor)
+                        case when a.FlagKKBB in ('ark','arb','arc') then (select x.customer_name from MsCustomer x where x.customer_id=a.actor)
+                  when a.FlagKKBB in ('apk','apb','apc') then (select x.NmSupplier from MsSupplier x where x.KdSupplier=a.actor)
                  else a.actor end as actor_name,
             a.bankid as bank_id,b.bankname as bank_name,a.note,a.upddate,a.upduser,a.total,
             a.company_id,c.company_code,c.company_name,c.company_address
@@ -114,8 +114,8 @@ class CFTrKKBBHd extends BaseModel //nama class
 	        when a.FlagKKBB in ('ju') then 'X' else 'Y' end as userinput,
             case when a.FlagKKBB in ('arc','apc') then 'Y' else 'T' end as dualtgl,
             a.voucherid as voucher_id,a.transdate,a.actor,
-            case when a.FlagKKBB in ('ark','arb','arc') then (select x.custname from MsCustomer x where x.custid=a.actor)
-                 when a.FlagKKBB in ('apk','apb','apc') then (select x.NmSupplier from MsSupplier x where x.KdSupplier=a.actor)
+                        case when a.FlagKKBB in ('ark','arb','arc') then (select x.customer_name from MsCustomer x where x.customer_id=a.actor)
+                  when a.FlagKKBB in ('apk','apb','apc') then (select x.NmSupplier from MsSupplier x where x.KdSupplier=a.actor)
                  else a.actor end as actor_name,
             a.bankid as bank_id,b.bankname as bank_name,a.note,a.upddate,a.upduser,a.total,
             a.company_id,c.company_code,c.company_name,c.company_address
