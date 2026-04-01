@@ -30,6 +30,7 @@ use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\PayrollController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\PurchaseOrderKitchenController;
 
 Route::post('login', [AuthController::class, 'login']);
 Route::post('logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
@@ -148,6 +149,12 @@ Route::get('invoice-by-id', [InvoiceController::class, 'getDataById'])->middlewa
 Route::post('invoice', [InvoiceController::class, 'insertData'])->middleware('auth:sanctum');
 Route::patch('invoice', [InvoiceController::class, 'updateData'])->middleware('auth:sanctum');
 Route::delete('invoice', [InvoiceController::class, 'deleteData'])->middleware('auth:sanctum');
+
+Route::get('purchase-order-kitchen', [PurchaseOrderKitchenController::class, 'getListData'])->middleware('auth:sanctum');
+Route::get('purchase-order-kitchen-by-id', [PurchaseOrderKitchenController::class, 'getDataById'])->middleware('auth:sanctum');
+Route::post('purchase-order-kitchen', [PurchaseOrderKitchenController::class, 'insertData'])->middleware('auth:sanctum');
+Route::patch('purchase-order-kitchen', [PurchaseOrderKitchenController::class, 'updateData'])->middleware('auth:sanctum');
+Route::delete('purchase-order-kitchen', [PurchaseOrderKitchenController::class, 'deleteData'])->middleware('auth:sanctum');
 
 /*==============================================================================================================
  * Laporan
