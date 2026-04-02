@@ -20,10 +20,10 @@ class PurchaseOrderKitchenHd extends BaseModel
             "INSERT INTO trpurchaseorderkitchenhd
             (purchase_order_kitchen_id, purchase_order_kitchen_date, purchase_order_kitchen_supplier_id,
             purchase_order_kitchen_supplier_name, purchase_order_kitchen_pic_name, purchase_order_kitchen_pic_phone,
-            purchase_order_kitchen_address, purchase_order_kitchen_discount, purchase_order_kitchen_tax,
+            purchase_order_kitchen_to, purchase_order_kitchen_address, purchase_order_kitchen_note, purchase_order_kitchen_discount, purchase_order_kitchen_tax,
             purchase_order_kitchen_tax_amount, purchase_order_kitchen_subtotal, purchase_order_kitchen_grandtotal,
             upddate, upduser)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 0, 0, 0, getdate(), ?)",
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0, 0, 0, getdate(), ?)",
             [
                 $params['purchase_order_kitchen_id'],
                 $params['purchase_order_kitchen_date'],
@@ -31,7 +31,9 @@ class PurchaseOrderKitchenHd extends BaseModel
                 $params['purchase_order_kitchen_supplier_name'],
                 $params['purchase_order_kitchen_pic_name'],
                 $params['purchase_order_kitchen_pic_phone'],
+                $params['purchase_order_kitchen_to'],
                 $params['purchase_order_kitchen_address'],
+                $params['purchase_order_kitchen_note'],
                 $params['purchase_order_kitchen_discount'],
                 $params['purchase_order_kitchen_tax'],
                 $params['upduser'],
@@ -49,7 +51,9 @@ class PurchaseOrderKitchenHd extends BaseModel
             purchase_order_kitchen_supplier_name = ?,
             purchase_order_kitchen_pic_name = ?,
             purchase_order_kitchen_pic_phone = ?,
+            purchase_order_kitchen_to = ?,
             purchase_order_kitchen_address = ?,
+            purchase_order_kitchen_note = ?,
             purchase_order_kitchen_discount = ?,
             purchase_order_kitchen_tax = ?,
             upddate = getdate(),
@@ -61,7 +65,9 @@ class PurchaseOrderKitchenHd extends BaseModel
                 $params['purchase_order_kitchen_supplier_name'],
                 $params['purchase_order_kitchen_pic_name'],
                 $params['purchase_order_kitchen_pic_phone'],
+                $params['purchase_order_kitchen_to'],
                 $params['purchase_order_kitchen_address'],
+                $params['purchase_order_kitchen_note'],
                 $params['purchase_order_kitchen_discount'],
                 $params['purchase_order_kitchen_tax'],
                 $params['upduser'],
@@ -77,22 +83,28 @@ class PurchaseOrderKitchenHd extends BaseModel
             a.purchase_order_kitchen_id,
             a.purchase_order_kitchen_date,
             a.purchase_order_kitchen_supplier_id,
-            a.purchase_order_kitchen_supplier_name,
-            a.purchase_order_kitchen_pic_name,
-            a.purchase_order_kitchen_pic_phone,
+            ISNULL(s.nmsupplier, a.purchase_order_kitchen_supplier_name) AS purchase_order_kitchen_supplier_name,
+            ISNULL(s.cp, a.purchase_order_kitchen_pic_name) AS purchase_order_kitchen_pic_name,
+            ISNULL(s.hp, a.purchase_order_kitchen_pic_phone) AS purchase_order_kitchen_pic_phone,
+            a.purchase_order_kitchen_to,
             a.purchase_order_kitchen_address,
+            a.purchase_order_kitchen_note,
             a.purchase_order_kitchen_discount,
             a.purchase_order_kitchen_tax,
             a.purchase_order_kitchen_tax_amount,
             a.purchase_order_kitchen_subtotal,
             a.purchase_order_kitchen_grandtotal,
+            ISNULL(s.bank_branch, '') AS purchase_order_kitchen_bank_branch,
+            ISNULL(s.bank_account, '') AS purchase_order_kitchen_bank_account,
+            ISNULL(s.bank_holder, '') AS purchase_order_kitchen_bank_holder,
             a.upddate,
             a.upduser
             FROM trpurchaseorderkitchenhd a
+            LEFT JOIN mssupplier s ON CAST(a.purchase_order_kitchen_supplier_id AS VARCHAR(50)) = s.kdsupplier
             WHERE convert(varchar(10), a.purchase_order_kitchen_date, 112) BETWEEN ? AND ?
             AND (
                 ISNULL(a.purchase_order_kitchen_id, '') LIKE ?
-                OR ISNULL(a.purchase_order_kitchen_supplier_name, '') LIKE ?
+                OR COALESCE(s.nmsupplier, a.purchase_order_kitchen_supplier_name, '') LIKE ?
             )
             ORDER BY a.purchase_order_kitchen_id DESC",
             [
@@ -111,20 +123,40 @@ class PurchaseOrderKitchenHd extends BaseModel
             a.purchase_order_kitchen_id,
             a.purchase_order_kitchen_date,
             a.purchase_order_kitchen_supplier_id,
-            a.purchase_order_kitchen_supplier_name,
-            a.purchase_order_kitchen_pic_name,
-            a.purchase_order_kitchen_pic_phone,
+            ISNULL(s.nmsupplier, a.purchase_order_kitchen_supplier_name) AS purchase_order_kitchen_supplier_name,
+            ISNULL(s.cp, a.purchase_order_kitchen_pic_name) AS purchase_order_kitchen_pic_name,
+            ISNULL(s.hp, a.purchase_order_kitchen_pic_phone) AS purchase_order_kitchen_pic_phone,
+            a.purchase_order_kitchen_to,
             a.purchase_order_kitchen_address,
+            a.purchase_order_kitchen_note,
             a.purchase_order_kitchen_discount,
             a.purchase_order_kitchen_tax,
             a.purchase_order_kitchen_tax_amount,
             a.purchase_order_kitchen_subtotal,
             a.purchase_order_kitchen_grandtotal,
+            ISNULL(s.bank_branch, '') AS purchase_order_kitchen_bank_branch,
+            ISNULL(s.bank_account, '') AS purchase_order_kitchen_bank_account,
+            ISNULL(s.bank_holder, '') AS purchase_order_kitchen_bank_holder,
             a.upddate,
             a.upduser
             FROM trpurchaseorderkitchenhd a
+            LEFT JOIN mssupplier s ON CAST(a.purchase_order_kitchen_supplier_id AS VARCHAR(50)) = s.kdsupplier
             WHERE a.purchase_order_kitchen_id = ?",
             [$id]
+        );
+    }
+
+    public function getSupplierDataById($supplierId)
+    {
+        return DB::selectOne(
+            "SELECT
+            kdsupplier AS supplier_id,
+            nmsupplier AS supplier_name,
+            ISNULL(cp, '') AS supplier_pic_name,
+            ISNULL(hp, '') AS supplier_pic_phone
+            FROM mssupplier
+            WHERE kdsupplier = ?",
+            [$supplierId]
         );
     }
 

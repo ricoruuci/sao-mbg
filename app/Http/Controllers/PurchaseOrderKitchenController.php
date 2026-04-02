@@ -24,13 +24,21 @@ class PurchaseOrderKitchenController extends Controller
         $modelHeader = new PurchaseOrderKitchenHd();
         $modelDetail = new PurchaseOrderKitchenDt();
 
+        $supplier = $modelHeader->getSupplierDataById($request->purchase_order_kitchen_supplier_id);
+
+        if ($supplier == false) {
+            return $this->responseError('supplier tidak ditemukan', 404);
+        }
+
         $params = [
             'purchase_order_kitchen_date' => $request->purchase_order_kitchen_date,
             'purchase_order_kitchen_supplier_id' => $request->purchase_order_kitchen_supplier_id,
-            'purchase_order_kitchen_supplier_name' => $request->purchase_order_kitchen_supplier_name,
-            'purchase_order_kitchen_pic_name' => $request->purchase_order_kitchen_pic_name,
-            'purchase_order_kitchen_pic_phone' => $request->purchase_order_kitchen_pic_phone ?? '',
+            'purchase_order_kitchen_supplier_name' => $supplier->supplier_name,
+            'purchase_order_kitchen_pic_name' => $supplier->supplier_pic_name,
+            'purchase_order_kitchen_pic_phone' => $supplier->supplier_pic_phone,
+            'purchase_order_kitchen_to' => $request->purchase_order_kitchen_to,
             'purchase_order_kitchen_address' => $request->purchase_order_kitchen_address,
+            'purchase_order_kitchen_note' => $request->purchase_order_kitchen_note ?? '',
             'purchase_order_kitchen_discount' => $request->purchase_order_kitchen_discount ?? 0,
             'purchase_order_kitchen_tax' => $request->purchase_order_kitchen_tax ?? 0,
             'upduser' => Auth::user()->currentAccessToken()['namauser'],
@@ -41,7 +49,7 @@ class PurchaseOrderKitchenController extends Controller
         try {
             $purchaseOrderKitchenId = $modelHeader->generatePurchaseOrderKitchenId(
                 $request->purchase_order_kitchen_date,
-                $request->purchase_order_kitchen_supplier_name
+                $supplier->supplier_name
             );
 
             $params['purchase_order_kitchen_id'] = $purchaseOrderKitchenId;
@@ -107,6 +115,12 @@ class PurchaseOrderKitchenController extends Controller
         $modelHeader = new PurchaseOrderKitchenHd();
         $modelDetail = new PurchaseOrderKitchenDt();
 
+        $supplier = $modelHeader->getSupplierDataById($request->purchase_order_kitchen_supplier_id);
+
+        if ($supplier == false) {
+            return $this->responseError('supplier tidak ditemukan', 404);
+        }
+
         $cek = $modelHeader->cekData($request->purchase_order_kitchen_id ?? '');
 
         if ($cek == false) {
@@ -117,10 +131,12 @@ class PurchaseOrderKitchenController extends Controller
             'purchase_order_kitchen_id' => $request->purchase_order_kitchen_id,
             'purchase_order_kitchen_date' => $request->purchase_order_kitchen_date,
             'purchase_order_kitchen_supplier_id' => $request->purchase_order_kitchen_supplier_id,
-            'purchase_order_kitchen_supplier_name' => $request->purchase_order_kitchen_supplier_name,
-            'purchase_order_kitchen_pic_name' => $request->purchase_order_kitchen_pic_name,
-            'purchase_order_kitchen_pic_phone' => $request->purchase_order_kitchen_pic_phone ?? '',
+            'purchase_order_kitchen_supplier_name' => $supplier->supplier_name,
+            'purchase_order_kitchen_pic_name' => $supplier->supplier_pic_name,
+            'purchase_order_kitchen_pic_phone' => $supplier->supplier_pic_phone,
+            'purchase_order_kitchen_to' => $request->purchase_order_kitchen_to,
             'purchase_order_kitchen_address' => $request->purchase_order_kitchen_address,
+            'purchase_order_kitchen_note' => $request->purchase_order_kitchen_note ?? '',
             'purchase_order_kitchen_discount' => $request->purchase_order_kitchen_discount ?? 0,
             'purchase_order_kitchen_tax' => $request->purchase_order_kitchen_tax ?? 0,
             'upduser' => Auth::user()->currentAccessToken()['namauser'],
