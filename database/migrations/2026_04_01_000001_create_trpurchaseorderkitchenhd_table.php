@@ -21,11 +21,14 @@ return new class extends Migration
             $table->string('purchase_order_kitchen_to', 255);
             $table->text('purchase_order_kitchen_address');
             $table->text('purchase_order_kitchen_note')->nullable();
-            $table->decimal('purchase_order_kitchen_discount', 15, 2)->default(0);
-            $table->decimal('purchase_order_kitchen_tax', 5, 2)->default(0);
-            $table->decimal('purchase_order_kitchen_tax_amount', 15, 2)->default(0);
-            $table->decimal('purchase_order_kitchen_subtotal', 15, 2)->default(0);
-            $table->decimal('purchase_order_kitchen_grandtotal', 15, 2)->default(0);
+            $table->decimal('purchase_order_kitchen_discount', 15, 6)->default(0);
+            $table->decimal('purchase_order_kitchen_tax', 15, 6)->default(0);
+            $table->decimal('purchase_order_kitchen_tax_amount', 15, 6)->default(0);
+            $table->decimal('purchase_order_kitchen_koefisien', 15, 6)->default(0);
+            $table->decimal('purchase_order_kitchen_budget', 15, 6)->default(0);
+            $table->decimal('purchase_order_kitchen_budget_over', 15, 6)->default(0);
+            $table->decimal('purchase_order_kitchen_subtotal', 15, 6)->default(0);
+            $table->decimal('purchase_order_kitchen_grandtotal', 15, 6)->default(0);
             $table->dateTime('upddate');
             $table->string('upduser', 50);
 

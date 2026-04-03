@@ -16,9 +16,9 @@ return new class extends Migration
             $table->date('invoice_date');
             $table->string('invoice_to', 255);
             $table->text('invoice_note')->nullable();
-            $table->decimal('invoice_subtotal', 15, 2)->default(0);
-            $table->decimal('invoice_ppn', 5, 2)->default(0);
-            $table->decimal('invoice_ppn_amount', 15, 2)->default(0);
+            $table->decimal('invoice_subtotal', 15, 6)->default(0);
+            $table->decimal('invoice_ppn', 9, 6)->default(0);
+            $table->decimal('invoice_ppn_amount', 15, 6)->default(0);
             $table->boolean('invoice_ppn_flag')->default(false);
             $table->datetime('upddate');
             $table->string('upduser', 50);
