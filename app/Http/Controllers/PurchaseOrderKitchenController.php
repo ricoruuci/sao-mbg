@@ -41,6 +41,9 @@ class PurchaseOrderKitchenController extends Controller
             'purchase_order_kitchen_note' => $request->purchase_order_kitchen_note ?? '',
             'purchase_order_kitchen_discount' => $request->purchase_order_kitchen_discount ?? 0,
             'purchase_order_kitchen_tax' => $request->purchase_order_kitchen_tax ?? 0,
+            'purchase_order_kitchen_koefisien' => $request->purchase_order_kitchen_koefisien ?? 0,
+            'purchase_order_kitchen_budget' => $request->purchase_order_kitchen_budget ?? 0,
+            'purchase_order_kitchen_budget_over' => $request->purchase_order_kitchen_budget_over ?? 0,
             'upduser' => Auth::user()->currentAccessToken()['namauser'],
         ];
 
@@ -73,9 +76,13 @@ class PurchaseOrderKitchenController extends Controller
 
                 $insertDetail = $modelDetail->insertData([
                     'purchase_order_kitchen_id' => $purchaseOrderKitchenId,
-                    'purchase_order_kitchen_detail_description' => $detail['purchase_order_kitchen_detail_description'],
+                    'purchase_order_kitchen_detail_itemid' => $detail['purchase_order_kitchen_detail_itemid'],
+                    'purchase_order_kitchen_detail_itemname' => $detail['purchase_order_kitchen_detail_itemname'],
+                    'purchase_order_kitchen_detail_formula' => $detail['purchase_order_kitchen_detail_formula'] ?? 0,
                     'purchase_order_kitchen_detail_qty' => $detail['purchase_order_kitchen_detail_qty'],
+                    'purchase_order_kitchen_detail_qty_invoice' => $detail['purchase_order_kitchen_detail_qty_invoice'] ?? 0,
                     'purchase_order_kitchen_detail_uom' => $detail['purchase_order_kitchen_detail_uom'],
+                    'purchase_order_kitchen_detail_last_price' => $detail['purchase_order_kitchen_detail_last_price'] ?? 0,
                     'purchase_order_kitchen_detail_price' => $detail['purchase_order_kitchen_detail_price'],
                     'purchase_order_kitchen_detail_total' => $detailTotal,
                     'purchase_order_kitchen_detail_send_date' => $detail['purchase_order_kitchen_detail_send_date'],
@@ -139,6 +146,9 @@ class PurchaseOrderKitchenController extends Controller
             'purchase_order_kitchen_note' => $request->purchase_order_kitchen_note ?? '',
             'purchase_order_kitchen_discount' => $request->purchase_order_kitchen_discount ?? 0,
             'purchase_order_kitchen_tax' => $request->purchase_order_kitchen_tax ?? 0,
+            'purchase_order_kitchen_koefisien' => $request->purchase_order_kitchen_koefisien ?? 0,
+            'purchase_order_kitchen_budget' => $request->purchase_order_kitchen_budget ?? 0,
+            'purchase_order_kitchen_budget_over' => $request->purchase_order_kitchen_budget_over ?? 0,
             'upduser' => Auth::user()->currentAccessToken()['namauser'],
         ];
 
@@ -166,9 +176,13 @@ class PurchaseOrderKitchenController extends Controller
 
                 $insertDetail = $modelDetail->insertData([
                     'purchase_order_kitchen_id' => $request->purchase_order_kitchen_id,
-                    'purchase_order_kitchen_detail_description' => $detail['purchase_order_kitchen_detail_description'],
+                    'purchase_order_kitchen_detail_itemid' => $detail['purchase_order_kitchen_detail_itemid'],
+                    'purchase_order_kitchen_detail_itemname' => $detail['purchase_order_kitchen_detail_itemname'],
+                    'purchase_order_kitchen_detail_formula' => $detail['purchase_order_kitchen_detail_formula'] ?? 0,
                     'purchase_order_kitchen_detail_qty' => $detail['purchase_order_kitchen_detail_qty'],
+                    'purchase_order_kitchen_detail_qty_invoice' => $detail['purchase_order_kitchen_detail_qty_invoice'] ?? 0,
                     'purchase_order_kitchen_detail_uom' => $detail['purchase_order_kitchen_detail_uom'],
+                    'purchase_order_kitchen_detail_last_price' => $detail['purchase_order_kitchen_detail_last_price'] ?? 0,
                     'purchase_order_kitchen_detail_price' => $detail['purchase_order_kitchen_detail_price'],
                     'purchase_order_kitchen_detail_total' => $detailTotal,
                     'purchase_order_kitchen_detail_send_date' => $detail['purchase_order_kitchen_detail_send_date'],

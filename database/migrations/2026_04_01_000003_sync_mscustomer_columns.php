@@ -22,7 +22,7 @@ return new class extends Migration
                 $table->string('customer_email', 100)->nullable();
                 $table->string('customer_npwp', 50)->nullable();
                 $table->string('customer_account_manager', 100)->nullable();
-                $table->decimal('customer_limit_piutang', 18, 2)->default(0);
+                $table->decimal('customer_limit_piutang', 18, 6)->default(0);
                 $table->string('customer_address', 255)->nullable();
                 $table->string('customer_address_npwp', 255)->nullable();
                 $table->string('customer_note', 255)->nullable();
@@ -74,7 +74,7 @@ return new class extends Migration
                 $table->string('customer_account_manager', 100)->nullable();
             }
             if (!Schema::hasColumn('mscustomer', 'customer_limit_piutang')) {
-                $table->decimal('customer_limit_piutang', 18, 2)->default(0);
+                $table->decimal('customer_limit_piutang', 18, 6)->default(0);
             }
             if (!Schema::hasColumn('mscustomer', 'customer_address')) {
                 $table->string('customer_address', 255)->nullable();

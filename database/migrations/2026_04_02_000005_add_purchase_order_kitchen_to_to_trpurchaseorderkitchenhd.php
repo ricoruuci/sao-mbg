@@ -11,9 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('trpurchaseorderkitchenhd', function (Blueprint $table) {
-            $table->string('purchase_order_kitchen_to', 255)->default('')->after('purchase_order_kitchen_pic_phone');
-        });
+        if (!Schema::hasColumn('trpurchaseorderkitchenhd', 'purchase_order_kitchen_to')) {
+            Schema::table('trpurchaseorderkitchenhd', function (Blueprint $table) {
+                $table->string('purchase_order_kitchen_to', 255)->default('')->after('purchase_order_kitchen_pic_phone');
+            });
+        }
     }
 
     /**
@@ -21,8 +23,10 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('trpurchaseorderkitchenhd', function (Blueprint $table) {
-            $table->dropColumn('purchase_order_kitchen_to');
-        });
+        if (Schema::hasColumn('trpurchaseorderkitchenhd', 'purchase_order_kitchen_to')) {
+            Schema::table('trpurchaseorderkitchenhd', function (Blueprint $table) {
+                $table->dropColumn('purchase_order_kitchen_to');
+            });
+        }
     }
 };

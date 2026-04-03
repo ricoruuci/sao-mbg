@@ -21,9 +21,10 @@ class PurchaseOrderKitchenHd extends BaseModel
             (purchase_order_kitchen_id, purchase_order_kitchen_date, purchase_order_kitchen_supplier_id,
             purchase_order_kitchen_supplier_name, purchase_order_kitchen_pic_name, purchase_order_kitchen_pic_phone,
             purchase_order_kitchen_to, purchase_order_kitchen_address, purchase_order_kitchen_note, purchase_order_kitchen_discount, purchase_order_kitchen_tax,
-            purchase_order_kitchen_tax_amount, purchase_order_kitchen_subtotal, purchase_order_kitchen_grandtotal,
+            purchase_order_kitchen_tax_amount, purchase_order_kitchen_koefisien, purchase_order_kitchen_budget,
+            purchase_order_kitchen_budget_over, purchase_order_kitchen_subtotal, purchase_order_kitchen_grandtotal,
             upddate, upduser)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0, 0, 0, getdate(), ?)",
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0, ?, ?, ?, 0, 0, getdate(), ?)",
             [
                 $params['purchase_order_kitchen_id'],
                 $params['purchase_order_kitchen_date'],
@@ -36,6 +37,9 @@ class PurchaseOrderKitchenHd extends BaseModel
                 $params['purchase_order_kitchen_note'],
                 $params['purchase_order_kitchen_discount'],
                 $params['purchase_order_kitchen_tax'],
+                $params['purchase_order_kitchen_koefisien'],
+                $params['purchase_order_kitchen_budget'],
+                $params['purchase_order_kitchen_budget_over'],
                 $params['upduser'],
             ]
         );
@@ -56,6 +60,9 @@ class PurchaseOrderKitchenHd extends BaseModel
             purchase_order_kitchen_note = ?,
             purchase_order_kitchen_discount = ?,
             purchase_order_kitchen_tax = ?,
+            purchase_order_kitchen_koefisien = ?,
+            purchase_order_kitchen_budget = ?,
+            purchase_order_kitchen_budget_over = ?,
             upddate = getdate(),
             upduser = ?
             WHERE purchase_order_kitchen_id = ?",
@@ -70,6 +77,9 @@ class PurchaseOrderKitchenHd extends BaseModel
                 $params['purchase_order_kitchen_note'],
                 $params['purchase_order_kitchen_discount'],
                 $params['purchase_order_kitchen_tax'],
+                $params['purchase_order_kitchen_koefisien'],
+                $params['purchase_order_kitchen_budget'],
+                $params['purchase_order_kitchen_budget_over'],
                 $params['upduser'],
                 $params['purchase_order_kitchen_id'],
             ]
@@ -92,6 +102,9 @@ class PurchaseOrderKitchenHd extends BaseModel
             a.purchase_order_kitchen_discount,
             a.purchase_order_kitchen_tax,
             a.purchase_order_kitchen_tax_amount,
+            a.purchase_order_kitchen_koefisien,
+            a.purchase_order_kitchen_budget,
+            a.purchase_order_kitchen_budget_over,
             a.purchase_order_kitchen_subtotal,
             a.purchase_order_kitchen_grandtotal,
             ISNULL(s.bank_branch, '') AS purchase_order_kitchen_bank_branch,
@@ -132,6 +145,9 @@ class PurchaseOrderKitchenHd extends BaseModel
             a.purchase_order_kitchen_discount,
             a.purchase_order_kitchen_tax,
             a.purchase_order_kitchen_tax_amount,
+            a.purchase_order_kitchen_koefisien,
+            a.purchase_order_kitchen_budget,
+            a.purchase_order_kitchen_budget_over,
             a.purchase_order_kitchen_subtotal,
             a.purchase_order_kitchen_grandtotal,
             ISNULL(s.bank_branch, '') AS purchase_order_kitchen_bank_branch,
@@ -207,11 +223,17 @@ class PurchaseOrderKitchenHd extends BaseModel
             SET
             purchase_order_kitchen_subtotal = ?,
             purchase_order_kitchen_tax_amount = ?,
-            purchase_order_kitchen_grandtotal = ?
+            purchase_order_kitchen_grandtotal = ?,
+            purchase_order_kitchen_budget_over = CASE
+                WHEN ? - purchase_order_kitchen_budget > 0 THEN ? - purchase_order_kitchen_budget
+                ELSE 0
+            END
             WHERE purchase_order_kitchen_id = ?",
             [
                 $params['purchase_order_kitchen_subtotal'],
                 $params['purchase_order_kitchen_tax_amount'],
+                $params['purchase_order_kitchen_grandtotal'],
+                $params['purchase_order_kitchen_grandtotal'],
                 $params['purchase_order_kitchen_grandtotal'],
                 $params['purchase_order_kitchen_id'],
             ]

@@ -15,9 +15,9 @@ return new class extends Migration
             $table->id();
             $table->string('invoice_code', 50);
             $table->text('invoice_detail_description');
-            $table->decimal('invoice_detail_qty', 10, 2);
-            $table->decimal('invoice_detail_price', 15, 2);
-            $table->decimal('invoice_detail_total', 15, 2);
+            $table->decimal('invoice_detail_qty', 10, 6);
+            $table->decimal('invoice_detail_price', 15, 6);
+            $table->decimal('invoice_detail_total', 15, 6);
             $table->datetime('upddate');
             $table->string('upduser', 50);
             
