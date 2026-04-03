@@ -204,13 +204,24 @@ class BeliHd extends BaseModel
     function hitungTotal($id)
     {
         $result = DB::selectOne(
-            "SELECT k.nota,k.kdsupplier,k.total as sub_total,(k.total-k.discamount)*k.tax*0.01 as total_ppn,
-            (k.total-k.discamount)*(1+(k.tax*0.01)) as grand_total from (
-            select a.Nota,b.KdSupplier,isnull(sum(a.jml*a.harga),0) as total,b.tax,isnull(b.discamount,0) as discamount
-            from TrBeliBBDt a inner join TrBeliBBHd b on a.Nota=b.Nota and a.KdSupplier=b.KdSupplier
-            group by a.nota,b.KdSupplier,b.tax,b.discamount
-            ) as K
-            where k.nota=:id ",
+            "SELECT
+                k.nota,
+                k.kdsupplier,
+                k.total AS sub_total,
+                (k.total - k.discamount) * k.tax * 0.01 AS total_ppn,
+                (k.total - k.discamount) * (1 + (k.tax * 0.01)) AS grand_total
+            FROM (
+                SELECT
+                    b.nota,
+                    b.kdsupplier,
+                    CAST(ISNULL(SUM(CAST(a.jml AS DECIMAL(28, 6)) * CAST(a.harga AS DECIMAL(28, 6))), 0) AS DECIMAL(28, 6)) AS total,
+                    CAST(ISNULL(b.tax, 0) AS DECIMAL(18, 6)) AS tax,
+                    CAST(ISNULL(b.discamount, 0) AS DECIMAL(28, 6)) AS discamount
+                FROM TrBeliBBHd b
+                LEFT JOIN TrBeliBBDt a ON a.Nota = b.Nota AND a.KdSupplier = b.KdSupplier
+                WHERE b.nota = :id
+                GROUP BY b.nota, b.KdSupplier, b.tax, b.discamount
+            ) AS k",
             [
                 'id' => $id
             ]
