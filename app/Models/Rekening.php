@@ -106,10 +106,28 @@ class Rekening extends BaseModel
 
     function cekData($id)
     {
+        $id = trim((string) $id);
+
         $result = DB::selectOne(
             'SELECT * from cfmsrekening WHERE rekeningid = :id',
             [
                 'id' => $id
+            ]
+        );
+
+        if ($result) {
+            return $result;
+        }
+
+        // Fallback for numeric account codes with different decimal scale (e.g. 100.02 vs 100.020000).
+        $result = DB::selectOne(
+            "SELECT TOP 1 * from cfmsrekening
+            WHERE ISNUMERIC(rekeningid) = 1
+            AND ISNUMERIC(:id1) = 1
+            AND CONVERT(decimal(38,6), rekeningid) = CONVERT(decimal(38,6), :id2)",
+            [
+                'id1' => $id,
+                'id2' => $id
             ]
         );
 

@@ -25,19 +25,27 @@ class RptFinanceController extends Controller
         $model = new RptFinance();
         $rekening = new Rekening();
 
-        $rekeningId = $request->input('rekening_id');
+        $rekeningId = trim((string) $request->input('rekening_id', ''));
 
-        if ($rekeningId !== null && $rekeningId !== '') {
+        if ($rekeningId !== '') {
             $cek = $rekening->cekData($rekeningId);
             if ($cek == false) {
                 return $this->responseError('Rekening not found', 404);
+            }
+
+            $rekeningFields = is_object($cek) ? get_object_vars($cek) : [];
+            foreach ($rekeningFields as $key => $value) {
+                if (strtolower((string) $key) === 'rekeningid') {
+                    $rekeningId = trim((string) $value);
+                    break;
+                }
             }
         }
 
         $result = $model->getRptBukuBesar([
             'dari' => $request->input('dari'),
             'sampai' => $request->input('sampai'),
-            'rekening_id' => $request->input('rekening_id', ''),
+            'rekening_id' => $rekeningId,
         ]);
 
         return $this->responseData($result);
