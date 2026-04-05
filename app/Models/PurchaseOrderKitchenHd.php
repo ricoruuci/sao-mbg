@@ -101,12 +101,27 @@ class PurchaseOrderKitchenHd extends BaseModel
             a.purchase_order_kitchen_note,
             a.purchase_order_kitchen_discount,
             a.purchase_order_kitchen_tax,
-            a.purchase_order_kitchen_tax_amount,
+            CASE
+                WHEN (dt.subtotal - a.purchase_order_kitchen_discount) > 0
+                    AND a.purchase_order_kitchen_tax > 0
+                    THEN (dt.subtotal - a.purchase_order_kitchen_discount) * a.purchase_order_kitchen_tax * 0.01
+                ELSE 0
+            END AS purchase_order_kitchen_tax_amount,
             a.purchase_order_kitchen_koefisien,
             a.purchase_order_kitchen_budget,
             a.purchase_order_kitchen_budget_over,
-            a.purchase_order_kitchen_subtotal,
-            a.purchase_order_kitchen_grandtotal,
+            dt.subtotal AS purchase_order_kitchen_subtotal,
+            (CASE
+                WHEN (dt.subtotal - a.purchase_order_kitchen_discount) < 0
+                    THEN 0
+                ELSE (dt.subtotal - a.purchase_order_kitchen_discount)
+            END) +
+            (CASE
+                WHEN (dt.subtotal - a.purchase_order_kitchen_discount) > 0
+                    AND a.purchase_order_kitchen_tax > 0
+                    THEN (dt.subtotal - a.purchase_order_kitchen_discount) * a.purchase_order_kitchen_tax * 0.01
+                ELSE 0
+            END) AS purchase_order_kitchen_grandtotal,
             ISNULL(s.bank_branch, '') AS purchase_order_kitchen_bank_branch,
             ISNULL(s.bank_account, '') AS purchase_order_kitchen_bank_account,
             ISNULL(s.bank_holder, '') AS purchase_order_kitchen_bank_holder,
@@ -114,6 +129,11 @@ class PurchaseOrderKitchenHd extends BaseModel
             a.upduser
             FROM trpurchaseorderkitchenhd a
             LEFT JOIN mssupplier s ON CAST(a.purchase_order_kitchen_supplier_id AS VARCHAR(50)) = s.kdsupplier
+            OUTER APPLY (
+                SELECT ISNULL(SUM(ISNULL(d.purchase_order_kitchen_detail_qty_invoice, 0) * ISNULL(d.purchase_order_kitchen_detail_price, 0)), 0) AS subtotal
+                FROM trpurchaseorderkitchendt d
+                WHERE d.purchase_order_kitchen_id = a.purchase_order_kitchen_id
+            ) dt
             WHERE convert(varchar(10), a.purchase_order_kitchen_date, 112) BETWEEN ? AND ?
             AND (
                 ISNULL(a.purchase_order_kitchen_id, '') LIKE ?
@@ -144,12 +164,27 @@ class PurchaseOrderKitchenHd extends BaseModel
             a.purchase_order_kitchen_note,
             a.purchase_order_kitchen_discount,
             a.purchase_order_kitchen_tax,
-            a.purchase_order_kitchen_tax_amount,
+            CASE
+                WHEN (dt.subtotal - a.purchase_order_kitchen_discount) > 0
+                    AND a.purchase_order_kitchen_tax > 0
+                    THEN (dt.subtotal - a.purchase_order_kitchen_discount) * a.purchase_order_kitchen_tax * 0.01
+                ELSE 0
+            END AS purchase_order_kitchen_tax_amount,
             a.purchase_order_kitchen_koefisien,
             a.purchase_order_kitchen_budget,
             a.purchase_order_kitchen_budget_over,
-            a.purchase_order_kitchen_subtotal,
-            a.purchase_order_kitchen_grandtotal,
+            dt.subtotal AS purchase_order_kitchen_subtotal,
+            (CASE
+                WHEN (dt.subtotal - a.purchase_order_kitchen_discount) < 0
+                    THEN 0
+                ELSE (dt.subtotal - a.purchase_order_kitchen_discount)
+            END) +
+            (CASE
+                WHEN (dt.subtotal - a.purchase_order_kitchen_discount) > 0
+                    AND a.purchase_order_kitchen_tax > 0
+                    THEN (dt.subtotal - a.purchase_order_kitchen_discount) * a.purchase_order_kitchen_tax * 0.01
+                ELSE 0
+            END) AS purchase_order_kitchen_grandtotal,
             ISNULL(s.bank_branch, '') AS purchase_order_kitchen_bank_branch,
             ISNULL(s.bank_account, '') AS purchase_order_kitchen_bank_account,
             ISNULL(s.bank_holder, '') AS purchase_order_kitchen_bank_holder,
@@ -157,6 +192,11 @@ class PurchaseOrderKitchenHd extends BaseModel
             a.upduser
             FROM trpurchaseorderkitchenhd a
             LEFT JOIN mssupplier s ON CAST(a.purchase_order_kitchen_supplier_id AS VARCHAR(50)) = s.kdsupplier
+            OUTER APPLY (
+                SELECT ISNULL(SUM(ISNULL(d.purchase_order_kitchen_detail_qty_invoice, 0) * ISNULL(d.purchase_order_kitchen_detail_price, 0)), 0) AS subtotal
+                FROM trpurchaseorderkitchendt d
+                WHERE d.purchase_order_kitchen_id = a.purchase_order_kitchen_id
+            ) dt
             WHERE a.purchase_order_kitchen_id = ?",
             [$id]
         );
@@ -196,12 +236,12 @@ class PurchaseOrderKitchenHd extends BaseModel
             FROM (
                 SELECT
                     b.purchase_order_kitchen_id,
-                    ISNULL(SUM(a.purchase_order_kitchen_detail_total), 0) AS subtotal,
+                    ISNULL(SUM(ISNULL(a.purchase_order_kitchen_detail_qty_invoice, 0) * ISNULL(a.purchase_order_kitchen_detail_price, 0)), 0) AS subtotal,
                     b.purchase_order_kitchen_discount,
                     b.purchase_order_kitchen_tax,
                     CASE
-                        WHEN ISNULL(SUM(a.purchase_order_kitchen_detail_total), 0) - b.purchase_order_kitchen_discount < 0 THEN 0
-                        ELSE ISNULL(SUM(a.purchase_order_kitchen_detail_total), 0) - b.purchase_order_kitchen_discount
+                        WHEN ISNULL(SUM(ISNULL(a.purchase_order_kitchen_detail_qty_invoice, 0) * ISNULL(a.purchase_order_kitchen_detail_price, 0)), 0) - b.purchase_order_kitchen_discount < 0 THEN 0
+                        ELSE ISNULL(SUM(ISNULL(a.purchase_order_kitchen_detail_qty_invoice, 0) * ISNULL(a.purchase_order_kitchen_detail_price, 0)), 0) - b.purchase_order_kitchen_discount
                     END AS base_amount
                 FROM trpurchaseorderkitchenhd b
                 LEFT JOIN trpurchaseorderkitchendt a

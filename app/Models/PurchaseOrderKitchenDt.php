@@ -62,7 +62,7 @@ class PurchaseOrderKitchenDt extends BaseModel
             a.purchase_order_kitchen_detail_uom,
             a.purchase_order_kitchen_detail_last_price,
             a.purchase_order_kitchen_detail_price,
-            a.purchase_order_kitchen_detail_total,
+            ISNULL(a.purchase_order_kitchen_detail_qty_invoice, 0) * ISNULL(a.purchase_order_kitchen_detail_price, 0) AS purchase_order_kitchen_detail_total,
             a.purchase_order_kitchen_detail_send_date,
             a.upddate,
             a.upduser
