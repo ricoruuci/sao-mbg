@@ -28,7 +28,7 @@ class InsertRequest extends BaseRequest
             'detail.*.purchase_order_kitchen_detail_itemid' => 'required|string',
             'detail.*.purchase_order_kitchen_detail_itemname' => 'required|string',
             'detail.*.purchase_order_kitchen_detail_formula' => 'nullable|numeric|min:0',
-            'detail.*.purchase_order_kitchen_detail_qty' => 'required|numeric|min:1',
+            'detail.*.purchase_order_kitchen_detail_qty' => 'required|numeric|min:0',
             'detail.*.purchase_order_kitchen_detail_qty_invoice' => 'nullable|numeric|min:0',
             'detail.*.purchase_order_kitchen_detail_uom' => 'required|string',
             'detail.*.purchase_order_kitchen_detail_last_price' => 'nullable|numeric|min:0',

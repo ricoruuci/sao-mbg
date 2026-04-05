@@ -72,7 +72,7 @@ class PurchaseOrderKitchenController extends Controller
             }
 
             foreach ($arrDetail as $detail) {
-                $detailTotal = $detail['purchase_order_kitchen_detail_qty'] * $detail['purchase_order_kitchen_detail_price'];
+                $detailTotal = ($detail['purchase_order_kitchen_detail_qty_invoice'] ?? 0) * $detail['purchase_order_kitchen_detail_price'];
 
                 $insertDetail = $modelDetail->insertData([
                     'purchase_order_kitchen_id' => $purchaseOrderKitchenId,
@@ -172,7 +172,7 @@ class PurchaseOrderKitchenController extends Controller
             $modelDetail->deleteData($request->purchase_order_kitchen_id);
 
             foreach ($arrDetail as $detail) {
-                $detailTotal = $detail['purchase_order_kitchen_detail_qty'] * $detail['purchase_order_kitchen_detail_price'];
+                $detailTotal = ($detail['purchase_order_kitchen_detail_qty_invoice'] ?? 0) * $detail['purchase_order_kitchen_detail_price'];
 
                 $insertDetail = $modelDetail->insertData([
                     'purchase_order_kitchen_id' => $request->purchase_order_kitchen_id,
