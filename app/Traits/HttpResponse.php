@@ -6,29 +6,34 @@ trait HttpResponse
 {
     protected function responsePagination($data, $httpCode = 200)
     {
-        if (is_array($data) && array_key_exists('data', $data)) {
-            $data['data'] = $this->formatDecimalPayload($data['data']);
+        return response()->json($data, $httpCode);
+        // if (is_array($data) && array_key_exists('data', $data)) {
+        //     $data['data'] = $this->formatDecimalPayload($data['data']);
 
-            return response()->json($data, $httpCode);
-        }
+        //     return response()->json($data, $httpCode);
+        // }
 
-        return response()->json($this->formatDecimalPayload($data), $httpCode);
+        // return response()->json($this->formatDecimalPayload($data), $httpCode);
     }
 
     protected function responseData($data, $httpCode = 200)
     {
-        if ($data)
-        {
-            return response()->json([
-                'data' => $this->formatDecimalPayload($data)
-            ], $httpCode);
-        }
-        else
-        {
-            return response()->json([
-                'data' => ''
-            ]);
-        }
+        return response()->json([
+            'data' => $data
+        ], $httpCode);
+
+        // if ($data)
+        // {
+        //     return response()->json([
+        //         'data' => $this->formatDecimalPayload($data)
+        //     ], $httpCode);
+        // }
+        // else
+        // {
+        //     return response()->json([
+        //         'data' => ''
+        //     ]);
+        // }
     }
 
     protected function responseError($message, $httpCode)
