@@ -31,6 +31,7 @@ use App\Http\Controllers\PayrollController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\PurchaseOrderKitchenController;
+use App\Http\Controllers\VolunteerSalaryController;
 
 Route::post('login', [AuthController::class, 'login']);
 Route::post('logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
@@ -155,6 +156,12 @@ Route::get('purchase-order-kitchen-by-id', [PurchaseOrderKitchenController::clas
 Route::post('purchase-order-kitchen', [PurchaseOrderKitchenController::class, 'insertData'])->middleware('auth:sanctum');
 Route::patch('purchase-order-kitchen', [PurchaseOrderKitchenController::class, 'updateData'])->middleware('auth:sanctum');
 Route::delete('purchase-order-kitchen', [PurchaseOrderKitchenController::class, 'deleteData'])->middleware('auth:sanctum');
+
+Route::get('volunteer-salary', [VolunteerSalaryController::class, 'getListData'])->middleware('auth:sanctum');
+Route::get('volunteer-salary-by-id', [VolunteerSalaryController::class, 'getDataById'])->middleware('auth:sanctum');
+Route::post('volunteer-salary', [VolunteerSalaryController::class, 'insertData'])->middleware('auth:sanctum');
+Route::patch('volunteer-salary', [VolunteerSalaryController::class, 'updateData'])->middleware('auth:sanctum');
+Route::delete('volunteer-salary', [VolunteerSalaryController::class, 'deleteData'])->middleware('auth:sanctum');
 
 /*==============================================================================================================
  * Laporan
