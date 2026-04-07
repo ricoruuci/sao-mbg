@@ -12,12 +12,14 @@ use App\Http\Controllers\BankController;
 use App\Http\Controllers\GroupMenuController;
 use App\Http\Controllers\SatuanController;
 use App\Http\Controllers\BahanBakuController;
+use App\Http\Controllers\BahanATKController;
 use App\Http\Controllers\GroupBahanBakuController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\TxnKKBBController;
 use App\Http\Controllers\GroupRekeningController;
 use App\Http\Controllers\RekeningController;
 use App\Http\Controllers\BeliController;
+use App\Http\Controllers\BeliATKController;
 use App\Http\Controllers\RptPenjualanController;
 use App\Http\Controllers\RptPembelianController;
 use App\Http\Controllers\SetRekeningController;
@@ -79,6 +81,12 @@ Route::post('bahan-baku', [BahanBakuController::class, 'insertData'])->middlewar
 Route::patch('bahan-baku', [BahanBakuController::class, 'updateData'])->middleware('auth:sanctum');
 Route::delete('bahan-baku', [BahanBakuController::class, 'deleteData'])->middleware('auth:sanctum');
 
+Route::get('bahan-atk', [BahanATKController::class, 'getListData'])->middleware('auth:sanctum');
+Route::get('bahan-atk-by-id', [BahanATKController::class, 'getDataById'])->middleware('auth:sanctum');
+Route::post('bahan-atk', [BahanATKController::class, 'insertData'])->middleware('auth:sanctum');
+Route::patch('bahan-atk', [BahanATKController::class, 'updateData'])->middleware('auth:sanctum');
+Route::delete('bahan-atk', [BahanATKController::class, 'deleteData'])->middleware('auth:sanctum');
+
 Route::get('group-bahan-baku', [GroupBahanBakuController::class, 'getListData'])->middleware('auth:sanctum');
 Route::get('group-bahan-baku-by-id', [GroupBahanBakuController::class, 'getDataById'])->middleware('auth:sanctum');
 Route::post('group-bahan-baku', [GroupBahanBakuController::class, 'insertData'])->middleware('auth:sanctum');
@@ -132,6 +140,13 @@ Route::get('beli-by-id-adjustment', [BeliController::class, 'getDataByIdAdjustme
 Route::post('beli', [BeliController::class, 'insertData'])->middleware('auth:sanctum');
 Route::patch('beli', [BeliController::class, 'updateData'])->middleware('auth:sanctum');
 Route::delete('beli', [BeliController::class, 'deleteData'])->middleware('auth:sanctum');
+
+Route::get('beli-atk', [BeliATKController::class, 'getListData'])->middleware('auth:sanctum');
+Route::get('beli-atk-by-id', [BeliATKController::class, 'getDataById'])->middleware('auth:sanctum');
+Route::get('beli-atk-by-id-adjustment', [BeliATKController::class, 'getDataByIdAdjustment'])->middleware('auth:sanctum');
+Route::post('beli-atk', [BeliATKController::class, 'insertData'])->middleware('auth:sanctum');
+Route::patch('beli-atk', [BeliATKController::class, 'updateData'])->middleware('auth:sanctum');
+Route::delete('beli-atk', [BeliATKController::class, 'deleteData'])->middleware('auth:sanctum');
 
 Route::get('set-rekening', [SetRekeningController::class, 'getListData'])->middleware('auth:sanctum');
 Route::patch('set-rekening', [SetRekeningController::class, 'updateData'])->middleware('auth:sanctum');
