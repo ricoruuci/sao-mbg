@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\BaseModel;
 use function PHPUnit\Framework\isNull;
 
-class BahanBaku extends BaseModel
+class BahanATK extends BaseModel
 {
     use HasFactory;
 
@@ -24,7 +24,7 @@ class BahanBaku extends BaseModel
             b.kdgroupbb as group_bahan_baku_id, b.nmgroupbb as group_bahan_baku_name,a.upddate,a.upduser
             FROM msbahanbaku a
             inner join msgroupbb b on a.kdgroupbb = b.kdgroupbb
-            WHERE a.fgform='BB' and a.nmbb LIKE :search_keyword
+            WHERE a.fgform='BA' and a.nmbb LIKE :search_keyword
             OR b.nmgroupbb LIKE :search_keyword2
             order by a.nmbb ",
             [
@@ -45,7 +45,7 @@ class BahanBaku extends BaseModel
             b.kdgroupbb as group_bahan_baku_id, b.nmgroupbb as group_bahan_baku_name,a.upddate,a.upduser
             FROM msbahanbaku a
             inner join msgroupbb b on a.kdgroupbb = b.kdgroupbb
-            WHERE  a.fgform='BB' and a.kdbb = :id",
+            WHERE a.fgform='BA' and a.kdbb = :id",
             [
                 'id' => $id
             ]
@@ -97,8 +97,8 @@ class BahanBaku extends BaseModel
     function insertData($params)
     {
         $result = DB::insert(
-            "INSERT INTO msbahanbaku (kdbb, nmbb, satkecil, kdgroupbb, satbesar, jumsat,upddate,upduser, fgform)
-            VALUES (:kdbb, :nmbb, :satkecil, :kdgroupbb, :satbesar, :jumsat, getdate(), :upduser, 'BB')",
+            "INSERT INTO msbahanbaku (kdbb, nmbb, satkecil, kdgroupbb, satbesar, jumsat,upddate,upduser ,fgform)
+            VALUES (:kdbb, :nmbb, :satkecil, :kdgroupbb, :satbesar, :jumsat, getdate(), :upduser, 'BA')",
             [
                 'kdbb' => $params['bahan_baku_id'],
                 'nmbb' => $params['bahan_baku_name'],
@@ -153,7 +153,7 @@ class BahanBaku extends BaseModel
 
     public function beforeAutoNumber()
     {
-        $autoNumber = $this->autoNumber($this->table, 'kdbb', 'BB', '0000');
+        $autoNumber = $this->autoNumber($this->table, 'kdbb', 'BA', '0000');
 
         return $autoNumber;
     }

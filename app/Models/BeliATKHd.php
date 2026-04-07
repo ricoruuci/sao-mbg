@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\BaseModel;
 use function PHPUnit\Framework\isNull;
 
-class BeliHd extends BaseModel
+class BeliATKHd extends BaseModel
 {
     use HasFactory;
 
@@ -20,7 +20,7 @@ class BeliHd extends BaseModel
     {
         $result = DB::insert(
             "INSERT trbelibbhd (nota,kdsupplier,tglbeli,tax,keterangan,upddate,upduser,ttlpb,stpb,ttltax,company_id,interest,fg_upload,discamount, fgform)
-            VALUES (:nota, :kdsupplier, :transdate, :tax, :note, getdate(), :upduser, 0, 0, 0,:company_id, :interest, :fgupload, :discamount, 'BB')",
+            VALUES (:nota, :kdsupplier, :transdate, :tax, :note, getdate(), :upduser, 0, 0, 0,:company_id, :interest, :fgupload, :discamount, 'BA')",
             [
                 'nota' => $params['nota_beli'],
                 'kdsupplier' => $params['supplier_id'],
@@ -102,7 +102,7 @@ class BeliHd extends BaseModel
             from trbelibbhd a
             inner join mssupplier b on a.kdsupplier=b.kdsupplier
             left join mscabang c on a.company_id = c.company_id
-            where a.fgform='BB' and convert(varchar(10),a.tglbeli,112) between :dari and :sampai
+            where a.fgform='BA' and convert(varchar(10),a.tglbeli,112) between :dari and :sampai
             $addCon
             and isnull(a.nota,'') like :searchkeyword and isnull(b.nmsupplier,'') like :supplierkeyword
             order by a.nota ",
@@ -126,7 +126,7 @@ class BeliHd extends BaseModel
             from trbelibbhd a
             inner join mssupplier b on a.kdsupplier=b.kdsupplier
             left join mscabang c on a.company_id = c.company_id
-            where a.fgform='BB' and a.nota = :id",
+            where  a.fgform='BA' and a.nota = :id",
             [
                 'id' => $id
             ]
@@ -185,7 +185,7 @@ class BeliHd extends BaseModel
             LEFT JOIN mscabang c ON a.company_id = c.company_id
             LEFT JOIN trbelibbdt d ON a.nota = d.nota AND a.kdsupplier = d.kdsupplier
 
-            WHERE a.nota = :id
+            WHERE a.fgform='BA' and a.nota = :id
             GROUP BY
                 a.nota,a.kdsupplier,b.nmsupplier,b.hp,b.cp,a.tglbeli,a.tax,
                 a.keterangan,a.upddate,a.upduser,a.discamount,a.ttltax,
@@ -276,7 +276,7 @@ class BeliHd extends BaseModel
 
     public function beforeAutoNumber($transdate,$company_code)
     {
-        $tahunBulan = '/' . substr($transdate, 2, 2) . '/' . substr($transdate, 4, 2) . '/';
+        $tahunBulan = 'A' . substr($transdate, 2, 2) . '/' . substr($transdate, 4, 2) . '/';
 
         $autoNumber = $this->autoNumber($this->table, 'nota', $company_code.$tahunBulan, '000');
 
