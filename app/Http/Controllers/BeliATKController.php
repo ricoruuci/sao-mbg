@@ -22,7 +22,7 @@ use App\Http\Requests\Beli\DeleteRequest;
 use App\Http\Requests\Beli\GetRequestById;
 use App\Http\Requests\Beli\GetRequest;
 
-class BeliController extends Controller
+class BeliATKController extends Controller
 {
     use ArrayPaginator, HttpResponse;
 

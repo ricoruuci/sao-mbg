@@ -19,18 +19,28 @@ class BahanATK extends BaseModel
     function getAllData($params)
     {
         $result = DB::select(
-            "SELECT a.kdbb as bahan_baku_id, a.nmbb as bahan_baku_name,
-            a.satkecil as satuan, a.satbesar as satuan_besar, a.jumsat as konversi,
-            b.kdgroupbb as group_bahan_baku_id, b.nmgroupbb as group_bahan_baku_name,a.upddate,a.upduser
+            "SELECT 
+                a.kdbb as bahan_baku_id, 
+                a.nmbb as bahan_baku_name,
+                a.satkecil as satuan, 
+                a.satbesar as satuan_besar, 
+                a.jumsat as konversi,
+                b.kdgroupbb as group_bahan_baku_id, 
+                b.nmgroupbb as group_bahan_baku_name,
+                a.upddate,
+                a.upduser
             FROM msbahanbaku a
-            inner join msgroupbb b on a.kdgroupbb = b.kdgroupbb
-            WHERE a.fgform='BA' and a.nmbb LIKE :search_keyword
-            OR b.nmgroupbb LIKE :search_keyword2
-            order by a.nmbb ",
+            INNER JOIN msgroupbb b ON a.kdgroupbb = b.kdgroupbb
+            WHERE 
+                a.fgform = 'BA'
+                AND (
+                    a.nmbb LIKE :search_keyword
+                    OR b.nmgroupbb LIKE :search_keyword2
+                )
+            ORDER BY a.nmbb",
             [
-                'search_keyword' => '%' . $params['search_keyword'] . '%',
+                'search_keyword'  => '%' . $params['search_keyword'] . '%',
                 'search_keyword2' => '%' . $params['search_keyword'] . '%'
-
             ]
         );
 
