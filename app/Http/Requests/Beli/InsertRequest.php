@@ -21,6 +21,7 @@ class InsertRequest extends BaseRequest
             'note' => 'nullable|string',
             'company_id' => 'required|integer',
             'company_code' => 'required|string',
+            'date_costing' => 'nullable|date',
             'detail' => 'nullable|array',
             'detail.*.bahan_baku_id' => 'required|string',
             'detail.*.qty' => 'required|numeric|min:0',
