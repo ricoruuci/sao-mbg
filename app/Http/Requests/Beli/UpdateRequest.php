@@ -20,6 +20,7 @@ class UpdateRequest extends BaseRequest
             'disc_amount' => 'required|numeric|min:0',
             'ppn' => 'required|numeric|min:0',
             'note' => 'nullable|string',
+            'date_costing' => 'nullable|date',
             'detail' => 'nullable|array',
             'detail.*.bahan_baku_id' => 'required|string',
             'detail.*.qty' => 'required|numeric|min:0',

@@ -19,8 +19,8 @@ class BeliHd extends BaseModel
     function insertData($params)
     {
         $result = DB::insert(
-            "INSERT trbelibbhd (nota,kdsupplier,tglbeli,tax,keterangan,upddate,upduser,ttlpb,stpb,ttltax,company_id,interest,fg_upload,discamount, fgform)
-            VALUES (:nota, :kdsupplier, :transdate, :tax, :note, getdate(), :upduser, 0, 0, 0,:company_id, :interest, :fgupload, :discamount, 'BB')",
+            "INSERT trbelibbhd (nota,kdsupplier,tglbeli,tax,keterangan,upddate,upduser,ttlpb,stpb,ttltax,company_id,interest,fg_upload,discamount, fgform, date_costing)
+            VALUES (:nota, :kdsupplier, :transdate, :tax, :note, getdate(), :upduser, 0, 0, 0,:company_id, :interest, :fgupload, :discamount, 'BB', :date_costing)",
             [
                 'nota' => $params['nota_beli'],
                 'kdsupplier' => $params['supplier_id'],
@@ -31,7 +31,8 @@ class BeliHd extends BaseModel
                 'company_id' => $params['company_id'],
                 'interest' => 0,
                 'fgupload' => 'T',
-                'discamount' => $params['discamount']
+                'discamount' => $params['discamount'],
+                'date_costing' => $params['date_costing']
             ]
         );
 
@@ -49,7 +50,8 @@ class BeliHd extends BaseModel
             upddate = getdate(),
             upduser = :upduser,
             kdsupplier = :kdsupplier,
-            discamount = :discamount
+            discamount = :discamount,
+            date_costing = :date_costing
             WHERE nota = :nota",
             [
                 'nota' => $params['nota_beli'],
@@ -58,7 +60,8 @@ class BeliHd extends BaseModel
                 'note' => $params['note'],
                 'upduser' => $params['upduser'],
                 'kdsupplier' => $params['supplier_id'],
-                'discamount' => $params['discamount']
+                'discamount' => $params['discamount'],
+                'date_costing' => $params['date_costing']
             ]
         );
 
@@ -98,7 +101,7 @@ class BeliHd extends BaseModel
             a.stpb as sub_total,isnull(a.discamount,0) as disc_amount,a.ttltax as total_ppn,a.ttlpb as grand_total,
             isnull(a.fg_upload,'T') as fg_upload,
             case when isnull(a.fg_upload,'T')='T' then 'Belum Upload' else 'Sudah Upload' end as status_upload,
-            a.company_id,c.company_code,c.company_name,c.company_address
+            a.company_id,c.company_code,c.company_name,c.company_address, a.date_costing as date_costing
             from trbelibbhd a
             inner join mssupplier b on a.kdsupplier=b.kdsupplier
             left join mscabang c on a.company_id = c.company_id
@@ -122,7 +125,7 @@ class BeliHd extends BaseModel
             a.stpb as sub_total,isnull(a.discamount,0) as disc_amount,a.ttltax as total_ppn,a.ttlpb as grand_total,
             isnull(a.fg_upload,'T') as fg_upload,
             case when isnull(a.fg_upload,'T')='T' then 'Belum Upload' else 'Sudah Upload' end as status_upload,
-            a.company_id,c.company_code,c.company_name,c.company_address
+            a.company_id,c.company_code,c.company_name,c.company_address, a.date_costing as date_costing
             from trbelibbhd a
             inner join mssupplier b on a.kdsupplier=b.kdsupplier
             left join mscabang c on a.company_id = c.company_id
@@ -178,7 +181,8 @@ class BeliHd extends BaseModel
                 a.company_id,
                 c.company_code,
                 c.company_name,
-                c.company_address
+                c.company_address,
+                a.date_costing as date_costing
 
             FROM trbelibbhd a
             INNER JOIN mssupplier b ON a.kdsupplier=b.kdsupplier
@@ -190,7 +194,7 @@ class BeliHd extends BaseModel
                 a.nota,a.kdsupplier,b.nmsupplier,b.hp,b.cp,a.tglbeli,a.tax,
                 a.keterangan,a.upddate,a.upduser,a.discamount,a.ttltax,
                 a.fg_upload,a.company_id,c.company_code,c.company_name,c.company_address,
-                b.bank_branch,b.bank_account,b.bank_holder
+                b.bank_branch,b.bank_account,b.bank_holder,a.date_costing
                 ",
             [
                 'id' => $id
