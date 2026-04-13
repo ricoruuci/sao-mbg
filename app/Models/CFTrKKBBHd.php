@@ -36,7 +36,7 @@ class CFTrKKBBHd extends BaseModel //nama class
             'currid' => $param['currid'],
             'total' => $param['total'],
             'company_id' => $param['company_id'],
-            'date_costing' => $param['date_costing']
+            'date_costing' => $param['date_costing'],
             ]
         );
 
