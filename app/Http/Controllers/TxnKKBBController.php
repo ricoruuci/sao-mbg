@@ -107,7 +107,8 @@ class TxnKKBBController extends Controller
                 'currid' => $request->input('currid') ?? 'IDR',
                 'total' => $request->input('total'),
                 'upduser' => Auth::user()->currentAccessToken()['namauser'],
-                'company_id' => $request->input('company_id')
+                'company_id' => $request->input('company_id'),
+                'date_costing' => $request->input('date_costing')
             ]);
 
             if ($insertheader == false) {
@@ -341,7 +342,8 @@ class TxnKKBBController extends Controller
                 'note' => $request->input('note') ?? '',
                 'currid' => $request->input('currid') ?? 'IDR',
                 'total' => $request->input('total'),
-                'upduser' => Auth::user()->currentAccessToken()['namauser']
+                'upduser' => Auth::user()->currentAccessToken()['namauser'],
+                'date_costing' => $request->input('date_costing')
             ]);
 
             if ($insertheader == false) {

@@ -21,6 +21,7 @@ class UpdateRequest extends BaseRequest
             'flagkkbb' => 'required|string|in:KM,KK,BM,BK,JU,APK,APB',
             'bank_id' => 'nullable|required_if:flagkkbb,BM,BK,APB|string',
             'total' => 'required|numeric',
+            'date_costing' => 'nullable|date_format:Ymd',
             'detail' => 'required|array',
             'detail.*.rekeningid' => 'required|string',
             'detail.*.note' => 'nullable|string|max:255',
