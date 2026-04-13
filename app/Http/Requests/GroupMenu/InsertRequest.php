@@ -14,7 +14,7 @@ class InsertRequest extends BaseRequest
     public function rules()
     {
         return [
-            'group_menu_name' => 'required|string|max:255',
+            'group_menu_name' => 'required|string|max:30',
         ];
     }
 }

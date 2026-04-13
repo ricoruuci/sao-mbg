@@ -22,9 +22,9 @@ class CFTrKKBBHd extends BaseModel //nama class
 
         $result = DB::insert(
             "INSERT INTO cftrkkbbhd
-            (voucherid,transdate,actor,bankid,note,flagkkbb,upddate,upduser,currid,total,company_id)
+            (voucherid,transdate,actor,bankid,note,flagkkbb,upddate,upduser,currid,total,company_id,date_costing)
             VALUES
-            (:voucherid,:transdate,:actor,:bankid,:note,:flagkkbb,getDate(),:upduser,:currid,:total,:company_id)",
+            (:voucherid,:transdate,:actor,:bankid,:note,:flagkkbb,getDate(),:upduser,:currid,:total,:company_id,:date_costing)",
             [
             'voucherid' => $param['voucherid'],
             'transdate' => $param['transdate'],
@@ -35,7 +35,8 @@ class CFTrKKBBHd extends BaseModel //nama class
             'upduser' => $param['upduser'],
             'currid' => $param['currid'],
             'total' => $param['total'],
-            'company_id' => $param['company_id']
+            'company_id' => $param['company_id'],
+            'date_costing' => $param['date_costing']
             ]
         );
 
@@ -90,7 +91,7 @@ class CFTrKKBBHd extends BaseModel //nama class
                   when a.FlagKKBB in ('apk','apb','apc') then (select x.NmSupplier from MsSupplier x where x.KdSupplier=a.actor)
                  else a.actor end as actor_name,
             a.bankid as bank_id,b.bankname as bank_name,a.note,a.upddate,a.upduser,a.total,
-            a.company_id,c.company_code,c.company_name,c.company_address
+            a.company_id,c.company_code,c.company_name,c.company_address,a.date_costing
             from cftrkkbbhd a
             left join cfmsbank b on a.bankid = b.bankid
             left join mscabang c on a.company_id = c.company_id
@@ -118,7 +119,7 @@ class CFTrKKBBHd extends BaseModel //nama class
                   when a.FlagKKBB in ('apk','apb','apc') then (select x.NmSupplier from MsSupplier x where x.KdSupplier=a.actor)
                  else a.actor end as actor_name,
             a.bankid as bank_id,b.bankname as bank_name,a.note,a.upddate,a.upduser,a.total,
-            a.company_id,c.company_code,c.company_name,c.company_address
+            a.company_id,c.company_code,c.company_name,c.company_address,a.date_costing
             from cftrkkbbhd a
             left join cfmsbank b on a.bankid = b.bankid
             left join mscabang c on a.company_id = c.company_id
@@ -141,6 +142,7 @@ class CFTrKKBBHd extends BaseModel //nama class
                 note = :note,
                 currid = :currid,
                 total = :total,
+                date_costing = :date_costing,
                 upddate = getDate(),
                 upduser = :upduser
             WHERE voucherid = :voucherid ',
@@ -152,6 +154,7 @@ class CFTrKKBBHd extends BaseModel //nama class
                 'note' => $param['note'],
                 'currid' => $param['currid'],
                 'total' => $param['total'],
+                'date_costing' => $param['date_costing'],
                 'upduser' => $param['upduser'],
             ]
         );

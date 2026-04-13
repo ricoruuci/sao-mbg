@@ -15,8 +15,8 @@ class InsertRequest extends BaseRequest
     {
         return [
             'transdate' => 'required|date_format:Ymd',
-            'actor' => 'nullable|string|max:255|required_unless:flagkkbb,JU',
-            'note' => 'nullable|string|max:255',
+            'actor' => 'nullable|string|max:50|required_unless:flagkkbb,JU',
+            'note' => 'nullable|string|max:100',
             'flagkkbb' => 'required|string|in:KM,KK,BM,BK,JU,APK,APB',
             'company_id' => 'required|integer',
             'company_code' => 'required|string',
