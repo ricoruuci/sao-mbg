@@ -15,7 +15,7 @@ class UpdateRequest extends BaseRequest
     {
         return [
             'group_menu_id' => 'required|string',
-            'group_menu_name' => 'required|string|max:255',
+            'group_menu_name' => 'required|string|max:30',
         ];
     }
 }

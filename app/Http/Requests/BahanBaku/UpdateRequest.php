@@ -16,11 +16,11 @@ class UpdateRequest extends BaseRequest
     {
         return [
             'bahan_baku_id' => 'required|string',
-            'bahan_baku_name' => 'required|string|max:255',
-            'satuan' => 'required|string|max:50',
-            'satuan_besar' => 'required|string|max:50',
+            'bahan_baku_name' => 'required|string|max:100',
+            'satuan' => 'required|string|max:20',
+            'satuan_besar' => 'required|string|max:20',
             'konversi' => 'required|numeric',
-            'group_bahan_baku_id' => 'required|string',
+            'group_bahan_baku_id' => 'required|string|max:20',
         ];
     }
 
