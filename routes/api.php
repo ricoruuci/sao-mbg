@@ -35,6 +35,7 @@ use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\PurchaseOrderKitchenController;
 use App\Http\Controllers\PurchaseOrderAtkController;
 use App\Http\Controllers\VolunteerSalaryController;
+use App\Http\Controllers\TrAbsensiController;
 
 Route::post('login', [AuthController::class, 'login']);
 Route::post('logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
@@ -184,6 +185,12 @@ Route::get('volunteer-salary-by-id', [VolunteerSalaryController::class, 'getData
 Route::post('volunteer-salary', [VolunteerSalaryController::class, 'insertData'])->middleware('auth:sanctum');
 Route::patch('volunteer-salary', [VolunteerSalaryController::class, 'updateData'])->middleware('auth:sanctum');
 Route::delete('volunteer-salary', [VolunteerSalaryController::class, 'deleteData'])->middleware('auth:sanctum');
+
+Route::get('tr-absensi', [TrAbsensiController::class, 'getListData'])->middleware('auth:sanctum');
+Route::get('tr-absensi-by-id', [TrAbsensiController::class, 'getDataById'])->middleware('auth:sanctum');
+Route::post('tr-absensi', [TrAbsensiController::class, 'insertData'])->middleware('auth:sanctum');
+Route::patch('tr-absensi', [TrAbsensiController::class, 'updateData'])->middleware('auth:sanctum');
+Route::delete('tr-absensi', [TrAbsensiController::class, 'deleteData'])->middleware('auth:sanctum');
 
 /*==============================================================================================================
  * Laporan
