@@ -181,6 +181,7 @@ Route::patch('purchase-order-atk', [PurchaseOrderAtkController::class, 'updateDa
 Route::delete('purchase-order-atk', [PurchaseOrderAtkController::class, 'deleteData'])->middleware('auth:sanctum');
 
 Route::get('volunteer-salary', [VolunteerSalaryController::class, 'getListData'])->middleware('auth:sanctum');
+Route::get('volunteer-salary-absensi', [VolunteerSalaryController::class, 'getDataAbsensi'])->middleware('auth:sanctum');
 Route::get('volunteer-salary-by-id', [VolunteerSalaryController::class, 'getDataById'])->middleware('auth:sanctum');
 Route::post('volunteer-salary', [VolunteerSalaryController::class, 'insertData'])->middleware('auth:sanctum');
 Route::patch('volunteer-salary', [VolunteerSalaryController::class, 'updateData'])->middleware('auth:sanctum');

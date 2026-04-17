@@ -65,6 +65,7 @@ class EmployeeController extends Controller
             $params = [
                 'employee_code' => $autonumber,
                 'employee_name' => $request->employee_name,
+                'employee_divisi' => $request->employee_divisi ?? '',
                 'join_date' => $request->join_date,
                 'fg_active' => $request->fg_active ?? 'Y',
                 'meal_amount' => $request->meal_amount ?? 0,
@@ -103,6 +104,7 @@ class EmployeeController extends Controller
             'id' => $request->id,
             // 'employee_code' => $request->employee_code,
             'employee_name' => $request->employee_name,
+            'employee_divisi' => $request->employee_divisi ?? '',
             'join_date' => $request->join_date,
             'fg_active' => $request->fg_active ?? 'Y',
             'meal_amount' => $request->meal_amount ?? 0,
