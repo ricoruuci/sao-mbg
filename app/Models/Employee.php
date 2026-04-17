@@ -19,7 +19,7 @@ class Employee extends BaseModel
     function getAllData($params)
     {
         $result = DB::select(
-            "SELECT a.id, a.employee_code, a.employee_name, a.join_date, a.fg_active, a.meal_amount, a.salary_amount, a.other_amount, a.upddate, a.upduser,
+            "SELECT a.id, a.employee_code, a.employee_name, isnull(a.employee_divisi,'') as employee_divisi, a.join_date, a.fg_active, a.meal_amount, a.salary_amount, a.other_amount, a.upddate, a.upduser,
             a.company_id,b.company_code,b.company_name,b.company_address
             from mskaryawan a
             left join mscabang b on a.company_id = b.company_id
@@ -39,7 +39,7 @@ class Employee extends BaseModel
     function getDataById($id)
     {
         $result = DB::selectOne(
-            "SELECT a.id, a.employee_code, a.employee_name, a.join_date, a.fg_active, a.meal_amount, a.salary_amount, a.other_amount, a.upddate, a.upduser,
+            "SELECT a.id, a.employee_code, a.employee_name, isnull(a.employee_divisi,'') as employee_divisi, a.join_date, a.fg_active, a.meal_amount, a.salary_amount, a.other_amount, a.upddate, a.upduser,
             a.company_id,b.company_code,b.company_name,b.company_address
             from mskaryawan a
             left join mscabang b on a.company_id = b.company_id
@@ -79,11 +79,12 @@ class Employee extends BaseModel
     function insertData($params)
     {
         $result = DB::insert(
-            "INSERT INTO mskaryawan (employee_code, employee_name, join_date, fg_active, meal_amount, salary_amount, other_amount, upddate, upduser, company_id)
-            VALUES (:employee_code, :employee_name, :join_date, :fg_active, :meal_amount, :salary_amount, :other_amount, getdate(), :upduser, :company_id)",
+            "INSERT INTO mskaryawan (employee_code, employee_name, employee_divisi, join_date, fg_active, meal_amount, salary_amount, other_amount, upddate, upduser, company_id)
+            VALUES (:employee_code, :employee_name, :employee_divisi, :join_date, :fg_active, :meal_amount, :salary_amount, :other_amount, getdate(), :upduser, :company_id)",
             [
                 'employee_code' => $params['employee_code'],
                 'employee_name' => $params['employee_name'],
+                'employee_divisi' => $params['employee_divisi'],
                 'join_date' => $params['join_date'],
                 'fg_active' => $params['fg_active'],
                 'meal_amount' => $params['meal_amount'],
@@ -105,6 +106,7 @@ class Employee extends BaseModel
             SET
             -- employee_code = :employee_code,
             employee_name = :employee_name,
+            employee_divisi = :employee_divisi,
             join_date = :join_date,
             fg_active = :fg_active,
             meal_amount = :meal_amount,
@@ -118,6 +120,7 @@ class Employee extends BaseModel
                 'id' => $params['id'],
                 // 'employee_code' => $params['employee_code'],
                 'employee_name' => $params['employee_name'],
+                'employee_divisi' => $params['employee_divisi'],
                 'join_date' => $params['join_date'],
                 'fg_active' => $params['fg_active'],
                 'meal_amount' => $params['meal_amount'],

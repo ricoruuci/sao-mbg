@@ -14,16 +14,22 @@ class InsertRequest extends BaseRequest
     public function rules()
     {
         return [
-            'volunteer_salary_instansi' => 'required|string|max:255',
-            'volunteer_salary_date' => 'required|date',
-            'volunteer_salary_date_from' => 'required|date',
-            'volunteer_salary_date_to' => 'required|date|after_or_equal:volunteer_salary_date_from',
-            'volunteer_salary_name' => 'required|string|max:255',
-            'volunteer_salary_position' => 'nullable|string|max:150',
-            'volunteer_salary_price' => 'required|numeric|min:0',
-            'volunteer_salary_qty' => 'required|numeric|min:0',
-            'volunteer_salary_overtime' => 'nullable|numeric|min:0',
-            'volunteer_salary_total' => 'nullable|numeric|min:0',
+            'volunteer_salary_hd_date' => 'required|date_format:Ymd',
+            'volunteer_salary_hd_date_from' => 'required|date_format:Ymd',
+            'volunteer_salary_hd_date_to' => 'required|date_format:Ymd|after_or_equal:volunteer_salary_hd_date_from',
+            'volunteer_salary_hd_adjust' => 'nullable|numeric|min:0',
+            'volunteer_salary_hd_subtotal' => 'nullable|numeric|min:0',
+            'volunteer_salary_hd_subbonuses' => 'nullable|numeric|min:0',
+            'volunteer_salary_hd_note' => 'nullable|string',
+
+            'detail' => 'required|array|min:1',
+            'detail.*.volunteer_salary_dt_user_code' => 'required|string|max:50',
+            'detail.*.volunteer_salary_dt_user_name' => 'required|string|max:100',
+            'detail.*.volunteer_salary_dt_divisi' => 'nullable|string|max:50',
+            'detail.*.volunteer_salary_dt_work_day' => 'nullable|numeric|min:0',
+            'detail.*.volunteer_salary_dt_price' => 'nullable|numeric|min:0',
+            'detail.*.volunteer_salary_dt_bonuses' => 'nullable|numeric|min:0',
+            'detail.*.volunteer_salary_dt_total' => 'nullable|numeric|min:0',
         ];
     }
 }

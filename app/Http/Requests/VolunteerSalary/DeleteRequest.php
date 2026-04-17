@@ -14,7 +14,7 @@ class DeleteRequest extends BaseRequest
     public function rules()
     {
         return [
-            'volunteer_salary_code' => 'required|string|max:30',
+            'volunteer_salary_hd_code' => 'required|string|max:50',
         ];
     }
 }

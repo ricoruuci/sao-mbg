@@ -15,6 +15,7 @@ class InsertRequest extends BaseRequest
     {
         return [
             'employee_name' => 'required|string|max:100',
+            'employee_divisi' => 'nullable|string|max:100',
             'join_date' => 'required|date_format:Ymd',
             'fg_active' => 'required|in:Y,T',
             'meal_amount' => 'nullable|numeric|min:0',
