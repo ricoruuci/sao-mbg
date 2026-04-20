@@ -200,8 +200,10 @@ Route::delete('tr-absensi', [TrAbsensiController::class, 'deleteData'])->middlew
 Route::get('rpt-penjualan', [RptPenjualanController::class, 'getLapPenjualan'])->middleware('auth:sanctum');
 Route::get('rpt-penjualan-harian', [RptPenjualanController::class, 'getLapPenjualanHarian'])->middleware('auth:sanctum');
 Route::get('rpt-pembelian', [RptPembelianController::class, 'getLapPembelian'])->middleware('auth:sanctum');
+Route::get('rpt-pembelian-periode-non-bahan-baku', [RptPembelianController::class, 'getLapPembelianPeriodeNonBahanBaku'])->middleware('auth:sanctum');
 Route::get('rpt-hutang', [RptPembelianController::class, 'getLapHutang'])->middleware('auth:sanctum');
 Route::get('rpt-beli-adjustment', [RptPembelianController::class, 'getLaporanBeliAdjustment'])->middleware('auth:sanctum');
+Route::get('rpt-beli-adjustment-non-bahan-baku', [RptPembelianController::class, 'getLaporanBeliAdjustmentNonBahanBaku'])->middleware('auth:sanctum');
 Route::patch('update-nota-beli', [RptPembelianController::class, 'updateFgUpload'])->middleware('auth:sanctum');
 
 Route::get('rpt-buku-besar', [RptFinanceController::class, 'getRptBukuBesar'])->middleware('auth:sanctum');

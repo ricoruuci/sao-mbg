@@ -59,12 +59,13 @@ class VolunteerSalaryHd extends BaseModel
                 isnull(volunteer_salary_hd_subbonuses, 0) as volunteer_salary_hd_subbonuses,
                 isnull(volunteer_salary_hd_subtotal + volunteer_salary_hd_subbonuses, 0) as volunteer_salary_hd_grandtotal,
                 isnull((
-                    SELECT TOP 1 tr_absensi_header_branch
-                    FROM trabsensihd
-                    WHERE convert(varchar(8), tr_absensi_header_date, 112)
+                    SELECT TOP 1 b.tr_absensi_header_branch
+                    FROM trabsensidt a
+                    INNER JOIN trabsensihd b ON a.tr_absensi_header_code = b.tr_absensi_header_code
+                    WHERE convert(varchar(8), a.tr_absensi_dt_date, 112)
                         BETWEEN convert(varchar(8), volunteer_salary_hd_date_from, 112)
                         AND convert(varchar(8), volunteer_salary_hd_date_to, 112)
-                    ORDER BY tr_absensi_header_date DESC, tr_absensi_header_code DESC
+                    ORDER BY a.tr_absensi_dt_date DESC, a.tr_absensi_header_code DESC
                 ), '') as volunteer_salary_hd_branch,
                 isnull(volunteer_salary_hd_note, '') as volunteer_salary_hd_note,
                 upddate,

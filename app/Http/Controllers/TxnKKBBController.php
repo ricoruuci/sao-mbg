@@ -172,7 +172,9 @@ class TxnKKBBController extends Controller
 
     public function getListData(GetRequest $request)
     {
-        $cfheader = new CFTrKKBBHd();
+        try {
+                
+    $cfheader = new CFTrKKBBHd();
         $cfdetail = new CFTrKKBBDt();
 
         $user = new User();
@@ -212,6 +214,10 @@ class TxnKKBBController extends Controller
         $resultPaginated = $this->arrayPaginator($request, $result);
 
         return $this->responsePagination($resultPaginated);
+
+        } catch (\Exception $e) {
+            return $this->responseError('Terjadi kesalahan: ' . $e->getMessage(), 500);
+        }
 
     }
 

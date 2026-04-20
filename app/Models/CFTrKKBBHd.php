@@ -53,31 +53,24 @@ class CFTrKKBBHd extends BaseModel //nama class
 
         $addCon = ''; // default kosong
 
-        if (!empty($params['company_id']))
-        {
-            $addCon = 'and a.company_id =:company_id ';
-            $binding =
-            [
-                'dari' => $param['dari'],
-                'sampai' => $param['sampai'],
-                'flagkkbb' => $param['flagkkbb'],
-                'bankid' => '%' . $param['bankid'] . '%',
-                'actorkeyword' => '%' . $param['actorkeyword'] . '%',
-                'voucherkeyword' => '%' . $param['voucherkeyword'] . '%',
-                'company_id' => $param['company_id']
-            ];
+        $binding = [
+            'dari' => $param['dari'],
+            'sampai' => $param['sampai'],
+            'flagkkbb' => $param['flagkkbb'],
+            'actorkeyword' => '%' . $param['actorkeyword'] . '%',
+            'voucherkeyword' => '%' . $param['voucherkeyword'] . '%',
+        ];
+
+        // filter company_id
+        if (!empty($param['company_id'])) {
+            $addCon .= ' AND a.company_id = :company_id ';
+            $binding['company_id'] = $param['company_id'];
         }
-        else
-        {
-            $binding =
-            [
-                'dari' => $param['dari'],
-                'sampai' => $param['sampai'],
-                'flagkkbb' => $param['flagkkbb'],
-                'bankid' => '%' . $param['bankid'] . '%',
-                'actorkeyword' => '%' . $param['actorkeyword'] . '%',
-                'voucherkeyword' => '%' . $param['voucherkeyword'] . '%',
-            ];
+
+        // filter bank_id exact
+        if (!empty($param['bankid'])) {
+            $addCon .= ' AND ISNULL(a.bankid, \'\') = :bankid ';
+            $binding['bankid'] = $param['bankid'];
         }
 
         $result = DB::select(
@@ -98,7 +91,7 @@ class CFTrKKBBHd extends BaseModel //nama class
 			where
 			convert(varchar(10),a.transdate,112) between :dari and :sampai and a.flagkkbb=:flagkkbb
             $addCon
-            and isnull(a.bankid,'') like :bankid and isnull(a.actor,'') like :actorkeyword and a.voucherid like :voucherkeyword
+            and isnull(a.actor,'') like :actorkeyword and a.voucherid like :voucherkeyword
             order by a.transdate $order",
             $binding
         );
