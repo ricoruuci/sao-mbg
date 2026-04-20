@@ -247,9 +247,10 @@ class VolunteerSalaryController extends Controller
             "WITH absensi AS (
                 SELECT
                     tr_absensi_dt_id AS employee_code,
-                    COUNT(1) AS total_day
+                    COUNT(DISTINCT CONVERT(VARCHAR(8), tr_absensi_dt_date, 112)) AS total_day
                 FROM trabsensidt
                 WHERE CONVERT(varchar(8), tr_absensi_dt_date, 112) BETWEEN :dari AND :sampai
+                AND (tr_absensi_dt_clock_in IS NOT NULL OR tr_absensi_dt_clock_out IS NOT NULL)
                 GROUP BY tr_absensi_dt_id
             )
             SELECT

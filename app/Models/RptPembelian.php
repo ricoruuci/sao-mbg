@@ -42,7 +42,47 @@ class RptPembelian extends BaseModel
             "SELECT a.nota as nota_beli,a.KdSupplier as supplier_id,b.NmSupplier as supplier_name,a.tglbeli as transdate,
             a.Tax as ppn,a.stpb as sub_total,isnull(a.discamount,0) as disc_amount,a.ttltax as total_ppn,a.TTLPb as grand_total,a.upddate,a.upduser
             from TrBeliBBHd a inner join MsSupplier b on a.KdSupplier=b.KdSupplier
-            where convert(varchar(10),a.tglbeli,112) between :dari and :sampai and a.nota like :search_keyword
+            where convert(varchar(10),a.tglbeli,112) between :dari and :sampai and a.fgform='BB' and a.nota like :search_keyword
+            and isnull(b.nmSupplier,'') like :supplier_keyword
+            $condition
+            order by a.tglbeli,a.nota ",
+            $bindings
+        );
+
+        return $result;
+    }
+
+    function getLapPembelianPeriodeNonBahanBaku($params)
+    {
+        $condition = '';
+
+        if (!empty($params['company_id']))
+        {
+            $condition = " and a.company_id=:company_id";
+            $bindings = [
+                'dari' => $params['dari'],
+                'sampai' => $params['sampai'],
+                'search_keyword' => '%'.$params['search_keyword'].'%',
+                'supplier_keyword' => '%'.$params['supplier_keyword'].'%',
+                'company_id' => $params['company_id']
+            ];
+            // dd(var_dump($params['company_id']));
+        }
+        else
+        {
+            $bindings = [
+                'dari' => $params['dari'],
+                'sampai' => $params['sampai'],
+                'search_keyword' => '%'.$params['search_keyword'].'%',
+                'supplier_keyword' => '%'.$params['supplier_keyword'].'%'
+            ];
+        }
+
+        $result = DB::select(
+            "SELECT a.nota as nota_beli,a.KdSupplier as supplier_id,b.NmSupplier as supplier_name,a.tglbeli as transdate,
+            a.Tax as ppn,a.stpb as sub_total,isnull(a.discamount,0) as disc_amount,a.ttltax as total_ppn,a.TTLPb as grand_total,a.upddate,a.upduser
+            from TrBeliBBHd a inner join MsSupplier b on a.KdSupplier=b.KdSupplier
+            where convert(varchar(10),a.tglbeli,112) between :dari and :sampai and a.fgform='BA' and a.nota like :search_keyword
             and isnull(b.nmSupplier,'') like :supplier_keyword
             $condition
             order by a.tglbeli,a.nota ",
@@ -136,6 +176,44 @@ class RptPembelian extends BaseModel
             inner join msbahanbaku d on a.kdbb=d.kdbb
             inner join mscabang e on b.company_id=e.company_id
             where convert(varchar(10),b.tglbeli,112) between :dari and :sampai
+            and b.fgform='BB'
+            and b.company_id=:company_id
+            order by b.tglbeli,b.nota,d.nmbb ",
+            [
+                'dari' => $params['dari'],
+                'sampai' => $params['sampai'],
+                'company_id' => $params['company_id']
+            ]
+        );
+
+        return $result;
+    }
+
+    public function getLaporanBeliAdjustmentNonBahanBaku($params)
+    {
+        if (empty($params['adjustment']))
+        {
+            $adjustment = 0;
+        }
+        else
+        {
+            $adjustment = $params['adjustment'];
+        }
+
+        $result = DB::select(
+            "SELECT b.company_id,e.company_code,e.company_name,e.company_address,b.tglbeli as transdate,b.nota as nota_beli,b.kdsupplier as supplier_id,
+            c.nmsupplier as supplier_name,a.kdbb as bahan_baku_id,d.nmbb as bahan_baku_name,a.jml as qty,a.kdsat as satuan,a.harga as price,
+            isnull(a.jml*a.harga,0) as total,
+            (case when isnull(b.fg_upload,'T')='T' then $adjustment else isnull(b.interest,0) end) as adjustment,
+            (a.jml+round(a.jml*((case when isnull(b.fg_upload,'T')='T' then $adjustment else isnull(b.interest,0) end)*0.01),0) ) as qty_adjustment,
+            (a.jml+round(a.jml*((case when isnull(b.fg_upload,'T')='T' then $adjustment else isnull(b.interest,0) end)*0.01),0) )*a.harga as total_adjustment
+            from trbelibbdt a
+            inner join trbelibbhd b on a.nota=b.nota
+            inner join mssupplier c on b.kdsupplier=c.kdsupplier
+            inner join msbahanbaku d on a.kdbb=d.kdbb
+            inner join mscabang e on b.company_id=e.company_id
+            where convert(varchar(10),b.tglbeli,112) between :dari and :sampai
+            and b.fgform='BA'
             and b.company_id=:company_id
             order by b.tglbeli,b.nota,d.nmbb ",
             [

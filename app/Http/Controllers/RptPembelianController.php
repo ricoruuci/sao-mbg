@@ -113,6 +113,36 @@ class RptPembelianController extends Controller
         return $result;
     }
 
+    public function getLaporanBeliAdjustmentNonBahanBaku(GetLapBeliAdjustmentRequest $request)
+    {
+        $model = new RptPembelian();
+
+        $data = $model->getLaporanBeliAdjustmentNonBahanBaku([
+            'dari' => $request->input('dari'),
+            'sampai' => $request->input('sampai'),
+            'adjustment' => $request->input('adjustment') ?? 0,
+            'company_id' => $request->input('company_id') ?? Auth::user()->currentAccessToken()['company_id']
+        ]);
+
+        $grandtotal = 0;
+        $grandtotaladjustment = 0;
+
+        foreach ($data as $res) {
+            $grandtotal += $res->total;
+            $grandtotaladjustment += $res->total_adjustment;
+        }
+
+        $result = [
+            'data' => $data,
+            'summary' => [
+                'grand_total' => $grandtotal,
+                'grand_total_adjustment' => $grandtotaladjustment
+            ]
+        ];
+
+        return $result;
+    }
+
     public function updateFgUpload(UpdateNotaBeliRequest $request)
     {
         $model = new RptPembelian();
@@ -140,6 +170,38 @@ class RptPembelianController extends Controller
             DB::rollBack();
             return $this->responseError('Terjadi kesalahan: ' . $e->getMessage(), 500);
         }
+    }
+
+    public function getLapPembelianPeriodeNonBahanBaku(GetLapPembelianRequest $request)
+    {
+        $model = new RptPembelian();
+        $user = new User();
+        $cek = $user->cekLevel(Auth::user()->currentAccessToken()['namauser']);
+
+        if ($cek->kdjabatan=='USR')
+        {
+            $result = $model->getLapPembelianPeriodeNonBahanBaku([
+                'dari' => $request->input('dari'),
+                'sampai' => $request->input('sampai'),
+                'search_keyword' => $request->input('search_keyword', ''),
+                'supplier_keyword' => $request->input('supplier_keyword', ''),
+                'company_id' => Auth::user()->currentAccessToken()['company_id']
+            ]);
+        }
+        else
+        {
+            $result = $model->getLapPembelianPeriodeNonBahanBaku([
+                'dari' => $request->input('dari'),
+                'sampai' => $request->input('sampai'),
+                'search_keyword' => $request->input('search_keyword', ''),
+                'supplier_keyword' => $request->input('supplier_keyword', ''),
+                'company_id' => $request->input('company_id', Auth::user()->currentAccessToken()['company_id'])
+            ]);
+        }
+
+        $resultPaginated = $this->arrayPaginator($request, $result);
+
+        return $this->responsePagination($resultPaginated);
     }
 
 }
