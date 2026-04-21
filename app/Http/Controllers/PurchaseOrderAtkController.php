@@ -32,6 +32,7 @@ class PurchaseOrderAtkController extends Controller
 
         $params = [
             'purchase_order_atk_date' => $request->purchase_order_atk_date,
+            'purchase_order_atk_date_costing' => $request->purchase_order_atk_date_costing,
             'purchase_order_atk_supplier_id' => $request->purchase_order_atk_supplier_id,
             'purchase_order_atk_supplier_name' => $supplier->supplier_name,
             'purchase_order_atk_pic_name' => $supplier->supplier_pic_name,
@@ -137,6 +138,7 @@ class PurchaseOrderAtkController extends Controller
         $params = [
             'purchase_order_atk_id' => $request->purchase_order_atk_id,
             'purchase_order_atk_date' => $request->purchase_order_atk_date,
+            'purchase_order_atk_date_costing' => $request->purchase_order_atk_date_costing,
             'purchase_order_atk_supplier_id' => $request->purchase_order_atk_supplier_id,
             'purchase_order_atk_supplier_name' => $supplier->supplier_name,
             'purchase_order_atk_pic_name' => $supplier->supplier_pic_name,
