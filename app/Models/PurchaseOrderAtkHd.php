@@ -10,24 +10,25 @@ class PurchaseOrderAtkHd extends BaseModel
 {
     use HasFactory;
 
-    protected $table = 'trpurchaseorderatkhhd';
+    protected $table = 'trpurchaseorderatkhd';
 
     public $timestamps = false;
 
     public function insertData($params)
     {
         return DB::insert(
-            "INSERT INTO trpurchaseorderatkhhd
-            (purchase_order_atk_id, purchase_order_atk_date, purchase_order_atk_supplier_id,
+            "INSERT INTO trpurchaseorderatkhd
+            (purchase_order_atk_id, purchase_order_atk_date, purchase_order_atk_date_costing, purchase_order_atk_supplier_id,
             purchase_order_atk_supplier_name, purchase_order_atk_pic_name, purchase_order_atk_pic_phone,
             purchase_order_atk_to, purchase_order_atk_address, purchase_order_atk_note, purchase_order_atk_discount, purchase_order_atk_tax,
             purchase_order_atk_tax_amount, purchase_order_atk_koefisien, purchase_order_atk_budget,
             purchase_order_atk_budget_over, purchase_order_atk_subtotal, purchase_order_atk_grandtotal,
             upddate, upduser)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0, ?, ?, ?, 0, 0, getdate(), ?)",
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, getdate(), ?)",
             [
                 $params['purchase_order_atk_id'],
                 $params['purchase_order_atk_date'],
+                $params['purchase_order_atk_date_costing'] ?? null,
                 $params['purchase_order_atk_supplier_id'],
                 $params['purchase_order_atk_supplier_name'],
                 $params['purchase_order_atk_pic_name'],
@@ -37,9 +38,12 @@ class PurchaseOrderAtkHd extends BaseModel
                 $params['purchase_order_atk_note'],
                 $params['purchase_order_atk_discount'],
                 $params['purchase_order_atk_tax'],
+                0, // purchase_order_atk_tax_amount
                 $params['purchase_order_atk_koefisien'],
                 $params['purchase_order_atk_budget'],
                 $params['purchase_order_atk_budget_over'],
+                0, // purchase_order_atk_subtotal
+                0, // purchase_order_atk_grandtotal
                 $params['upduser'],
             ]
         );
@@ -48,9 +52,10 @@ class PurchaseOrderAtkHd extends BaseModel
     public function updateData($params)
     {
         return DB::update(
-            "UPDATE trpurchaseorderatkhhd
+            "UPDATE trpurchaseorderatkhd
             SET
             purchase_order_atk_date = ?,
+            purchase_order_atk_date_costing = ?,
             purchase_order_atk_supplier_id = ?,
             purchase_order_atk_supplier_name = ?,
             purchase_order_atk_pic_name = ?,
@@ -68,6 +73,7 @@ class PurchaseOrderAtkHd extends BaseModel
             WHERE purchase_order_atk_id = ?",
             [
                 $params['purchase_order_atk_date'],
+                $params['purchase_order_atk_date_costing'] ?? null,
                 $params['purchase_order_atk_supplier_id'],
                 $params['purchase_order_atk_supplier_name'],
                 $params['purchase_order_atk_pic_name'],
@@ -92,6 +98,7 @@ class PurchaseOrderAtkHd extends BaseModel
             "SELECT
             a.purchase_order_atk_id,
             a.purchase_order_atk_date,
+            a.purchase_order_atk_date_costing,
             a.purchase_order_atk_supplier_id,
             ISNULL(s.nmsupplier, a.purchase_order_atk_supplier_name) AS purchase_order_atk_supplier_name,
             ISNULL(s.cp, a.purchase_order_atk_pic_name) AS purchase_order_atk_pic_name,
@@ -127,7 +134,7 @@ class PurchaseOrderAtkHd extends BaseModel
             ISNULL(s.bank_holder, '') AS purchase_order_atk_bank_holder,
             a.upddate,
             a.upduser
-            FROM trpurchaseorderatkhhd a
+            FROM trpurchaseorderatkhd a
             LEFT JOIN mssupplier s ON CAST(a.purchase_order_atk_supplier_id AS VARCHAR(50)) = s.kdsupplier
             OUTER APPLY (
                 SELECT ISNULL(SUM(ISNULL(d.purchase_order_atk_detail_qty_invoice, 0) * ISNULL(d.purchase_order_atk_detail_price, 0)), 0) AS subtotal
@@ -155,6 +162,7 @@ class PurchaseOrderAtkHd extends BaseModel
             "SELECT
             a.purchase_order_atk_id,
             a.purchase_order_atk_date,
+            a.purchase_order_atk_date_costing,
             a.purchase_order_atk_supplier_id,
             ISNULL(s.nmsupplier, a.purchase_order_atk_supplier_name) AS purchase_order_atk_supplier_name,
             ISNULL(s.cp, a.purchase_order_atk_pic_name) AS purchase_order_atk_pic_name,
@@ -190,7 +198,7 @@ class PurchaseOrderAtkHd extends BaseModel
             ISNULL(s.bank_holder, '') AS purchase_order_atk_bank_holder,
             a.upddate,
             a.upduser
-            FROM trpurchaseorderatkhhd a
+            FROM trpurchaseorderatkhd a
             LEFT JOIN mssupplier s ON CAST(a.purchase_order_atk_supplier_id AS VARCHAR(50)) = s.kdsupplier
             OUTER APPLY (
                 SELECT ISNULL(SUM(ISNULL(d.purchase_order_atk_detail_qty_invoice, 0) * ISNULL(d.purchase_order_atk_detail_price, 0)), 0) AS subtotal
@@ -243,7 +251,7 @@ class PurchaseOrderAtkHd extends BaseModel
                         WHEN ISNULL(SUM(ISNULL(a.purchase_order_atk_detail_qty_invoice, 0) * ISNULL(a.purchase_order_atk_detail_price, 0)), 0) - b.purchase_order_atk_discount < 0 THEN 0
                         ELSE ISNULL(SUM(ISNULL(a.purchase_order_atk_detail_qty_invoice, 0) * ISNULL(a.purchase_order_atk_detail_price, 0)), 0) - b.purchase_order_atk_discount
                     END AS base_amount
-                FROM trpurchaseorderatkhhd b
+                FROM trpurchaseorderatkhd b
                 LEFT JOIN trpurchaseorderatkdt a
                     ON a.purchase_order_atk_id = b.purchase_order_atk_id
                 WHERE b.purchase_order_atk_id = ?
@@ -259,7 +267,7 @@ class PurchaseOrderAtkHd extends BaseModel
     public function updateTotal($params)
     {
         return DB::update(
-            "UPDATE trpurchaseorderatkhhd
+            "UPDATE trpurchaseorderatkhd
             SET
             purchase_order_atk_subtotal = ?,
             purchase_order_atk_tax_amount = ?,
@@ -284,7 +292,7 @@ class PurchaseOrderAtkHd extends BaseModel
     {
         return DB::selectOne(
             "SELECT purchase_order_atk_id
-            FROM trpurchaseorderatkhhd
+            FROM trpurchaseorderatkhd
             WHERE purchase_order_atk_id = ?",
             [$id]
         );
@@ -323,7 +331,7 @@ class PurchaseOrderAtkHd extends BaseModel
 
         $lastData = DB::selectOne(
             "SELECT TOP 1 purchase_order_atk_id
-            FROM trpurchaseorderatkhhd
+            FROM trpurchaseorderatkhd
             WHERE purchase_order_atk_id LIKE ?
             ORDER BY purchase_order_atk_id DESC",
             ['%'.$suffix]
@@ -343,7 +351,7 @@ class PurchaseOrderAtkHd extends BaseModel
     public function deleteData($id)
     {
         return DB::delete(
-            "DELETE FROM trpurchaseorderatkhhd WHERE purchase_order_atk_id = ?",
+            "DELETE FROM trpurchaseorderatkhd WHERE purchase_order_atk_id = ?",
             [$id]
         );
     }

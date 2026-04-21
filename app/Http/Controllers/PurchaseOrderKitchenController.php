@@ -32,6 +32,7 @@ class PurchaseOrderKitchenController extends Controller
 
         $params = [
             'purchase_order_kitchen_date' => $request->purchase_order_kitchen_date,
+            'purchase_order_kitchen_date_costing' => $request->purchase_order_kitchen_date_costing,
             'purchase_order_kitchen_supplier_id' => $request->purchase_order_kitchen_supplier_id,
             'purchase_order_kitchen_supplier_name' => $supplier->supplier_name,
             'purchase_order_kitchen_pic_name' => $supplier->supplier_pic_name,
@@ -137,6 +138,7 @@ class PurchaseOrderKitchenController extends Controller
         $params = [
             'purchase_order_kitchen_id' => $request->purchase_order_kitchen_id,
             'purchase_order_kitchen_date' => $request->purchase_order_kitchen_date,
+            'purchase_order_kitchen_date_costing' => $request->purchase_order_kitchen_date_costing,
             'purchase_order_kitchen_supplier_id' => $request->purchase_order_kitchen_supplier_id,
             'purchase_order_kitchen_supplier_name' => $supplier->supplier_name,
             'purchase_order_kitchen_pic_name' => $supplier->supplier_pic_name,

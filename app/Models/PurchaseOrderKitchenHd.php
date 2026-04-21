@@ -18,16 +18,17 @@ class PurchaseOrderKitchenHd extends BaseModel
     {
         return DB::insert(
             "INSERT INTO trpurchaseorderkitchenhd
-            (purchase_order_kitchen_id, purchase_order_kitchen_date, purchase_order_kitchen_supplier_id,
+            (purchase_order_kitchen_id, purchase_order_kitchen_date, purchase_order_kitchen_date_costing, purchase_order_kitchen_supplier_id,
             purchase_order_kitchen_supplier_name, purchase_order_kitchen_pic_name, purchase_order_kitchen_pic_phone,
             purchase_order_kitchen_to, purchase_order_kitchen_address, purchase_order_kitchen_note, purchase_order_kitchen_discount, purchase_order_kitchen_tax,
             purchase_order_kitchen_tax_amount, purchase_order_kitchen_koefisien, purchase_order_kitchen_budget,
             purchase_order_kitchen_budget_over, purchase_order_kitchen_subtotal, purchase_order_kitchen_grandtotal,
             upddate, upduser)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0, ?, ?, ?, 0, 0, getdate(), ?)",
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, getdate(), ?)",
             [
                 $params['purchase_order_kitchen_id'],
                 $params['purchase_order_kitchen_date'],
+                $params['purchase_order_kitchen_date_costing'] ?? null,
                 $params['purchase_order_kitchen_supplier_id'],
                 $params['purchase_order_kitchen_supplier_name'],
                 $params['purchase_order_kitchen_pic_name'],
@@ -37,9 +38,12 @@ class PurchaseOrderKitchenHd extends BaseModel
                 $params['purchase_order_kitchen_note'],
                 $params['purchase_order_kitchen_discount'],
                 $params['purchase_order_kitchen_tax'],
+                0, // purchase_order_kitchen_tax_amount
                 $params['purchase_order_kitchen_koefisien'],
                 $params['purchase_order_kitchen_budget'],
                 $params['purchase_order_kitchen_budget_over'],
+                0, // purchase_order_kitchen_subtotal
+                0, // purchase_order_kitchen_grandtotal
                 $params['upduser'],
             ]
         );
@@ -51,6 +55,7 @@ class PurchaseOrderKitchenHd extends BaseModel
             "UPDATE trpurchaseorderkitchenhd
             SET
             purchase_order_kitchen_date = ?,
+            purchase_order_kitchen_date_costing = ?,
             purchase_order_kitchen_supplier_id = ?,
             purchase_order_kitchen_supplier_name = ?,
             purchase_order_kitchen_pic_name = ?,
@@ -68,6 +73,7 @@ class PurchaseOrderKitchenHd extends BaseModel
             WHERE purchase_order_kitchen_id = ?",
             [
                 $params['purchase_order_kitchen_date'],
+                $params['purchase_order_kitchen_date_costing'] ?? null,
                 $params['purchase_order_kitchen_supplier_id'],
                 $params['purchase_order_kitchen_supplier_name'],
                 $params['purchase_order_kitchen_pic_name'],
@@ -92,6 +98,7 @@ class PurchaseOrderKitchenHd extends BaseModel
             "SELECT
             a.purchase_order_kitchen_id,
             a.purchase_order_kitchen_date,
+            a.purchase_order_kitchen_date_costing,
             a.purchase_order_kitchen_supplier_id,
             ISNULL(s.nmsupplier, a.purchase_order_kitchen_supplier_name) AS purchase_order_kitchen_supplier_name,
             ISNULL(s.cp, a.purchase_order_kitchen_pic_name) AS purchase_order_kitchen_pic_name,
@@ -155,6 +162,7 @@ class PurchaseOrderKitchenHd extends BaseModel
             "SELECT
             a.purchase_order_kitchen_id,
             a.purchase_order_kitchen_date,
+            a.purchase_order_kitchen_date_costing,
             a.purchase_order_kitchen_supplier_id,
             ISNULL(s.nmsupplier, a.purchase_order_kitchen_supplier_name) AS purchase_order_kitchen_supplier_name,
             ISNULL(s.cp, a.purchase_order_kitchen_pic_name) AS purchase_order_kitchen_pic_name,
