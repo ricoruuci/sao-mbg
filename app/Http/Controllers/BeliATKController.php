@@ -51,6 +51,7 @@ class BeliATKController extends Controller
             'upduser' => Auth::user()->currentAccessToken()['namauser'],
             'company_id' => $request->company_id,
             'date_costing' => $request->date_costing ?? null,
+            'rekening_beli' => $request->rekening_beli ?? null,
         ];
 
         DB::beginTransaction();
@@ -213,6 +214,7 @@ class BeliATKController extends Controller
             'note' => $request->note ?? '',
             'upduser' => Auth::user()->currentAccessToken()['namauser'],
             'date_costing' => $request->date_costing ?? null,
+            'rekening_beli' => $request->rekening_beli ?? null,
         ];
 
         DB::beginTransaction();

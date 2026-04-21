@@ -19,8 +19,8 @@ class BeliHd extends BaseModel
     function insertData($params)
     {
         $result = DB::insert(
-            "INSERT trbelibbhd (nota,kdsupplier,tglbeli,tax,keterangan,upddate,upduser,ttlpb,stpb,ttltax,company_id,interest,fg_upload,discamount, fgform, date_costing)
-            VALUES (:nota, :kdsupplier, :transdate, :tax, :note, getdate(), :upduser, 0, 0, 0,:company_id, :interest, :fgupload, :discamount, 'BB', :date_costing)",
+            "INSERT trbelibbhd (nota,kdsupplier,tglbeli,tax,keterangan,upddate,upduser,ttlpb,stpb,ttltax,company_id,interest,fg_upload,discamount, fgform, date_costing, rekening_beli)
+            VALUES (:nota, :kdsupplier, :transdate, :tax, :note, getdate(), :upduser, 0, 0, 0,:company_id, :interest, :fgupload, :discamount, 'BB', :date_costing, :rekening_beli)",
             [
                 'nota' => $params['nota_beli'],
                 'kdsupplier' => $params['supplier_id'],
@@ -32,7 +32,8 @@ class BeliHd extends BaseModel
                 'interest' => 0,
                 'fgupload' => 'T',
                 'discamount' => $params['discamount'],
-                'date_costing' => $params['date_costing']
+                'date_costing' => $params['date_costing'],
+                'rekening_beli' => $params['rekening_beli'] ?? null
             ]
         );
 
@@ -51,7 +52,8 @@ class BeliHd extends BaseModel
             upduser = :upduser,
             kdsupplier = :kdsupplier,
             discamount = :discamount,
-            date_costing = :date_costing
+            date_costing = :date_costing,
+            rekening_beli = :rekening_beli
             WHERE nota = :nota",
             [
                 'nota' => $params['nota_beli'],
@@ -61,7 +63,8 @@ class BeliHd extends BaseModel
                 'upduser' => $params['upduser'],
                 'kdsupplier' => $params['supplier_id'],
                 'discamount' => $params['discamount'],
-                'date_costing' => $params['date_costing']
+                'date_costing' => $params['date_costing'],
+                'rekening_beli' => $params['rekening_beli'] ?? null
             ]
         );
 
@@ -101,7 +104,7 @@ class BeliHd extends BaseModel
             a.stpb as sub_total,isnull(a.discamount,0) as disc_amount,a.ttltax as total_ppn,a.ttlpb as grand_total,
             isnull(a.fg_upload,'T') as fg_upload,
             case when isnull(a.fg_upload,'T')='T' then 'Belum Upload' else 'Sudah Upload' end as status_upload,
-            a.company_id,c.company_code,c.company_name,c.company_address, a.date_costing as date_costing
+            a.company_id,c.company_code,c.company_name,c.company_address, a.date_costing as date_costing, a.rekening_beli as rekening_beli
             from trbelibbhd a
             inner join mssupplier b on a.kdsupplier=b.kdsupplier
             left join mscabang c on a.company_id = c.company_id
@@ -125,10 +128,12 @@ class BeliHd extends BaseModel
             a.stpb as sub_total,isnull(a.discamount,0) as disc_amount,a.ttltax as total_ppn,a.ttlpb as grand_total,
             isnull(a.fg_upload,'T') as fg_upload,
             case when isnull(a.fg_upload,'T')='T' then 'Belum Upload' else 'Sudah Upload' end as status_upload,
-            a.company_id,c.company_code,c.company_name,c.company_address, a.date_costing as date_costing
+            a.company_id,c.company_code,c.company_name,c.company_address, a.date_costing as date_costing, a.rekening_beli as rekening_beli,
+            r.RekeningName as rekening_beli_name
             from trbelibbhd a
             inner join mssupplier b on a.kdsupplier=b.kdsupplier
             left join mscabang c on a.company_id = c.company_id
+            left join CFMsRekening r on a.rekening_beli = r.RekeningID
             where a.fgform='BB' and a.nota = :id",
             [
                 'id' => $id
@@ -182,19 +187,22 @@ class BeliHd extends BaseModel
                 c.company_code,
                 c.company_name,
                 c.company_address,
-                a.date_costing as date_costing
+                a.date_costing as date_costing,
+                a.rekening_beli as rekening_beli,
+                r.RekeningName as rekening_beli_name
 
             FROM trbelibbhd a
             INNER JOIN mssupplier b ON a.kdsupplier=b.kdsupplier
             LEFT JOIN mscabang c ON a.company_id = c.company_id
             LEFT JOIN trbelibbdt d ON a.nota = d.nota AND a.kdsupplier = d.kdsupplier
+            LEFT JOIN CFMsRekening r ON a.rekening_beli = r.RekeningID
 
             WHERE a.nota = :id
             GROUP BY
                 a.nota,a.kdsupplier,b.nmsupplier,b.hp,b.cp,a.tglbeli,a.tax,
                 a.keterangan,a.upddate,a.upduser,a.discamount,a.ttltax,
                 a.fg_upload,a.company_id,c.company_code,c.company_name,c.company_address,
-                b.bank_branch,b.bank_account,b.bank_holder,a.date_costing
+                b.bank_branch,b.bank_account,b.bank_holder,a.date_costing,a.rekening_beli,r.RekeningName
                 ",
             [
                 'id' => $id

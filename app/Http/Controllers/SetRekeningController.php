@@ -34,6 +34,8 @@ class SetRekeningController extends Controller
             'rek_piutang' => $request->rek_piutang,
             'rek_kas' => $request->rek_kas,
             'rek_laba' => $request->rek_laba,
+            'rek_pembelian_non' => $request->rek_pembelian_non ?? null,
+
         ];
 
         $cek = $model_rekening->cekData($request->rek_pembelian);
@@ -71,6 +73,10 @@ class SetRekeningController extends Controller
         $cek = $model_rekening->cekData($request->rek_laba);
         if ($cek == false) {
             return $this->responseError('Rekening Laba tidak ada atau tidak ditemukan', 404);
+        }
+        $cek = $model_rekening->cekData($request->rek_pembelian_non);
+        if ($cek == false) {
+            return $this->responseError('Rekening Pembelian Non tidak ada atau tidak ditemukan', 404);
         }
 
         DB::beginTransaction();
