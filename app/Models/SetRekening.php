@@ -37,7 +37,9 @@ class SetRekening extends BaseModel
                 a.drkas as rek_kas,
                 (select x.rekeningname from cfmsrekening x where x.rekeningid=a.drkas) as rek_name_kas,
                 a.drlaba as rek_laba,
-                (select x.rekeningname from cfmsrekening x where x.rekeningid=a.drlaba) as rek_name_laba
+                (select x.rekeningname from cfmsrekening x where x.rekeningid=a.drlaba) as rek_name_laba,
+                a.drpbnon as rek_pembelian_non,
+                (select x.rekeningname from cfmsrekening x where x.rekeningid=a.drpbnon) as rek_name_pembelian_non
                 from setrekening a ");
 
         return $result;
@@ -55,7 +57,8 @@ class SetRekening extends BaseModel
             drtaxpj = :drtaxpj,
             drar = :drar,
             drkas = :drkas,
-            drlaba = :drlaba ",
+            drlaba = :drlaba,
+            drpbnon = :drpbnon",
             [
                 'drpb' => $param['rek_pembelian'],
                 'drtaxpb' => $param['rek_ppn_beli'],
@@ -66,6 +69,7 @@ class SetRekening extends BaseModel
                 'drar' => $param['rek_piutang'],
                 'drkas' => $param['rek_kas'],
                 'drlaba' => $param['rek_laba'],
+                'drpbnon' => $param['rek_pembelian_non'],
             ]
         );
 
