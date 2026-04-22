@@ -93,7 +93,8 @@ class TrAbsensiController extends Controller
                     'tr_absensi_header_code' => $headerCode,
                     'tr_absensi_header_date' => $request->tr_absensi_header_date,
                     'tr_absensi_header_name' => $request->tr_absensi_header_name,
-                    'tr_absensi_header_branch' => $request->tr_absensi_header_branch,
+                    'tr_absensi_header_company_id' => $request->tr_absensi_header_company_id,
+                    'tr_absensi_header_company_name' => $request->tr_absensi_header_company_name,
                     'upduser' => $upduser,
                 ]);
 
@@ -110,7 +111,8 @@ class TrAbsensiController extends Controller
                     'tr_absensi_header_code' => $headerCode,
                     'tr_absensi_header_date' => $request->tr_absensi_header_date,
                     'tr_absensi_header_name' => $request->tr_absensi_header_name,
-                    'tr_absensi_header_branch' => $request->tr_absensi_header_branch,
+                    'tr_absensi_header_company_id' => $request->tr_absensi_header_company_id,
+                    'tr_absensi_header_company_name' => $request->tr_absensi_header_company_name,
                     'upduser' => $upduser,
                 ]);
 
@@ -194,7 +196,8 @@ class TrAbsensiController extends Controller
                 'tr_absensi_header_code' => $id,
                 'tr_absensi_header_date' => $request->tr_absensi_header_date,
                 'tr_absensi_header_name' => $request->tr_absensi_header_name,
-                'tr_absensi_header_branch' => $request->tr_absensi_header_branch,
+                'tr_absensi_header_company_id' => $request->tr_absensi_header_company_id,
+                'tr_absensi_header_company_name' => $request->tr_absensi_header_company_name,
                 'upduser' => $upduser,
             ]);
             if ($updateHeader == false) {
