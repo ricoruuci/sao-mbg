@@ -33,6 +33,7 @@ class VolunteerSalaryController extends Controller
         $header = $modelHeader->getDataById($id);
         $detail = $modelDetail->getAllData($id);
 
+        // Pastikan company_id dan company_name ikut diresponse
         return $this->responseData([
             'header' => $header,
             'detail' => $detail,
@@ -57,6 +58,8 @@ class VolunteerSalaryController extends Controller
                 'volunteer_salary_hd_date' => $request->volunteer_salary_hd_date,
                 'volunteer_salary_hd_date_from' => $request->volunteer_salary_hd_date_from,
                 'volunteer_salary_hd_date_to' => $request->volunteer_salary_hd_date_to,
+                'volunteer_salary_hd_company_id' => $request->volunteer_salary_hd_company_id,
+                // company_name otomatis oleh model
                 'volunteer_salary_hd_adjust' => $request->volunteer_salary_hd_adjust,
                 'volunteer_salary_hd_subtotal' => $request->volunteer_salary_hd_subtotal,
                 'volunteer_salary_hd_subbonuses' => $request->volunteer_salary_hd_subbonuses,
@@ -128,6 +131,8 @@ class VolunteerSalaryController extends Controller
             'volunteer_salary_hd_date' => $request->volunteer_salary_hd_date,
             'volunteer_salary_hd_date_from' => $request->volunteer_salary_hd_date_from,
             'volunteer_salary_hd_date_to' => $request->volunteer_salary_hd_date_to,
+            'volunteer_salary_hd_company_id' => $request->volunteer_salary_hd_company_id,
+            // company_name otomatis oleh model
             'volunteer_salary_hd_adjust' => $request->volunteer_salary_hd_adjust,
             'volunteer_salary_hd_subtotal' => $request->volunteer_salary_hd_subtotal,
             'volunteer_salary_hd_subbonuses' => $request->volunteer_salary_hd_subbonuses,
@@ -242,38 +247,44 @@ class VolunteerSalaryController extends Controller
     }
 
     public function getDataAbsensi(GetRequest $request)
+
     {
-        $result = DB::select(
-            "WITH absensi AS (
+        $whereCompany = '';
+        $params = [
+            'dari' => $request->dari,
+            'sampai' => $request->sampai,
+        ];
+        if (!empty($request->company_id)) {
+            $whereCompany = 'AND h.tr_absensi_header_company_id = :company_id';
+            $params['company_id'] = $request->company_id;
+        }
+
+        $sql = "WITH absensi AS (
                 SELECT
-                    tr_absensi_dt_id AS employee_code,
-                    COUNT(DISTINCT CONVERT(VARCHAR(8), tr_absensi_dt_date, 112)) AS total_day
-                FROM trabsensidt
-                WHERE CONVERT(varchar(8), tr_absensi_dt_date, 112) BETWEEN :dari AND :sampai
-                AND (tr_absensi_dt_clock_in IS NOT NULL OR tr_absensi_dt_clock_out IS NOT NULL)
-                GROUP BY tr_absensi_dt_id
+                    d.tr_absensi_dt_id AS employee_code,
+                    COUNT(DISTINCT CONVERT(VARCHAR(8), d.tr_absensi_dt_date, 112)) AS total_day
+                FROM trabsensidt d
+                INNER JOIN trabsensihd h ON d.tr_absensi_header_code = h.tr_absensi_header_code
+                WHERE CONVERT(varchar(8), d.tr_absensi_dt_date, 112) BETWEEN :dari AND :sampai
+                AND (d.tr_absensi_dt_clock_in IS NOT NULL OR d.tr_absensi_dt_clock_out IS NOT NULL)
+                $whereCompany
+                GROUP BY d.tr_absensi_dt_id
             )
             SELECT
-                COALESCE(k.employee_code, a.employee_code) AS code,
+                k.employee_code AS code,
                 ISNULL(k.employee_name, '') AS name,
                 ISNULL(k.employee_divisi, '') AS divisi,
                 ISNULL(a.total_day, 0) AS day,
                 ISNULL(k.salary_amount, 0) AS salary,
                 CASE
-                    WHEN k.employee_code IS NULL THEN 'Tidak ada di mskaryawan'
                     WHEN a.employee_code IS NULL THEN 'Tidak ada di trabsensidt'
                     ELSE ''
                 END AS info
             FROM mskaryawan k
-            FULL OUTER JOIN absensi a ON k.employee_code = a.employee_code
-            WHERE k.employee_code IS NOT NULL OR a.employee_code IS NOT NULL
-            ORDER BY COALESCE(k.employee_code, a.employee_code)",
-            [
-                'dari' => $request->dari,
-                'sampai' => $request->sampai,
-            ]
-        );
+            LEFT JOIN absensi a ON k.employee_code = a.employee_code
+            ORDER BY k.employee_code";
 
+        $result = DB::select($sql, $params);
         return $this->responseData($result);
     }
 }
