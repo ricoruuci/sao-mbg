@@ -96,7 +96,7 @@ class BaseModel extends Model
             select $rek_ar,tgljual,'K',isnull(TTLPj,0),'IDR',1,'T',nota,nota from TrJualHd
             where fgbayar='Y' and fgbatal='T' $addCon8 union all
             */
-            select $rek_pb,TglBeli,'d',isnull(STPb,0),'IDR',1,'T',nota,nota from TrBeliBBHd $addCon9 union all
+            select rekening_beli,TglBeli,'d',isnull(STPb,0),'IDR',1,'T',nota,nota from TrBeliBBHd $addCon9 union all
             select $rek_taxpb,TglBeli,'d',isnull(TTLTax,0),'IDR',1,'T',nota,nota from TrBeliBBHd $addCon10 union all
             select $rek_ap,TglBeli,'k',isnull(TTLPb,0),'IDR',1,'T',nota,nota from TrBeliBBHd $addCon11 union all
             select $rek_discap,TglBeli,'k',isnull(DiscAmount,0),'IDR',1,'T',nota,nota from TrBeliBBHd $addCon12
