@@ -204,6 +204,40 @@ class RptPembelianController extends Controller
         return $this->responsePagination($resultPaginated);
     }
 
+    /**
+     * Menangani Rekap Berdasarkan Nama Barang
+     */
+    public function getRekapNonBBByItem(GetLapPembelianRequest $request)
+    {
+        $model = new RptPembelian();
+        $params = [
+            'dari' => $request->input('dari'),
+            'sampai' => $request->input('sampai'),
+            'company_id' => $request->input('company_id', Auth::user()->currentAccessToken()['company_id'])
+        ];
+
+        $result = $model->getRekapNonBBByItem($params);
+
+        return $this->responseData($result);
+    }
+
+     /**
+     * Menangani Rekap Berdasarkan Nama Barang
+     */
+    public function getRekapBBByItem(GetLapPembelianRequest $request)
+    {
+        $model = new RptPembelian();
+        $params = [
+            'dari' => $request->input('dari'),
+            'sampai' => $request->input('sampai'),
+            'company_id' => $request->input('company_id', Auth::user()->currentAccessToken()['company_id'])
+        ];
+
+        $result = $model->getRekapBBByItem($params);
+
+        return $this->responseData($result);
+    }
+
 }
 
 ?>

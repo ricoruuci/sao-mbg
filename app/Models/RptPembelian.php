@@ -226,6 +226,118 @@ class RptPembelian extends BaseModel
         return $result;
     }
 
+    /**
+     * Rekap Pembelian Non Bahan Baku Berdasarkan Nama Barang
+     */
+    function getRekapNonBBByItem($params)
+    {
+        $condition = '';
+        $bindings = [
+            'dari' => $params['dari'],
+            'sampai' => $params['sampai']
+        ];
+
+        if (!empty($params['company_id'])) {
+            $condition = " AND a.company_id = :company_id";
+            $bindings['company_id'] = $params['company_id'];
+        }
+
+        $result = DB::select(
+            "SELECT 
+                c.NmBB as item_name,
+                b.nota,
+                b.jml as qty,
+                b.harga as price,
+                (b.jml * b.harga) as total
+            FROM TrBeliBBHd a
+            INNER JOIN TrBeliBBDt b ON a.nota = b.nota
+            INNER JOIN MsBahanBaku c ON b.kdbb = c.kdbb
+            WHERE CONVERT(VARCHAR(8), a.tglbeli, 112) BETWEEN :dari AND :sampai
+              AND a.fgform = 'BA'
+              $condition
+            ORDER BY c.NmBB, a.tglbeli",
+            $bindings
+        );
+
+        $rekap = [];
+        foreach ($result as $row) {
+            $itemName = $row->item_name;
+            if (!isset($rekap[$itemName])) {
+                $rekap[$itemName] = [
+                    'item_name' => $itemName,
+                    'subtotal' => 0.0, // Inisialisasi subtotal
+                    'details' => []
+                ];
+            }
+            $rekap[$itemName]['details'][] = [
+                'nota' => $row->nota,
+                'qty' => (float)$row->qty,
+                'price' => (float)$row->price,
+                'total' => (float)$row->total
+            ];
+            // Tambahkan total ke subtotal
+            $rekap[$itemName]['subtotal'] += (float)$row->total;
+        }
+
+        return array_values($rekap);
+    }
+
+    /**
+     * Rekap Pembelian Bahan Baku Berdasarkan Nama Barang
+     */
+    function getRekapBBByItem($params)
+    {
+        $condition = '';
+        $bindings = [
+            'dari' => $params['dari'],
+            'sampai' => $params['sampai']
+        ];
+
+        if (!empty($params['company_id'])) {
+            $condition = " AND a.company_id = :company_id";
+            $bindings['company_id'] = $params['company_id'];
+        }
+
+        $result = DB::select(
+            "SELECT 
+                c.NmBB as item_name,
+                b.nota,
+                b.jml as qty,
+                b.harga as price,
+                (b.jml * b.harga) as total
+            FROM TrBeliBBHd a
+            INNER JOIN TrBeliBBDt b ON a.nota = b.nota
+            INNER JOIN MsBahanBaku c ON b.kdbb = c.kdbb
+            WHERE CONVERT(VARCHAR(8), a.tglbeli, 112) BETWEEN :dari AND :sampai
+              AND a.fgform = 'BB'
+              $condition
+            ORDER BY c.NmBB, a.tglbeli",
+            $bindings
+        );
+
+        $rekap = [];
+        foreach ($result as $row) {
+            $itemName = $row->item_name;
+            if (!isset($rekap[$itemName])) {
+                $rekap[$itemName] = [
+                    'item_name' => $itemName,
+                    'subtotal' => 0.0, // Inisialisasi subtotal
+                    'details' => []
+                ];
+            }
+            $rekap[$itemName]['details'][] = [
+                'nota' => $row->nota,
+                'qty' => (float)$row->qty,
+                'price' => (float)$row->price,
+                'total' => (float)$row->total
+            ];
+            // Tambahkan total ke subtotal
+            $rekap[$itemName]['subtotal'] += (float)$row->total;
+        }
+
+        return array_values($rekap);
+    }
+
     public function updateFgUploadNota($params)
     {
         $result = DB::update(
