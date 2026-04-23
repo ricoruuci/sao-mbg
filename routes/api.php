@@ -201,6 +201,8 @@ Route::get('rpt-penjualan', [RptPenjualanController::class, 'getLapPenjualan'])-
 Route::get('rpt-penjualan-harian', [RptPenjualanController::class, 'getLapPenjualanHarian'])->middleware('auth:sanctum');
 Route::get('rpt-pembelian', [RptPembelianController::class, 'getLapPembelian'])->middleware('auth:sanctum');
 Route::get('rpt-pembelian-periode-non-bahan-baku', [RptPembelianController::class, 'getLapPembelianPeriodeNonBahanBaku'])->middleware('auth:sanctum');
+Route::get('rpt-rekap-non-bb-by-item', [RptPembelianController::class, 'getRekapNonBBByItem'])->middleware('auth:sanctum');
+Route::get('rpt-rekap-bb-by-item', [RptPembelianController::class, 'getRekapBBByItem'])->middleware('auth:sanctum');
 Route::get('rpt-hutang', [RptPembelianController::class, 'getLapHutang'])->middleware('auth:sanctum');
 Route::get('rpt-beli-adjustment', [RptPembelianController::class, 'getLaporanBeliAdjustment'])->middleware('auth:sanctum');
 Route::get('rpt-beli-adjustment-non-bahan-baku', [RptPembelianController::class, 'getLaporanBeliAdjustmentNonBahanBaku'])->middleware('auth:sanctum');
@@ -212,4 +214,3 @@ Route::get('rpt-neraca', [RptFinanceController::class, 'getRptNeraca'])->middlew
 
 Route::get('rpt-stock-akhir', [RptInventoryController::class, 'getLapStock'])->middleware('auth:sanctum');
 Route::get('rpt-kartu-stock', [RptInventoryController::class, 'getLapKartuStock'])->middleware('auth:sanctum');
-
