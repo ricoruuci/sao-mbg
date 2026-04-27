@@ -1,3 +1,5 @@
+
+
 <?php
 
 use Illuminate\Http\Request;
@@ -36,6 +38,7 @@ use App\Http\Controllers\PurchaseOrderKitchenController;
 use App\Http\Controllers\PurchaseOrderAtkController;
 use App\Http\Controllers\VolunteerSalaryController;
 use App\Http\Controllers\TrAbsensiController;
+use App\Http\Controllers\TrBreakDownMenuController;
 
 Route::post('login', [AuthController::class, 'login']);
 Route::post('logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
@@ -192,6 +195,12 @@ Route::get('tr-absensi-by-id', [TrAbsensiController::class, 'getDataById'])->mid
 Route::post('tr-absensi', [TrAbsensiController::class, 'insertData'])->middleware('auth:sanctum');
 Route::patch('tr-absensi', [TrAbsensiController::class, 'updateData'])->middleware('auth:sanctum');
 Route::delete('tr-absensi', [TrAbsensiController::class, 'deleteData'])->middleware('auth:sanctum');
+
+Route::get('trbreakdownmenu', [TrBreakDownMenuController::class, 'getListData'])->middleware('auth:sanctum');
+Route::get('trbreakdownmenu-by-id', [TrBreakDownMenuController::class, 'getDataById'])->middleware('auth:sanctum');
+Route::post('trbreakdownmenu', [TrBreakDownMenuController::class, 'insertData'])->middleware('auth:sanctum');
+Route::patch('trbreakdownmenu', [TrBreakDownMenuController::class, 'updateData'])->middleware('auth:sanctum');
+Route::delete('trbreakdownmenu', [TrBreakDownMenuController::class, 'deleteData'])->middleware('auth:sanctum');
 
 /*==============================================================================================================
  * Laporan
