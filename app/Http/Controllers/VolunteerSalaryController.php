@@ -87,6 +87,7 @@ class VolunteerSalaryController extends Controller
                 $bonuses = (float) ($item['volunteer_salary_dt_bonuses'] ?? 0);
                 $total = $item['volunteer_salary_dt_total'] ?? (($workDay * $price) + $bonuses);
 
+                // Hanya kirim field yang sesuai dengan VolunteerSalaryDt
                 $insertDetail = $modelDetail->insertData([
                     'volunteer_salary_hd_code' => $autonumber,
                     'volunteer_salary_dt_user_code' => $item['volunteer_salary_dt_user_code'],
@@ -100,7 +101,6 @@ class VolunteerSalaryController extends Controller
 
                 if ($insertDetail == false) {
                     DB::rollBack();
-
                     return $this->responseError('Gagal menyimpan detail volunteer salary', 500);
                 }
             }
