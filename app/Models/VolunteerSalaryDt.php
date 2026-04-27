@@ -38,20 +38,17 @@ class VolunteerSalaryDt extends BaseModel
     {
         return DB::insert(
             "INSERT INTO msvolunteersalarydt
-            (volunteer_salary_hd_code, volunteer_salary_dt_user_code, volunteer_salary_dt_user_name, volunteer_salary_dt_divisi,
-            volunteer_salary_dt_work_day, volunteer_salary_dt_price, volunteer_salary_dt_bonuses, volunteer_salary_dt_total)
+            (trbreakdownmenudt_hd_code, trbreakdownmenudt_itemid, trbreakdownmenudt_qty, trbreakdownmenudt_uomid,
+            trbreakdownmenudt_note)
             VALUES
-            (:volunteer_salary_hd_code, :volunteer_salary_dt_user_code, :volunteer_salary_dt_user_name, :volunteer_salary_dt_divisi,
-            :volunteer_salary_dt_work_day, :volunteer_salary_dt_price, :volunteer_salary_dt_bonuses, :volunteer_salary_dt_total)",
+            (:trbreakdownmenudt_hd_code, :trbreakdownmenudt_itemid, :trbreakdownmenudt_qty, :trbreakdownmenudt_uomid,
+            :trbreakdownmenudt_note)",
             [
-                'volunteer_salary_hd_code' => $params['volunteer_salary_hd_code'],
-                'volunteer_salary_dt_user_code' => $params['volunteer_salary_dt_user_code'],
-                'volunteer_salary_dt_user_name' => $params['volunteer_salary_dt_user_name'],
-                'volunteer_salary_dt_divisi' => $params['volunteer_salary_dt_divisi'],
-                'volunteer_salary_dt_work_day' => $params['volunteer_salary_dt_work_day'],
-                'volunteer_salary_dt_price' => $params['volunteer_salary_dt_price'],
-                'volunteer_salary_dt_bonuses' => $params['volunteer_salary_dt_bonuses'],
-                'volunteer_salary_dt_total' => $params['volunteer_salary_dt_total'],
+                'trbreakdownmenudt_hd_code' => $params['trbreakdownmenudt_hd_code'],
+                'trbreakdownmenudt_itemid' => $params['trbreakdownmenudt_itemid'],
+                'trbreakdownmenudt_qty' => $params['trbreakdownmenudt_qty'],
+                'trbreakdownmenudt_uomid' => $params['trbreakdownmenudt_uomid'],
+                'trbreakdownmenudt_note' => $params['trbreakdownmenudt_note'],
             ]
         );
     }

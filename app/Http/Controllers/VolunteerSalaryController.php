@@ -285,6 +285,12 @@ class VolunteerSalaryController extends Controller
             ORDER BY k.employee_code";
 
         $result = DB::select($sql, $params);
-        return $this->responseData($result);
+        // Filter: hanya tampilkan yang day > 0
+        $filtered = array_filter($result, function($row) {
+            return isset($row->day) && $row->day > 0;
+        });
+        // Reset array keys
+        $filtered = array_values($filtered);
+        return $this->responseData($filtered);
     }
 }
