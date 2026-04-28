@@ -22,15 +22,16 @@ class PayrollHd extends BaseModel //nama class
 
         $result = DB::insert(
             "INSERT INTO payrollhd
-            (tx_id, tx_date, tx_period, upddate, upduser, work_days, total,company_id)
+            (tx_id, tx_date, tx_period, upddate, upduser, work_days, total, overtime_adjustment, company_id)
             VALUES
-            (:tx_id, :tx_date, :tx_period, getDate(), :upduser, :work_days, 0, :company_id)",
+            (:tx_id, :tx_date, :tx_period, getDate(), :upduser, :work_days, 0, :overtime_adjustment, :company_id)",
             [
                 'tx_id' => $param['tx_id'],
                 'tx_date' => $param['tx_date'],
                 'tx_period' => $param['tx_period'],
                 'upduser' => $param['upduser'],
                 'work_days' => $param['work_days'],
+                'overtime_adjustment' => $param['overtime_adjustment'],
                 'company_id' => $param['company_id']
             ]
         );
@@ -44,6 +45,7 @@ class PayrollHd extends BaseModel //nama class
         $result = DB::select(
            "SELECT
             a.id,a.tx_id,a.tx_date,a.tx_period,a.work_days,a.upddate,a.upduser,a.total,
+            isnull(a.overtime_adjustment, 0) as overtime_adjustment,
             a.company_id,c.company_code,c.company_name,c.company_address
             from payrollhd a
             left join mscabang c on a.company_id = c.company_id
@@ -69,6 +71,7 @@ class PayrollHd extends BaseModel //nama class
         $result = DB::selectOne(
             "SELECT
             a.id,a.tx_id,a.tx_date,a.tx_period,a.work_days,a.upddate,a.upduser,a.total,
+            isnull(a.overtime_adjustment, 0) as overtime_adjustment,
             a.company_id,c.company_code,c.company_name,c.company_address
             from payrollhd a
             left join mscabang c on a.company_id = c.company_id
@@ -88,6 +91,7 @@ class PayrollHd extends BaseModel //nama class
                 tx_date = :tx_date,
                 tx_period = :tx_period,
                 work_days = :work_days,
+                overtime_adjustment = :overtime_adjustment,
                 upddate = getDate(),
                 upduser = :upduser
             WHERE id = :id ',
@@ -96,6 +100,7 @@ class PayrollHd extends BaseModel //nama class
                 'tx_date' => $param['tx_date'],
                 'tx_period' => $param['tx_period'],
                 'work_days' => $param['work_days'],
+                'overtime_adjustment' => $param['overtime_adjustment'] ?? 0,
                 'upduser' => $param['upduser'],
             ]
         );
