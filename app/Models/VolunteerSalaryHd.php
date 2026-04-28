@@ -25,7 +25,6 @@ class VolunteerSalaryHd extends BaseModel
                 volunteer_salary_hd_date_to,
                 volunteer_salary_hd_company_id,
                 volunteer_salary_hd_company_name,
-                isnull(volunteer_salary_hd_adjust, 0) as volunteer_salary_hd_adjust,
                 isnull(volunteer_salary_hd_subtotal, 0) as volunteer_salary_hd_subtotal,
                 isnull(volunteer_salary_hd_subbonuses, 0) as volunteer_salary_hd_subbonuses,
                 isnull(volunteer_salary_hd_subtotal + volunteer_salary_hd_subbonuses, 0) as volunteer_salary_hd_grandtotal,
@@ -59,7 +58,6 @@ class VolunteerSalaryHd extends BaseModel
                 volunteer_salary_hd_date_to,
                 volunteer_salary_hd_company_id,
                 volunteer_salary_hd_company_name,
-                isnull(volunteer_salary_hd_adjust, 0) as volunteer_salary_hd_adjust,
                 isnull(volunteer_salary_hd_subtotal, 0) as volunteer_salary_hd_subtotal,
                 isnull(volunteer_salary_hd_subbonuses, 0) as volunteer_salary_hd_subbonuses,
                 isnull(volunteer_salary_hd_subtotal + volunteer_salary_hd_subbonuses, 0) as volunteer_salary_hd_grandtotal,
@@ -103,11 +101,11 @@ class VolunteerSalaryHd extends BaseModel
             "INSERT INTO msvolunteersalaryhd
             (volunteer_salary_hd_code, volunteer_salary_hd_date, volunteer_salary_hd_date_from, volunteer_salary_hd_date_to,
             volunteer_salary_hd_company_id, volunteer_salary_hd_company_name,
-            volunteer_salary_hd_adjust, volunteer_salary_hd_subtotal, volunteer_salary_hd_subbonuses, volunteer_salary_hd_note, upddate, upduser)
+            volunteer_salary_hd_subtotal, volunteer_salary_hd_subbonuses, volunteer_salary_hd_note, upddate, upduser)
             VALUES
             (:volunteer_salary_hd_code, :volunteer_salary_hd_date, :volunteer_salary_hd_date_from, :volunteer_salary_hd_date_to,
             :volunteer_salary_hd_company_id, :volunteer_salary_hd_company_name,
-            :volunteer_salary_hd_adjust, :volunteer_salary_hd_subtotal, :volunteer_salary_hd_subbonuses, :volunteer_salary_hd_note, getdate(), :upduser)",
+            :volunteer_salary_hd_subtotal, :volunteer_salary_hd_subbonuses, :volunteer_salary_hd_note, getdate(), :upduser)",
             [
                 'volunteer_salary_hd_code' => $params['volunteer_salary_hd_code'],
                 'volunteer_salary_hd_date' => $params['volunteer_salary_hd_date'],
@@ -115,7 +113,6 @@ class VolunteerSalaryHd extends BaseModel
                 'volunteer_salary_hd_date_to' => $params['volunteer_salary_hd_date_to'],
                 'volunteer_salary_hd_company_id' => $company_id,
                 'volunteer_salary_hd_company_name' => $company_name,
-                'volunteer_salary_hd_adjust' => $params['volunteer_salary_hd_adjust'],
                 'volunteer_salary_hd_subtotal' => $params['volunteer_salary_hd_subtotal'],
                 'volunteer_salary_hd_subbonuses' => $params['volunteer_salary_hd_subbonuses'],
                 'volunteer_salary_hd_note' => $params['volunteer_salary_hd_note'],
@@ -143,7 +140,6 @@ class VolunteerSalaryHd extends BaseModel
                 volunteer_salary_hd_date_to = :volunteer_salary_hd_date_to,
                 volunteer_salary_hd_company_id = :volunteer_salary_hd_company_id,
                 volunteer_salary_hd_company_name = :volunteer_salary_hd_company_name,
-                volunteer_salary_hd_adjust = :volunteer_salary_hd_adjust,
                 volunteer_salary_hd_subtotal = :volunteer_salary_hd_subtotal,
                 volunteer_salary_hd_subbonuses = :volunteer_salary_hd_subbonuses,
                 volunteer_salary_hd_note = :volunteer_salary_hd_note,
@@ -157,7 +153,6 @@ class VolunteerSalaryHd extends BaseModel
                 'volunteer_salary_hd_date_to' => $params['volunteer_salary_hd_date_to'],
                 'volunteer_salary_hd_company_id' => $company_id,
                 'volunteer_salary_hd_company_name' => $company_name,
-                'volunteer_salary_hd_adjust' => $params['volunteer_salary_hd_adjust'],
                 'volunteer_salary_hd_subtotal' => $params['volunteer_salary_hd_subtotal'],
                 'volunteer_salary_hd_subbonuses' => $params['volunteer_salary_hd_subbonuses'],
                 'volunteer_salary_hd_note' => $params['volunteer_salary_hd_note'],

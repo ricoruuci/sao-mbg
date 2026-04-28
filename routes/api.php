@@ -39,6 +39,7 @@ use App\Http\Controllers\PurchaseOrderAtkController;
 use App\Http\Controllers\VolunteerSalaryController;
 use App\Http\Controllers\TrAbsensiController;
 use App\Http\Controllers\TrBreakDownMenuController;
+use App\Http\Controllers\TrSpmController;
 
 Route::post('login', [AuthController::class, 'login']);
 Route::post('logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
@@ -164,6 +165,14 @@ Route::get('payroll-by-id', [PayrollController::class, 'getDataById'])->middlewa
 Route::post('payroll', [PayrollController::class, 'insertData'])->middleware('auth:sanctum');
 Route::patch('payroll', [PayrollController::class, 'updateData'])->middleware('auth:sanctum');
 Route::delete('payroll', [PayrollController::class, 'deleteData'])->middleware('auth:sanctum');
+
+Route::get('tr-spm', [TrSpmController::class, 'getListData'])->middleware('auth:sanctum');
+Route::get('tr-spm-by-id', [TrSpmController::class, 'getDataById'])->middleware('auth:sanctum');
+Route::post('tr-spm', [TrSpmController::class, 'insertData'])->middleware('auth:sanctum');
+Route::patch('tr-spm', [TrSpmController::class, 'updateData'])->middleware('auth:sanctum');
+Route::delete('tr-spm', [TrSpmController::class, 'deleteData'])->middleware('auth:sanctum');
+Route::get('tr-spm-absensi', [TrSpmController::class, 'getDataAbsensi'])->middleware('auth:sanctum');
+
 
 Route::get('invoice', [InvoiceController::class, 'getListData'])->middleware('auth:sanctum');
 Route::get('invoice-by-id', [InvoiceController::class, 'getDataById'])->middleware('auth:sanctum');

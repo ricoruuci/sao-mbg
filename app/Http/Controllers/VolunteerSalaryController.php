@@ -60,7 +60,6 @@ class VolunteerSalaryController extends Controller
                 'volunteer_salary_hd_date_to' => $request->volunteer_salary_hd_date_to,
                 'volunteer_salary_hd_company_id' => $request->volunteer_salary_hd_company_id,
                 // company_name otomatis oleh model
-                'volunteer_salary_hd_adjust' => $request->volunteer_salary_hd_adjust,
                 'volunteer_salary_hd_subtotal' => $request->volunteer_salary_hd_subtotal,
                 'volunteer_salary_hd_subbonuses' => $request->volunteer_salary_hd_subbonuses,
                 'volunteer_salary_hd_note' => $request->volunteer_salary_hd_note,
@@ -85,7 +84,8 @@ class VolunteerSalaryController extends Controller
                 $workDay = (float) ($item['volunteer_salary_dt_work_day'] ?? 0);
                 $price = (float) ($item['volunteer_salary_dt_price'] ?? 0);
                 $bonuses = (float) ($item['volunteer_salary_dt_bonuses'] ?? 0);
-                $total = $item['volunteer_salary_dt_total'] ?? (($workDay * $price) + $bonuses);
+                $overtime = (float) ($item['volunteer_salary_dt_overtime'] ?? 0);
+                $total = $item['volunteer_salary_dt_total'] ?? (($workDay * $price) + $bonuses + $overtime);
 
                 // Hanya kirim field yang sesuai dengan VolunteerSalaryDt
                 $insertDetail = $modelDetail->insertData([
@@ -96,6 +96,7 @@ class VolunteerSalaryController extends Controller
                     'volunteer_salary_dt_work_day' => $workDay,
                     'volunteer_salary_dt_price' => $price,
                     'volunteer_salary_dt_bonuses' => $bonuses,
+                    'volunteer_salary_dt_overtime' => $overtime,
                     'volunteer_salary_dt_total' => (float) $total,
                 ]);
 
@@ -133,7 +134,6 @@ class VolunteerSalaryController extends Controller
             'volunteer_salary_hd_date_to' => $request->volunteer_salary_hd_date_to,
             'volunteer_salary_hd_company_id' => $request->volunteer_salary_hd_company_id,
             // company_name otomatis oleh model
-            'volunteer_salary_hd_adjust' => $request->volunteer_salary_hd_adjust,
             'volunteer_salary_hd_subtotal' => $request->volunteer_salary_hd_subtotal,
             'volunteer_salary_hd_subbonuses' => $request->volunteer_salary_hd_subbonuses,
             'volunteer_salary_hd_note' => $request->volunteer_salary_hd_note,
@@ -163,7 +163,8 @@ class VolunteerSalaryController extends Controller
                 $workDay = (float) ($item['volunteer_salary_dt_work_day'] ?? 0);
                 $price = (float) ($item['volunteer_salary_dt_price'] ?? 0);
                 $bonuses = (float) ($item['volunteer_salary_dt_bonuses'] ?? 0);
-                $total = $item['volunteer_salary_dt_total'] ?? (($workDay * $price) + $bonuses);
+                $overtime = (float) ($item['volunteer_salary_dt_overtime'] ?? 0);
+                $total = $item['volunteer_salary_dt_total'] ?? (($workDay * $price) + $bonuses + $overtime);
 
                 $insertDetail = $modelDetail->insertData([
                     'volunteer_salary_hd_code' => $request->volunteer_salary_hd_code,
@@ -173,6 +174,7 @@ class VolunteerSalaryController extends Controller
                     'volunteer_salary_dt_work_day' => $workDay,
                     'volunteer_salary_dt_price' => $price,
                     'volunteer_salary_dt_bonuses' => $bonuses,
+                    'volunteer_salary_dt_overtime' => $overtime,
                     'volunteer_salary_dt_total' => (float) $total,
                 ]);
 
