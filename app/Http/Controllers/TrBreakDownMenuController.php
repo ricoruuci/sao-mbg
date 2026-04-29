@@ -59,10 +59,10 @@ class TrBreakDownMenuController extends Controller
             foreach ($arrDetail as $item) {
                 $insertDetail = $modelDetail->insertData([
                     'trbreakdownmenudt_hd_code' => $kodeHeader,
-                    'trbreakdownmenudt_itemid' => $item['trbreakdownmenudt_itemid'],
-                    'trbreakdownmenudt_qty' => $item['trbreakdownmenudt_qty'],
-                    'trbreakdownmenudt_uomid' => $item['trbreakdownmenudt_uomid'],
-                    'trbreakdownmenudt_note' => $item['trbreakdownmenudt_note'],
+                    'trbreakdownmenudt_itemid' => $item['trbreakdownmenudt_itemid'] ?? null,
+                    'trbreakdownmenudt_qty' => $item['trbreakdownmenudt_qty'] ?? 0,
+                    'trbreakdownmenudt_uomid' => $item['trbreakdownmenudt_uomid'] ?? null,
+                    'trbreakdownmenudt_note' => $item['trbreakdownmenudt_note'] ?? null,
                 ]);
                 if (!$insertDetail) {
                     DB::rollBack();
@@ -112,10 +112,10 @@ class TrBreakDownMenuController extends Controller
             foreach ($arrDetail as $item) {
                 $insertDetail = $modelDetail->insertData([
                     'trbreakdownmenudt_hd_code' => $request->trbreakdownhd_code,
-                    'trbreakdownmenudt_itemid' => $item['trbreakdownmenudt_itemid'],
-                    'trbreakdownmenudt_qty' => $item['trbreakdownmenudt_qty'],
-                    'trbreakdownmenudt_uomid' => $item['trbreakdownmenudt_uomid'],
-                    'trbreakdownmenudt_note' => $item['trbreakdownmenudt_note'],
+                    'trbreakdownmenudt_itemid' => $item['trbreakdownmenudt_itemid'] ?? null,
+                    'trbreakdownmenudt_qty' => $item['trbreakdownmenudt_qty'] ?? 0,
+                    'trbreakdownmenudt_uomid' => $item['trbreakdownmenudt_uomid'] ?? null,
+                    'trbreakdownmenudt_note' => $item['trbreakdownmenudt_note'] ?? null,
                 ]);
                 if (!$insertDetail) {
                     DB::rollBack();
