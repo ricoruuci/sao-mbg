@@ -69,7 +69,7 @@ class TrSpmDt extends BaseModel
             upduser
             FROM trspm_dt
             WHERE trspm_hd_id = :trspm_hd_id
-            ORDER BY trspm_dt_user_code ASC",
+            ORDER BY trspm_dt_user_name ASC",
             [
                 'trspm_hd_id' => $trspm_hd_id
             ]
