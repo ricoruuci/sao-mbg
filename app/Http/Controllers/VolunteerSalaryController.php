@@ -284,6 +284,7 @@ class VolunteerSalaryController extends Controller
                 END AS info
             FROM mskaryawan k
             LEFT JOIN absensi a ON k.employee_code = a.employee_code
+            WHERE ISNULL(k.meal_amount, 0) = 0
             ORDER BY k.employee_code";
 
         $result = DB::select($sql, $params);
