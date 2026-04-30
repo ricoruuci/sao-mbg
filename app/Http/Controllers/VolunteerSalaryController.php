@@ -268,7 +268,7 @@ class VolunteerSalaryController extends Controller
                 FROM trabsensidt d
                 INNER JOIN trabsensihd h ON d.tr_absensi_header_code = h.tr_absensi_header_code
                 WHERE CONVERT(varchar(8), d.tr_absensi_dt_date, 112) BETWEEN :dari AND :sampai
-                AND (d.tr_absensi_dt_clock_in IS NOT NULL OR d.tr_absensi_dt_clock_out IS NOT NULL)
+                AND d.tr_absensi_dt_clock_in IS NOT NULL
                 $whereCompany
                 GROUP BY d.tr_absensi_dt_id
             )
