@@ -66,4 +66,37 @@ class TrBreakDownMenuDt extends BaseModel
             ]
         );
     }
+
+    public function getDataBahanBaku($id)
+    {
+        return DB::select(
+            "SELECT 
+                l.kdgroupbb,
+                m.nmgroupbb,
+                k.kdbb,
+                l.nmbb, 
+                isnull(sum(k.trbreakdownmenudt_qty*k.trbreakdownhd_qty_beneficiaries*k.jumlah),0) as total,
+                k.kdsat
+            FROM (
+                select 
+                    a.trbreakdownmenudt_itemid,
+                    a.trbreakdownmenudt_qty,
+                    b.trbreakdownhd_qty_beneficiaries,
+                    c.kdbb,
+                    c.jumlah,
+                    c.kdsat 
+                FROM trbreakdownmenudt a
+                inner join trbreakdownmenuhd b on a.trbreakdownmenudt_hd_code=b.trbreakdownhd_code
+                inner join msmenudt c on a.trbreakdownmenudt_itemid=c.kdmenu
+                where trbreakdownmenudt_hd_code=:id
+            ) as k
+            inner join msbahanbaku l on k.kdbb=l.kdbb
+            inner join msgroupbb m on l.kdgroupbb=m.kdgroupbb
+            GROUP BY k.kdbb,k.kdsat,l.nmbb,l.kdgroupbb,m.nmgroupbb
+            ORDER BY m.nmgroupbb,l.nmbb",
+            [
+                'id' => $id,
+            ]
+        );
+    }
 }

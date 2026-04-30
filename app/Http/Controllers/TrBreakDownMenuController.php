@@ -25,9 +25,11 @@ class TrBreakDownMenuController extends Controller
         }
         $header = $modelHeader->getDataById($id);
         $detail = $modelDetail->getAllData($id);
+        $dataBahanBaku = $modelDetail->getDataBahanBaku($id);
         return $this->responseData([
-            'header' => $header,
-            'detail' => $detail,
+            'header' => $header ?? [],
+            'detail' => $detail ?? [],
+            'dataBahanBaku' => $dataBahanBaku ?? [],
         ]);
     }
 
@@ -69,9 +71,13 @@ class TrBreakDownMenuController extends Controller
                     return $this->responseError('Gagal menyimpan detail', 500);
                 }
             }
+
+            $dataBahanBaku = $modelDetail->getDataBahanBaku($kodeHeader);
+
             DB::commit();
             return $this->responseSuccess('Data berhasil disimpan', 200, [
                 'trbreakdownhd_code' => $kodeHeader,
+                'dataBahanBaku' => $dataBahanBaku ?? [],
             ]);
         } catch (\Exception $e) {
             DB::rollBack();
@@ -122,9 +128,12 @@ class TrBreakDownMenuController extends Controller
                     return $this->responseError('Gagal update detail', 500);
                 }
             }
+
+            $dataBahanBaku = $modelDetail->getDataBahanBaku($request->trbreakdownhd_code);
             DB::commit();
             return $this->responseSuccess('Data berhasil diupdate', 200, [
                 'trbreakdownhd_code' => $request->trbreakdownhd_code,
+                'dataBahanBaku' => $dataBahanBaku ?? [],
             ]);
         } catch (\Exception $e) {
             DB::rollBack();
