@@ -21,6 +21,7 @@ class UpdateRequest extends BaseRequest
             'satuan_besar' => 'required|string|max:20',
             'konversi' => 'required|numeric',
             'group_bahan_baku_id' => 'required|string|max:20',
+            'fg_active' => 'required|in:Y,T',
         ];
     }
 

@@ -53,6 +53,7 @@ class BahanATKController extends Controller
                 'satuan_besar' => $request->satuan_besar,
                 'konversi' => $request->konversi,
                 'upduser' => Auth::user()->currentAccessToken()['namauser'],
+                'fg_active' => $request->fg_active,
             ];
 
             $insertResult = $model->insertData($params);
@@ -81,6 +82,7 @@ class BahanATKController extends Controller
             'satuan_besar' => $request->satuan_besar,
             'konversi' => $request->konversi,
             'upduser' => Auth::user()->currentAccessToken()['namauser'],
+            'fg_active' => $request->fg_active,
         ];
 
         $cek = $model->cekData($request->bahan_baku_id);
@@ -144,6 +146,7 @@ class BahanATKController extends Controller
 
         $params = [
             'search_keyword' => $request->search_keyword ?? '',
+            'fg_active' => $request->fg_active ?? '',
         ];
 
         $result = $bahan_baku_model->getAllData($params);

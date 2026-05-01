@@ -15,6 +15,7 @@ class GetRequest extends BaseRequest
     {
         return [
             'search_keyword' => 'nullable|string',
+            'fg_active' => 'nullable|string|in:Y,T',
         ];
     }
 }

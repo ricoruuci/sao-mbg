@@ -20,6 +20,7 @@ class InsertRequest extends BaseRequest
             'satuan_besar' => 'required|string|max:20',
             'konversi' => 'required|numeric|min:1',
             'group_bahan_baku_id' => 'required|string|max:20',
+            'fg_active' => 'required|in:Y,T',
         ];
     }
 
