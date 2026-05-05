@@ -17,6 +17,7 @@ class GetRequestBukuBesar extends BaseRequest
             'dari' => 'required|date_format:Ymd',
             'sampai' => 'required|date_format:Ymd',
             'rekening_id' => 'nullable|string',
+            'fg_transaksi' => 'nullable|in:TR,TC',
         ];
     }
 }

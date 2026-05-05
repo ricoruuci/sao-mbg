@@ -65,43 +65,84 @@ class BaseModel extends Model
         $rek_laba = "'".$default->drlaba."'" ?? '';
         $rek_discap = "'".$default->drdiscap."'" ?? '';
 
-        $result =
-            "SELECT a.rekeningid,b.transdate,a.jenis,isnull(a.amount,0) as amount,'IDR' as currid,1 as rate,'T' as fgpayment,a.voucherid,a.note
-            from cftrkkbbdt a
-            inner join cftrkkbbhd b on a.voucherid=b.voucherid
-            where b.FlagKKBB IN ('KM','KK','BM','BK','APB','APK','JU')
-            $addCon1
-            union all
+        if (filled($params['fg_transaksi']) == "TR")
+        {
+            $result =
+                "SELECT a.rekeningid,b.transdate,a.jenis,isnull(a.amount,0) as amount,'IDR' as currid,1 as rate,'T' as fgpayment,a.voucherid,a.note
+                from cftrkkbbdt a
+                inner join cftrkkbbhd b on a.voucherid=b.voucherid
+                where b.FlagKKBB IN ('KM','KK','BM','BK','APB','APK','JU')
+                $addCon1
+                union all
 
-            select b.rekeningid,a.transdate,case when a.flagkkbb in ('BM') then 'D' else 'K' end,a.total,'IDR' as currid,1 as rate,'T' as fgpayment,a.voucherid,a.note
-            from cftrkkbbhd a
-            inner join cfmsbank b on a.bankid=b.bankid
-            where a.FlagKKBB IN ('BM','BK','APB')
-            $addCon2
-            union all
+                select b.rekeningid,a.transdate,case when a.flagkkbb in ('BM') then 'D' else 'K' end,a.total,'IDR' as currid,1 as rate,'T' as fgpayment,a.voucherid,a.note
+                from cftrkkbbhd a
+                inner join cfmsbank b on a.bankid=b.bankid
+                where a.FlagKKBB IN ('BM','BK','APB')
+                $addCon2
+                union all
 
-            select $rek_kas,a.transdate,case when a.flagkkbb in ('KM') then 'D' else 'K' end,a.total,'IDR' as currid,1 as rate,'T' as fgpayment,a.voucherid,a.note
-            from cftrkkbbhd a
-            where a.flagkkbb in ('KM','KK','APK')
-            $addCon3
-            union all
+                select $rek_kas,a.transdate,case when a.flagkkbb in ('KM') then 'D' else 'K' end,a.total,'IDR' as currid,1 as rate,'T' as fgpayment,a.voucherid,a.note
+                from cftrkkbbhd a
+                where a.flagkkbb in ('KM','KK','APK')
+                $addCon3
+                union all
 
-            select $rek_ar,tgljual,'d',isnull(TTLPj,0),'IDR',1,'T',nota,nota from TrJualHd where fgbatal='T' $addCon4 union all
-            select $rek_taxpj,tgljual,'k',isnull(TTLTax,0),'IDR',1,'T',nota,nota from TrJualHd where fgbatal='T' $addCon5 union all
-            select $rek_pj,tgljual,'k',isnull(STPj,0),'IDR',1,'T',nota,nota from TrJualHd where fgbatal='T' $addCon6 union all
-            /*
-            select case when a.PayType=3 then $rek_kas else b.RekeningID end,a.tgljual,'d',isnull(a.TTLPj,0),'IDR',1,'T',a.nota,a.nota from TrJualHd a
-            left join CFMsBank b on a.BankId=b.bankid
-            where a.fgbayar='Y' and a.fgbatal='T' $addCon7 union all
-            select $rek_ar,tgljual,'K',isnull(TTLPj,0),'IDR',1,'T',nota,nota from TrJualHd
-            where fgbayar='Y' and fgbatal='T' $addCon8 union all
-            */
-            select rekening_beli,TglBeli,'d',isnull(STPb,0),'IDR',1,'T',nota,nota from TrBeliBBHd $addCon9 union all
-            select $rek_taxpb,TglBeli,'d',isnull(TTLTax,0),'IDR',1,'T',nota,nota from TrBeliBBHd $addCon10 union all
-            select $rek_ap,TglBeli,'k',isnull(TTLPb,0),'IDR',1,'T',nota,nota from TrBeliBBHd $addCon11 union all
-            select $rek_discap,TglBeli,'k',isnull(DiscAmount,0),'IDR',1,'T',nota,nota from TrBeliBBHd $addCon12
-            ";
+                select $rek_ar,tgljual,'d',isnull(TTLPj,0),'IDR',1,'T',nota,nota from TrJualHd where fgbatal='T' $addCon4 union all
+                select $rek_taxpj,tgljual,'k',isnull(TTLTax,0),'IDR',1,'T',nota,nota from TrJualHd where fgbatal='T' $addCon5 union all
+                select $rek_pj,tgljual,'k',isnull(STPj,0),'IDR',1,'T',nota,nota from TrJualHd where fgbatal='T' $addCon6 union all
+                /*
+                select case when a.PayType=3 then $rek_kas else b.RekeningID end,a.tgljual,'d',isnull(a.TTLPj,0),'IDR',1,'T',a.nota,a.nota from TrJualHd a
+                left join CFMsBank b on a.BankId=b.bankid
+                where a.fgbayar='Y' and a.fgbatal='T' $addCon7 union all
+                select $rek_ar,tgljual,'K',isnull(TTLPj,0),'IDR',1,'T',nota,nota from TrJualHd
+                where fgbayar='Y' and fgbatal='T' $addCon8 union all
+                */
+                select rekening_beli,TglBeli,'d',isnull(STPb,0),'IDR',1,'T',nota,nota from TrBeliBBHd $addCon9 union all
+                select $rek_taxpb,TglBeli,'d',isnull(TTLTax,0),'IDR',1,'T',nota,nota from TrBeliBBHd $addCon10 union all
+                select $rek_ap,TglBeli,'k',isnull(TTLPb,0),'IDR',1,'T',nota,nota from TrBeliBBHd $addCon11 union all
+                select $rek_discap,TglBeli,'k',isnull(DiscAmount,0),'IDR',1,'T',nota,nota from TrBeliBBHd $addCon12
+                ";
+        }
+        else
+        {
+            $result =
+                "SELECT a.rekeningid,isnull(b.date_costing,a.transdate) as transdate,a.jenis,isnull(a.amount,0) as amount,'IDR' as currid,1 as rate,'T' as fgpayment,a.voucherid,a.note
+                from cftrkkbbdt a
+                inner join cftrkkbbhd b on a.voucherid=b.voucherid
+                where b.FlagKKBB IN ('KM','KK','BM','BK','APB','APK','JU')
+                $addCon1
+                union all
 
+                select b.rekeningid,isnull(b.date_costing,a.transdate) as transdate,case when a.flagkkbb in ('BM') then 'D' else 'K' end,a.total,'IDR' as currid,1 as rate,'T' as fgpayment,a.voucherid,a.note
+                from cftrkkbbhd a
+                inner join cfmsbank b on a.bankid=b.bankid
+                where a.FlagKKBB IN ('BM','BK','APB')
+                $addCon2
+                union all
+
+                select $rek_kas,isnull(b.date_costing,a.transdate) as transdate,case when a.flagkkbb in ('KM') then 'D' else 'K' end,a.total,'IDR' as currid,1 as rate,'T' as fgpayment,a.voucherid,a.note
+                from cftrkkbbhd a
+                where a.flagkkbb in ('KM','KK','APK')
+                $addCon3
+                union all
+
+                select $rek_ar,tgljual,'d',isnull(TTLPj,0),'IDR',1,'T',nota,nota from TrJualHd where fgbatal='T' $addCon4 union all
+                select $rek_taxpj,tgljual,'k',isnull(TTLTax,0),'IDR',1,'T',nota,nota from TrJualHd where fgbatal='T' $addCon5 union all
+                select $rek_pj,tgljual,'k',isnull(STPj,0),'IDR',1,'T',nota,nota from TrJualHd where fgbatal='T' $addCon6 union all
+                /*
+                select case when a.PayType=3 then $rek_kas else b.RekeningID end,a.tgljual,'d',isnull(a.TTLPj,0),'IDR',1,'T',a.nota,a.nota from TrJualHd a
+                left join CFMsBank b on a.BankId=b.bankid
+                where a.fgbayar='Y' and a.fgbatal='T' $addCon7 union all
+                select $rek_ar,tgljual,'K',isnull(TTLPj,0),'IDR',1,'T',nota,nota from TrJualHd
+                where fgbayar='Y' and fgbatal='T' $addCon8 union all
+                */
+                select rekening_beli,isnull(date_costing,TglBeli) as TglBeli,'d',isnull(STPb,0),'IDR',1,'T',nota,nota from TrBeliBBHd $addCon9 union all
+                select $rek_taxpb,isnull(date_costing,TglBeli) as TglBeli,'d',isnull(TTLTax,0),'IDR',1,'T',nota,nota from TrBeliBBHd $addCon10 union all
+                select $rek_ap,isnull(date_costing,TglBeli) as TglBeli,'k',isnull(TTLPb,0),'IDR',1,'T',nota,nota from TrBeliBBHd $addCon11 union all
+                select $rek_discap,isnull(date_costing,TglBeli) as TglBeli,'k',isnull(DiscAmount,0),'IDR',1,'T',nota,nota from TrBeliBBHd $addCon12
+                ";
+        }
         //var_dump($result); die;
         return $result;
     }

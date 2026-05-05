@@ -46,6 +46,7 @@ class RptFinanceController extends Controller
             'dari' => $request->input('dari'),
             'sampai' => $request->input('sampai'),
             'rekening_id' => $rekeningId,
+            'fg_transaksi' => $request->input('fg_transaksi') ?? 'TR'
         ]);
 
         return $this->responseData($result);
@@ -63,7 +64,8 @@ class RptFinanceController extends Controller
             $result = $model->getRptLabaRugi([
                 'dari' => $request->input('dari'),
                 'sampai' => $request->input('sampai'),
-                'company_id' => Auth::user()->currentAccessToken()['company_id']
+                'company_id' => Auth::user()->currentAccessToken()['company_id'],
+                'fg_transaksi' => $request->input('fg_transaksi') ?? 'TR'
             ]);
         }
         else
@@ -71,7 +73,8 @@ class RptFinanceController extends Controller
             $result = $model->getRptLabaRugi([
                 'dari' => $request->input('dari'),
                 'sampai' => $request->input('sampai'),
-                'company_id' => $request->input('company_id', Auth::user()->currentAccessToken()['company_id'])
+                'company_id' => $request->input('company_id', Auth::user()->currentAccessToken()['company_id']),
+                'fg_transaksi' => $request->input('fg_transaksi') ?? 'TR'
             ]);
         }
 

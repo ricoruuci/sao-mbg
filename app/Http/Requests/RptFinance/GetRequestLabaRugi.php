@@ -16,6 +16,7 @@ class GetRequestLabaRugi extends BaseRequest
         return [
             'dari' => 'required|date_format:Ymd',
             'sampai' => 'required|date_format:Ymd',
+            'fg_transaksi' => 'nullable|in:TR,TC',
         ];
     }
 }

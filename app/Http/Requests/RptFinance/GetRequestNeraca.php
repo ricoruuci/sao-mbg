@@ -14,7 +14,8 @@ class GetRequestNeraca extends BaseRequest
     public function rules()
     {
         return [
-            'periode' => 'required|date_format:Ymd'
+            'periode' => 'required|date_format:Ymd',
+            'fg_transaksi' => 'nullable|in:TR,TC',
         ];
     }
 }
