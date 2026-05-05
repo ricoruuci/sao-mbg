@@ -39,6 +39,8 @@ class TrSpmController extends Controller
             'trspm_hd_company_name' => $company_name,
             'trspm_hd_work_days' => $request->trspm_hd_work_days ?? 0,
             'trspm_hd_overtime_adjustment' => $request->trspm_hd_overtime_adjustment ?? 0,
+            'trspm_hd_subtotal' => $request->trspm_hd_subtotal ?? 0,
+            'trspm_hd_subbonuses' => $request->trspm_hd_subbonuses ?? 0,
             'trspm_hd_note' => $request->trspm_hd_note ?? '',
             'upduser' => Auth::user()->currentAccessToken()['namauser'] ?? 'system',
         ];
@@ -134,6 +136,8 @@ class TrSpmController extends Controller
             'trspm_hd_company_name' => $company_name,
             'trspm_hd_work_days' => $request->trspm_hd_work_days ?? 0,
             'trspm_hd_overtime_adjustment' => $request->trspm_hd_overtime_adjustment ?? 0,
+            'trspm_hd_subtotal' => $request->trspm_hd_subtotal ?? 0,
+            'trspm_hd_subbonuses' => $request->trspm_hd_subbonuses ?? 0,
             'trspm_hd_note' => $request->trspm_hd_note ?? '',
             'upduser' => Auth::user()->currentAccessToken()['namauser'] ?? 'system',
         ];

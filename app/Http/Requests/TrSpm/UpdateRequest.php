@@ -22,6 +22,8 @@ class UpdateRequest extends BaseRequest
             'trspm_hd_company_name' => 'nullable|string|max:100',
             'trspm_hd_work_days' => 'nullable|numeric|min:0',
             'trspm_hd_overtime_adjustment' => 'nullable|numeric|min:0',
+            'trspm_hd_subtotal' => 'nullable|numeric',
+            'trspm_hd_subbonuses' => 'nullable|numeric',
             'trspm_hd_note' => 'nullable|string',
 
             'detail' => 'required|array|min:1',
