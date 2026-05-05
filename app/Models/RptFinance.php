@@ -273,6 +273,42 @@ class RptFinance extends BaseModel
         return $result;
     }
 
+    function getRptCosting($params)
+    {
+        $result = DB::select(
+            "SELECT
+                K.*,
+                case when kode='A' THEN 'ANGGARAN' ELSE 'REALISASI' END as judul,
+                case when tipe='A1' then 'BUDGET BAHAN BAKU'
+                     when tipe='A2' then 'BUDGET OPERASIONAL'
+                     when tipe='B1' then 'REALISASI BAHAN BAKU'
+                     when tipe='B2' then 'REALISASI OPERASIONAL'
+                     END as keterangan
+            FROM (
+                SELECT 'A' as kode,'A1' as tipe,purchase_order_kitchen_id as id,purchase_order_kitchen_budget as amount from trpurchaseorderkitchenhd
+                where convert(varchar(10),purchase_order_kitchen_date,112) between :dari1 and :sampai1
+                union all
+                select 'A' as kode,'A2' as tipe,purchase_order_atk_id as id,purchase_order_atk_budget as amount from trpurchaseorderatkhd
+                where convert(varchar(10),purchase_order_atk_date,112) between :dari2 and :sampai2
+                union all
+                select 'B' as kode,case when fgform='BB' then 'B1' else 'B2' end as tipe,Nota as id,TTLPb as amount from TrBeliBBHd
+                where convert(varchar(10),TglBeli,112) between :dari3 and :sampai3
+            ) as K
+            ORDER BY K.kode,K.tipe ",
+            [
+                'dari1' => $params['dari'],
+                'dari2' => $params['dari'],
+                'dari3' => $params['dari'],
+                'sampai1' => $params['sampai'],
+                'sampai2' => $params['sampai'],
+                'sampai3' => $params['sampai']
+            ]
+        );
+
+        return $result;
+
+    }
+
 }
 
 ?>

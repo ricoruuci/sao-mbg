@@ -229,6 +229,7 @@ Route::patch('update-nota-beli', [RptPembelianController::class, 'updateFgUpload
 Route::get('rpt-buku-besar', [RptFinanceController::class, 'getRptBukuBesar'])->middleware('auth:sanctum');
 Route::get('rpt-laba-rugi', [RptFinanceController::class, 'getRptLabaRugi'])->middleware('auth:sanctum');
 Route::get('rpt-neraca', [RptFinanceController::class, 'getRptNeraca'])->middleware('auth:sanctum');
+Route::get('rpt-costing', [RptFinanceController::class, 'getRptCosting'])->middleware('auth:sanctum');
 
 Route::get('rpt-stock-akhir', [RptInventoryController::class, 'getLapStock'])->middleware('auth:sanctum');
 Route::get('rpt-kartu-stock', [RptInventoryController::class, 'getLapKartuStock'])->middleware('auth:sanctum');

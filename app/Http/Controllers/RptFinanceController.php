@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\RptFinance\GetRequestBukuBesar;
 use App\Http\Requests\RptFinance\GetRequestLabaRugi;
 use App\Http\Requests\RptFinance\GetRequestNeraca;
+use App\Http\Requests\RptFinance\GetRequestCosting;
 
 class RptFinanceController extends Controller
 {
@@ -92,6 +93,98 @@ class RptFinanceController extends Controller
         return $this->responseData($result);
     }
 
+    public function getRptCosting(GetRequestCosting $request)
+    {
+        $model = new RptFinance();
+
+        $data = $model->getRptCosting([
+            'dari' => $request->input('dari'),
+            'sampai' => $request->input('sampai'),
+        ]);
+
+        $collection = collect($data);
+
+        // ambil data per tipe
+        $A1 = $collection->where('tipe', 'A1')->values(); // bahan baku anggaran
+        $A2 = $collection->where('tipe', 'A2')->values(); // operasional anggaran
+        $B1 = $collection->where('tipe', 'B1')->values(); // bahan baku realisasi
+        $B2 = $collection->where('tipe', 'B2')->values(); // operasional realisasi
+
+        // total
+        $totalA1 = (float)$A1->sum(fn($i) => $i->amount);
+        $totalA2 = (float)$A2->sum(fn($i) => $i->amount);
+        $totalB1 = (float)$B1->sum(fn($i) => $i->amount);
+        $totalB2 = (float)$B2->sum(fn($i) => $i->amount);
+
+        // margin
+        $marginBahanBaku = $totalA1 - $totalB1;
+        $marginOperasional = $totalA2 - $totalB2;
+
+        $result = [
+            [
+                'judul' => 'ANGGARAN',
+                'total' => $totalA1 + $totalA2,
+                'detail' => [
+                    [
+                        'keterangan' => 'BAHAN BAKU',
+                        'total' => $totalA1,
+                        'detail_data' => $A1->map(fn($i) => [
+                            'id' => $i->id,
+                            'amount' => (float)$i->amount
+                        ])->values()
+                    ],
+                    [
+                        'keterangan' => 'OPERASIONAL',
+                        'total' => $totalA2,
+                        'detail_data' => $A2->map(fn($i) => [
+                            'id' => $i->id,
+                            'amount' => (float)$i->amount
+                        ])->values()
+                    ]
+                ]
+            ],
+            [
+                'judul' => 'REALISASI',
+                'total' => $totalB1 + $totalB2,
+                'detail' => [
+                    [
+                        'keterangan' => 'BAHAN BAKU',
+                        'total' => $totalB1,
+                        'detail_data' => $B1->map(fn($i) => [
+                            'id' => $i->id,
+                            'amount' => (float)$i->amount
+                        ])->values()
+                    ],
+                    [
+                        'keterangan' => 'OPERASIONAL',
+                        'total' => $totalB2,
+                        'detail_data' => $B2->map(fn($i) => [
+                            'id' => $i->id,
+                            'amount' => (float)$i->amount
+                        ])->values()
+                    ]
+                ]
+            ],
+            [
+                'judul' => 'MARGIN',
+                'total' => $marginBahanBaku + $marginOperasional,
+                'detail' => [
+                    [
+                        'keterangan' => 'BAHAN BAKU',
+                        'total' => $marginBahanBaku
+                    ],
+                    [
+                        'keterangan' => 'OPERASIONAL',
+                        'total' => $marginOperasional
+                    ]
+                ]
+            ]
+        ];
+
+        return [
+            'data' => $result
+        ];
+    }
 }
 
 ?>
