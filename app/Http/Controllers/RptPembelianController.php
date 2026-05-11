@@ -218,7 +218,9 @@ class RptPembelianController extends Controller
 
         $result = $model->getRekapNonBBByItem($params);
 
-        return $this->responseData($result);
+        $resultPaginated = $this->arrayPaginator($request, $result);
+
+        return $this->responsePagination($resultPaginated);
     }
 
      /**
@@ -235,8 +237,12 @@ class RptPembelianController extends Controller
 
         $result = $model->getRekapBBByItem($params);
 
-        return $this->responseData($result);
+        $resultPaginated = $this->arrayPaginator($request, $result);
+
+        return $this->responsePagination($resultPaginated);
     }
+
+    
 
 }
 

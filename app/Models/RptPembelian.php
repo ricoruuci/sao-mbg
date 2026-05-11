@@ -246,6 +246,7 @@ class RptPembelian extends BaseModel
             "SELECT 
                 c.NmBB as item_name,
                 b.nota,
+                a.tglbeli AS transdate,
                 b.jml as qty,
                 b.harga as price,
                 (b.jml * b.harga) as total
@@ -271,6 +272,7 @@ class RptPembelian extends BaseModel
             }
             $rekap[$itemName]['details'][] = [
                 'nota' => $row->nota,
+                'transdate' => $row->transdate,
                 'qty' => (float)$row->qty,
                 'price' => (float)$row->price,
                 'total' => (float)$row->total
@@ -302,6 +304,7 @@ class RptPembelian extends BaseModel
             "SELECT 
                 c.NmBB as item_name,
                 b.nota,
+                a.tglbeli AS transdate,
                 b.jml as qty,
                 b.harga as price,
                 (b.jml * b.harga) as total
@@ -327,6 +330,7 @@ class RptPembelian extends BaseModel
             }
             $rekap[$itemName]['details'][] = [
                 'nota' => $row->nota,
+                'transdate' => $row->transdate,
                 'qty' => (float)$row->qty,
                 'price' => (float)$row->price,
                 'total' => (float)$row->total
