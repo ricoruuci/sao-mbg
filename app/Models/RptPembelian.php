@@ -242,6 +242,11 @@ class RptPembelian extends BaseModel
             $bindings['company_id'] = $params['company_id'];
         }
 
+        if (!empty($params['bahan_baku_keyword'])) {
+            $condition .= " AND c.NmBB LIKE :bahan_baku_keyword";
+            $bindings['bahan_baku_keyword'] = '%' . $params['bahan_baku_keyword'] . '%';
+        }
+
         $result = DB::select(
             "SELECT 
                 c.NmBB as item_name,
@@ -298,6 +303,11 @@ class RptPembelian extends BaseModel
         if (!empty($params['company_id'])) {
             $condition = " AND a.company_id = :company_id";
             $bindings['company_id'] = $params['company_id'];
+        }
+
+        if (!empty($params['bahan_baku_keyword'])) {
+            $condition .= " AND c.NmBB LIKE :bahan_baku_keyword";
+            $bindings['bahan_baku_keyword'] = '%' . $params['bahan_baku_keyword'] . '%';
         }
 
         $result = DB::select(

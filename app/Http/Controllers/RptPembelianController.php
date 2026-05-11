@@ -213,7 +213,8 @@ class RptPembelianController extends Controller
         $params = [
             'dari' => $request->input('dari'),
             'sampai' => $request->input('sampai'),
-            'company_id' => $request->input('company_id', Auth::user()->currentAccessToken()['company_id'])
+            'company_id' => $request->input('company_id', Auth::user()->currentAccessToken()['company_id']),
+            'bahan_baku_keyword' => $request->input('bahan_baku_keyword', '')
         ];
 
         $result = $model->getRekapNonBBByItem($params);
@@ -232,7 +233,8 @@ class RptPembelianController extends Controller
         $params = [
             'dari' => $request->input('dari'),
             'sampai' => $request->input('sampai'),
-            'company_id' => $request->input('company_id', Auth::user()->currentAccessToken()['company_id'])
+            'company_id' => $request->input('company_id', Auth::user()->currentAccessToken()['company_id']),
+            'bahan_baku_keyword' => $request->input('bahan_baku_keyword', '')
         ];
 
         $result = $model->getRekapBBByItem($params);
