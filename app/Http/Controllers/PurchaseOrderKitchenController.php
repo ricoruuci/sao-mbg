@@ -53,7 +53,8 @@ class PurchaseOrderKitchenController extends Controller
         try {
             $purchaseOrderKitchenId = $modelHeader->generatePurchaseOrderKitchenId(
                 $request->purchase_order_kitchen_date,
-                $supplier->supplier_name
+                $supplier->supplier_name,
+                $request->purchase_order_kitchen_to
             );
 
             $params['purchase_order_kitchen_id'] = $purchaseOrderKitchenId;
@@ -157,12 +158,14 @@ class PurchaseOrderKitchenController extends Controller
         DB::beginTransaction();
 
         try {
-            $updateHeader = $modelHeader->updateData($params);
+            $oldId = $request->purchase_order_kitchen_id;
 
-            if ($updateHeader === false) {
-                DB::rollBack();
-                return $this->responseError('update header gagal', 400);
-            }
+            // Regenerate ID berdasarkan _to dan supplier baru
+            $newId = $modelHeader->generatePurchaseOrderKitchenId(
+                $request->purchase_order_kitchen_date,
+                $supplier->supplier_name,
+                $request->purchase_order_kitchen_to
+            );
 
             $arrDetail = $request->input('detail');
 
@@ -171,13 +174,29 @@ class PurchaseOrderKitchenController extends Controller
                 return $this->responseError('detail tidak boleh kosong', 400);
             }
 
-            $modelDetail->deleteData($request->purchase_order_kitchen_id);
+            // 1. Hapus detail lama dulu (lepas referensi FK ke oldId)
+            $modelDetail->deleteData($oldId);
 
+            // 2. Jika ID berubah, update PK header (aman karena detail sudah dihapus)
+            if ($oldId !== $newId) {
+                $modelHeader->updateId($oldId, $newId);
+                $params['purchase_order_kitchen_id'] = $newId;
+            }
+
+            // 3. Update field-field header
+            $updateHeader = $modelHeader->updateData($params);
+
+            if ($updateHeader === false) {
+                DB::rollBack();
+                return $this->responseError('update header gagal', 400);
+            }
+
+            // 4. Insert ulang detail dengan newId
             foreach ($arrDetail as $detail) {
                 $detailTotal = ($detail['purchase_order_kitchen_detail_qty_invoice'] ?? 0) * $detail['purchase_order_kitchen_detail_price'];
 
                 $insertDetail = $modelDetail->insertData([
-                    'purchase_order_kitchen_id' => $request->purchase_order_kitchen_id,
+                    'purchase_order_kitchen_id' => $newId,
                     'purchase_order_kitchen_detail_itemid' => $detail['purchase_order_kitchen_detail_itemid'],
                     'purchase_order_kitchen_detail_itemname' => $detail['purchase_order_kitchen_detail_itemname'],
                     'purchase_order_kitchen_detail_formula' => $detail['purchase_order_kitchen_detail_formula'] ?? 0,
@@ -197,21 +216,21 @@ class PurchaseOrderKitchenController extends Controller
                 }
             }
 
-            $hitung = $modelHeader->hitungTotal($request->purchase_order_kitchen_id);
+            $hitung = $modelHeader->hitungTotal($newId);
 
             if ($hitung) {
                 $modelHeader->updateTotal([
                     'purchase_order_kitchen_subtotal' => (float) $hitung->purchase_order_kitchen_subtotal,
                     'purchase_order_kitchen_tax_amount' => (float) $hitung->purchase_order_kitchen_tax_amount,
                     'purchase_order_kitchen_grandtotal' => (float) $hitung->purchase_order_kitchen_grandtotal,
-                    'purchase_order_kitchen_id' => $request->purchase_order_kitchen_id,
+                    'purchase_order_kitchen_id' => $newId,
                 ]);
             }
 
             DB::commit();
 
             return $this->responseSuccess('update berhasil', 200, [
-                'purchase_order_kitchen_id' => $request->purchase_order_kitchen_id,
+                'purchase_order_kitchen_id' => $newId,
             ]);
         } catch (\Exception $e) {
             DB::rollBack();
