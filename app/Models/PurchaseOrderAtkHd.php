@@ -92,6 +92,18 @@ class PurchaseOrderAtkHd extends BaseModel
         );
     }
 
+    public function updateId($oldId, $newId)
+    {
+        // Detail dihapus dulu di controller sebelum memanggil method ini
+        // sehingga tidak ada referensi FK yang menghalangi update header
+        return DB::update(
+            "UPDATE trpurchaseorderatkhd
+            SET purchase_order_atk_id = ?
+            WHERE purchase_order_atk_id = ?",
+            [$newId, $oldId]
+        );
+    }
+
     public function getAllData($params)
     {
         return DB::select(
@@ -298,7 +310,7 @@ class PurchaseOrderAtkHd extends BaseModel
         );
     }
 
-    public function generatePurchaseOrderAtkId($purchaseOrderAtkDate, $supplierName)
+    public function generatePurchaseOrderAtkId($purchaseOrderAtkDate, $supplierName, $purchaseOrderAtkTo = '')
     {
         $timestamp = strtotime($purchaseOrderAtkDate);
 
@@ -325,9 +337,10 @@ class PurchaseOrderAtkHd extends BaseModel
         $year = date('Y', $timestamp);
         $romanMonth = $monthRoman[$month];
 
-        $supplierCode = $this->buildSupplierInitial($supplierName);
+        $supplierCode = $this->buildInitial($supplierName, 'SUP');
+        $toCode = $this->buildInitial($purchaseOrderAtkTo, 'TO');
 
-        $suffix = '/INV/' . $supplierCode . '/' . $romanMonth . '/' . $year;
+        $suffix = '/INV/' . $toCode . '/' . $supplierCode . '/' . $romanMonth . '/' . $year;
 
         $lastData = DB::selectOne(
             "SELECT TOP 1 purchase_order_atk_id
@@ -356,9 +369,9 @@ class PurchaseOrderAtkHd extends BaseModel
         );
     }
 
-    private function buildSupplierInitial($supplierName)
+    private function buildInitial($name, $default = 'SUP')
     {
-        $clean = preg_replace('/[^A-Za-z0-9\s]/', ' ', (string) $supplierName);
+        $clean = preg_replace('/[^A-Za-z0-9\s]/', ' ', (string) $name);
         $parts = preg_split('/\s+/', trim($clean));
 
         $initial = '';
@@ -368,7 +381,7 @@ class PurchaseOrderAtkHd extends BaseModel
             }
         }
 
-        return $initial !== '' ? $initial : 'SUP';
+        return $initial !== '' ? $initial : $default;
     }
 }
 

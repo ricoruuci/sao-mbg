@@ -92,6 +92,18 @@ class PurchaseOrderKitchenHd extends BaseModel
         );
     }
 
+    public function updateId($oldId, $newId)
+    {
+        // Detail dihapus dulu di controller sebelum memanggil method ini
+        // sehingga tidak ada referensi FK yang menghalangi update header
+        return DB::update(
+            "UPDATE trpurchaseorderkitchenhd
+            SET purchase_order_kitchen_id = ?
+            WHERE purchase_order_kitchen_id = ?",
+            [$newId, $oldId]
+        );
+    }
+
     public function getAllData($params)
     {
         return DB::select(
@@ -298,7 +310,7 @@ class PurchaseOrderKitchenHd extends BaseModel
         );
     }
 
-    public function generatePurchaseOrderKitchenId($purchaseOrderKitchenDate, $supplierName)
+    public function generatePurchaseOrderKitchenId($purchaseOrderKitchenDate, $supplierName, $purchaseOrderKitchenTo = '')
     {
         $timestamp = strtotime($purchaseOrderKitchenDate);
 
@@ -325,9 +337,10 @@ class PurchaseOrderKitchenHd extends BaseModel
         $year = date('Y', $timestamp);
         $romanMonth = $monthRoman[$month];
 
-        $supplierCode = $this->buildSupplierInitial($supplierName);
+        $supplierCode = $this->buildInitial($supplierName, 'SUP');
+        $toCode = $this->buildInitial($purchaseOrderKitchenTo, 'TO');
 
-        $suffix = '/INV/' . $supplierCode . '/' . $romanMonth . '/' . $year;
+        $suffix = '/INV/' . $toCode . '/' . $supplierCode . '/' . $romanMonth . '/' . $year;
 
         $lastData = DB::selectOne(
             "SELECT TOP 1 purchase_order_kitchen_id
@@ -356,9 +369,9 @@ class PurchaseOrderKitchenHd extends BaseModel
         );
     }
 
-    private function buildSupplierInitial($supplierName)
+    private function buildInitial($name, $default = 'SUP')
     {
-        $clean = preg_replace('/[^A-Za-z0-9\s]/', ' ', (string) $supplierName);
+        $clean = preg_replace('/[^A-Za-z0-9\s]/', ' ', (string) $name);
         $parts = preg_split('/\s+/', trim($clean));
 
         $initial = '';
@@ -368,7 +381,7 @@ class PurchaseOrderKitchenHd extends BaseModel
             }
         }
 
-        return $initial !== '' ? $initial : 'SUP';
+        return $initial !== '' ? $initial : $default;
     }
 }
 
