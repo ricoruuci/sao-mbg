@@ -254,10 +254,13 @@ class RptPembelian extends BaseModel
                 a.tglbeli AS transdate,
                 b.jml as qty,
                 b.harga as price,
-                (b.jml * b.harga) as total
+                (b.jml * b.harga) as total,
+                d.KdSupplier as supplier_code,
+                d.NmSupplier as supplier_name
             FROM TrBeliBBHd a
             INNER JOIN TrBeliBBDt b ON a.nota = b.nota
             INNER JOIN MsBahanBaku c ON b.kdbb = c.kdbb
+            INNER JOIN MsSupplier d ON a.KdSupplier = d.KdSupplier
             WHERE CONVERT(VARCHAR(8), a.tglbeli, 112) BETWEEN :dari AND :sampai
               AND a.fgform = 'BA'
               $condition
@@ -278,6 +281,8 @@ class RptPembelian extends BaseModel
             $rekap[$itemName]['details'][] = [
                 'nota' => $row->nota,
                 'transdate' => $row->transdate,
+                'supplier_code' => $row->supplier_code,
+                'supplier_name' => $row->supplier_name,
                 'qty' => (float)$row->qty,
                 'price' => (float)$row->price,
                 'total' => (float)$row->total
@@ -317,10 +322,13 @@ class RptPembelian extends BaseModel
                 a.tglbeli AS transdate,
                 b.jml as qty,
                 b.harga as price,
-                (b.jml * b.harga) as total
+                (b.jml * b.harga) as total,
+                d.KdSupplier as supplier_code,
+                d.NmSupplier as supplier_name
             FROM TrBeliBBHd a
             INNER JOIN TrBeliBBDt b ON a.nota = b.nota
             INNER JOIN MsBahanBaku c ON b.kdbb = c.kdbb
+            INNER JOIN MsSupplier d ON a.KdSupplier = d.KdSupplier
             WHERE CONVERT(VARCHAR(8), a.tglbeli, 112) BETWEEN :dari AND :sampai
               AND a.fgform = 'BB'
               $condition
@@ -341,6 +349,8 @@ class RptPembelian extends BaseModel
             $rekap[$itemName]['details'][] = [
                 'nota' => $row->nota,
                 'transdate' => $row->transdate,
+                'supplier_code' => $row->supplier_code,
+                'supplier_name' => $row->supplier_name,
                 'qty' => (float)$row->qty,
                 'price' => (float)$row->price,
                 'total' => (float)$row->total
