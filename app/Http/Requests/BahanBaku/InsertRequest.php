@@ -21,6 +21,7 @@ class InsertRequest extends BaseRequest
             'konversi' => 'required|numeric|min:1',
             'group_bahan_baku_id' => 'required|string|max:20',
             'fg_active' => 'required|in:Y,T',
+            'price' => 'required|numeric|min:0',
         ];
     }
 

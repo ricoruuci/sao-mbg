@@ -22,7 +22,7 @@ class BahanBaku extends BaseModel
             "SELECT a.kdbb as bahan_baku_id, a.nmbb as bahan_baku_name,
             a.satkecil as satuan, a.satbesar as satuan_besar, a.jumsat as konversi,
             b.kdgroupbb as group_bahan_baku_id, b.nmgroupbb as group_bahan_baku_name,a.upddate,a.upduser,
-            a.fg_active
+            a.fg_active, a.HargaBeli as price
             FROM msbahanbaku a
             inner join msgroupbb b on a.kdgroupbb = b.kdgroupbb
             WHERE a.fgform='BB' and (a.nmbb LIKE :search_keyword
@@ -46,7 +46,7 @@ class BahanBaku extends BaseModel
             "SELECT a.kdbb as bahan_baku_id, a.nmbb as bahan_baku_name,
             a.satkecil as satuan, a.satbesar as satuan_besar, a.jumsat as konversi,
             b.kdgroupbb as group_bahan_baku_id, b.nmgroupbb as group_bahan_baku_name,a.upddate,a.upduser,
-            a.fg_active
+            a.fg_active, a.HargaBeli as price
             FROM msbahanbaku a
             inner join msgroupbb b on a.kdgroupbb = b.kdgroupbb
             WHERE  a.fgform='BB' and a.kdbb = :id",
@@ -101,8 +101,8 @@ class BahanBaku extends BaseModel
     function insertData($params)
     {
         $result = DB::insert(
-            "INSERT INTO msbahanbaku (kdbb, nmbb, satkecil, kdgroupbb, satbesar, jumsat,upddate,upduser, fgform, fg_active)
-            VALUES (:kdbb, :nmbb, :satkecil, :kdgroupbb, :satbesar, :jumsat, getdate(), :upduser, 'BB', :fg_active)",
+            "INSERT INTO msbahanbaku (kdbb, nmbb, satkecil, kdgroupbb, satbesar, jumsat, upddate, upduser, fgform, fg_active, HargaBeli)
+            VALUES (:kdbb, :nmbb, :satkecil, :kdgroupbb, :satbesar, :jumsat, getdate(), :upduser, 'BB', :fg_active, :price)",
             [
                 'kdbb' => $params['bahan_baku_id'],
                 'nmbb' => $params['bahan_baku_name'],
@@ -111,7 +111,8 @@ class BahanBaku extends BaseModel
                 'satbesar' => $params['satuan_besar'],
                 'jumsat' => $params['konversi'],
                 'upduser' => $params['upduser'],
-                'fg_active' => $params['fg_active']
+                'fg_active' => $params['fg_active'],
+                'price' => $params['price']
             ]
         );
 
@@ -129,7 +130,8 @@ class BahanBaku extends BaseModel
                 jumsat = :jumsat,
                 upddate = getdate(),
                 upduser = :upduser,
-                fg_active = :fg_active
+                fg_active = :fg_active,
+                HargaBeli = :price
             WHERE kdbb = :kdbb",
             [
                 'kdbb' => $params['bahan_baku_id'],
@@ -139,7 +141,8 @@ class BahanBaku extends BaseModel
                 'satbesar' => $params['satuan_besar'],
                 'jumsat' => $params['konversi'],
                 'upduser' => $params['upduser'],
-                'fg_active' => $params['fg_active']
+                'fg_active' => $params['fg_active'],
+                'price' => $params['price']
             ]
         );
 

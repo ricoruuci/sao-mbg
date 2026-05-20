@@ -54,6 +54,7 @@ class BahanBakuController extends Controller
                 'konversi' => $request->konversi,
                 'upduser' => Auth::user()->currentAccessToken()['namauser'],
                 'fg_active' => $request->fg_active,
+                'price' => $request->price,
             ];
 
             $insertResult = $model->insertData($params);
@@ -83,6 +84,7 @@ class BahanBakuController extends Controller
             'konversi' => $request->konversi,
             'upduser' => Auth::user()->currentAccessToken()['namauser'],
             'fg_active' => $request->fg_active,
+            'price' => $request->price,
         ];
 
         $cek = $model->cekData($request->bahan_baku_id);
