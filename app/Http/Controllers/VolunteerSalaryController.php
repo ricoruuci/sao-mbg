@@ -264,7 +264,7 @@ class VolunteerSalaryController extends Controller
         $sql = "WITH absensi AS (
                 SELECT
                     d.tr_absensi_dt_id AS employee_code,
-                    COUNT(DISTINCT CONVERT(VARCHAR(8), d.tr_absensi_dt_date, 112)) AS total_day
+                    COUNT(d.tr_absensi_dt_clock_in) AS total_day
                 FROM trabsensidt d
                 INNER JOIN trabsensihd h ON d.tr_absensi_header_code = h.tr_absensi_header_code
                 WHERE CONVERT(varchar(8), d.tr_absensi_dt_date, 112) BETWEEN :dari AND :sampai
