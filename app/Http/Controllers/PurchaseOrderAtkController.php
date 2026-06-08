@@ -52,7 +52,7 @@ class PurchaseOrderAtkController extends Controller
 
         try {
             $purchaseOrderAtkId = $modelHeader->generatePurchaseOrderAtkId(
-                $request->purchase_order_atk_date,
+                $request->purchase_order_atk_date_costing,
                 $supplier->supplier_name,
                 $request->purchase_order_atk_to
             );
@@ -162,7 +162,7 @@ class PurchaseOrderAtkController extends Controller
 
             // Regenerate ID berdasarkan _to dan supplier baru
             $newId = $modelHeader->generatePurchaseOrderAtkId(
-                $request->purchase_order_atk_date,
+                $request->purchase_order_atk_date_costing,
                 $supplier->supplier_name,
                 $request->purchase_order_atk_to
             );

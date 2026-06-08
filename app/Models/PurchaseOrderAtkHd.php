@@ -310,9 +310,9 @@ class PurchaseOrderAtkHd extends BaseModel
         );
     }
 
-    public function generatePurchaseOrderAtkId($purchaseOrderAtkDate, $supplierName, $purchaseOrderAtkTo = '')
+    public function generatePurchaseOrderAtkId($purchaseOrderAtkDateCosting, $supplierName, $purchaseOrderAtkTo = '')
     {
-        $timestamp = strtotime($purchaseOrderAtkDate);
+        $timestamp = strtotime($purchaseOrderAtkDateCosting);
 
         if ($timestamp === false) {
             $timestamp = time();

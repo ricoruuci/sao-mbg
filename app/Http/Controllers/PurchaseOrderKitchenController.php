@@ -52,7 +52,7 @@ class PurchaseOrderKitchenController extends Controller
 
         try {
             $purchaseOrderKitchenId = $modelHeader->generatePurchaseOrderKitchenId(
-                $request->purchase_order_kitchen_date,
+                $request->purchase_order_kitchen_date_costing,
                 $supplier->supplier_name,
                 $request->purchase_order_kitchen_to
             );
@@ -162,7 +162,7 @@ class PurchaseOrderKitchenController extends Controller
 
             // Regenerate ID berdasarkan _to dan supplier baru
             $newId = $modelHeader->generatePurchaseOrderKitchenId(
-                $request->purchase_order_kitchen_date,
+                $request->purchase_order_kitchen_date_costing,
                 $supplier->supplier_name,
                 $request->purchase_order_kitchen_to
             );

@@ -310,9 +310,9 @@ class PurchaseOrderKitchenHd extends BaseModel
         );
     }
 
-    public function generatePurchaseOrderKitchenId($purchaseOrderKitchenDate, $supplierName, $purchaseOrderKitchenTo = '')
+    public function generatePurchaseOrderKitchenId($purchaseOrderKitchenDateCosting, $supplierName, $purchaseOrderKitchenTo = '')
     {
-        $timestamp = strtotime($purchaseOrderKitchenDate);
+        $timestamp = strtotime($purchaseOrderKitchenDateCosting);
 
         if ($timestamp === false) {
             $timestamp = time();
