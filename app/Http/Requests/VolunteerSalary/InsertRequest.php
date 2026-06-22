@@ -15,8 +15,8 @@ class InsertRequest extends BaseRequest
     {
         return [
             'volunteer_salary_hd_date' => 'required|date_format:Ymd',
-            'volunteer_salary_hd_date_from' => 'required|date_format:Ymd',
-            'volunteer_salary_hd_date_to' => 'required|date_format:Ymd|after_or_equal:volunteer_salary_hd_date_from',
+            'volunteer_salary_hd_date_from' => 'required|date_format:Y-m-d H:i:s',
+            'volunteer_salary_hd_date_to' => 'required|date_format:Y-m-d H:i:s|after_or_equal:volunteer_salary_hd_date_from',
             'volunteer_salary_hd_adjust' => 'nullable|numeric|min:0',
             'volunteer_salary_hd_subtotal' => 'nullable|numeric|min:0',
             'volunteer_salary_hd_subbonuses' => 'nullable|numeric|min:0',
