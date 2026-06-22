@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\VolunteerSalary\DeleteRequest;
 use App\Http\Requests\VolunteerSalary\GetRequest;
+use App\Http\Requests\VolunteerSalary\GetAbsensiRequest;
 use App\Http\Requests\VolunteerSalary\GetRequestById;
 use App\Http\Requests\VolunteerSalary\InsertRequest;
 use App\Http\Requests\VolunteerSalary\UpdateRequest;
@@ -248,7 +249,7 @@ class VolunteerSalaryController extends Controller
         return $this->responsePagination($resultPaginated);
     }
 
-    public function getDataAbsensi(GetRequest $request)
+    public function getDataAbsensi(GetAbsensiRequest $request)
 
     {
         $whereCompany = '';
@@ -267,7 +268,7 @@ class VolunteerSalaryController extends Controller
                     COUNT(d.tr_absensi_dt_clock_in) AS total_day
                 FROM trabsensidt d
                 INNER JOIN trabsensihd h ON d.tr_absensi_header_code = h.tr_absensi_header_code
-                WHERE CONVERT(varchar(8), d.tr_absensi_dt_date, 112) BETWEEN :dari AND :sampai
+                WHERE d.tr_absensi_dt_date BETWEEN :dari AND :sampai
                 AND d.tr_absensi_dt_clock_in IS NOT NULL
                 $whereCompany
                 GROUP BY d.tr_absensi_dt_id
