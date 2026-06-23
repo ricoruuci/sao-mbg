@@ -28,7 +28,7 @@ class VolunteerSalaryDt extends BaseModel
                 isnull(volunteer_salary_dt_total, 0) as volunteer_salary_dt_total
             from msvolunteersalarydt
             where volunteer_salary_hd_code = :hd_code
-            order by volunteer_salary_dt_user_name ASC",
+            order by isnull(volunteer_salary_dt_divisi, '') ASC, volunteer_salary_dt_user_name ASC",
             [
                 'hd_code' => $hdCode,
             ]

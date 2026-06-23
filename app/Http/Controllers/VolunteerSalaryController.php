@@ -286,7 +286,7 @@ class VolunteerSalaryController extends Controller
             FROM mskaryawan k
             LEFT JOIN absensi a ON k.employee_code = a.employee_code
             WHERE ISNULL(k.meal_amount, 0) = 0
-            ORDER BY k.employee_code";
+            ORDER BY ISNULL(k.employee_divisi, '') ASC, k.employee_code ASC";
 
         $result = DB::select($sql, $params);
         // Filter: hanya tampilkan yang day > 0
