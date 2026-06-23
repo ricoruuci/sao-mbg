@@ -92,7 +92,7 @@ class CFTrKKBBHd extends BaseModel //nama class
 			convert(varchar(10),a.transdate,112) between :dari and :sampai and a.flagkkbb=:flagkkbb
             $addCon
             and isnull(a.actor,'') like :actorkeyword and a.voucherid like :voucherkeyword
-            order by a.transdate $order",
+            order by a.voucherid $order",
             $binding
         );
 
