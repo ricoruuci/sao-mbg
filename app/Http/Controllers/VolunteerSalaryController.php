@@ -268,7 +268,7 @@ class VolunteerSalaryController extends Controller
                     COUNT(d.tr_absensi_dt_clock_in) AS total_day
                 FROM trabsensidt d
                 INNER JOIN trabsensihd h ON d.tr_absensi_header_code = h.tr_absensi_header_code
-                WHERE CAST(CONCAT(CONVERT(varchar(10), d.tr_absensi_dt_date, 120), ' ', CAST(d.tr_absensi_dt_clock_in AS varchar(8))) AS DATETIME) BETWEEN :dari AND :sampai
+                WHERE CAST(CONCAT(CONVERT(varchar(10), ISNULL(d.tr_absensi_dt_date, h.tr_absensi_header_date), 120), ' ', CAST(d.tr_absensi_dt_clock_in AS varchar(8))) AS DATETIME) BETWEEN :dari AND :sampai
                 AND d.tr_absensi_dt_clock_in IS NOT NULL
                 $whereCompany
                 GROUP BY d.tr_absensi_dt_id
