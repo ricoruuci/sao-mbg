@@ -24,6 +24,8 @@ class InsertRequest extends BaseRequest
             'purchase_order_atk_koefisien' => 'nullable|numeric|min:0',
             'purchase_order_atk_budget' => 'nullable|numeric|min:0',
             'purchase_order_atk_budget_over' => 'nullable|numeric|min:0',
+            'yayasan_code' => 'nullable|string',
+            'yayasan_name' => 'nullable|string',
             'detail' => 'required|array|min:1',
             'detail.*.purchase_order_atk_detail_itemid' => 'required|string',
             'detail.*.purchase_order_atk_detail_itemname' => 'required|string',

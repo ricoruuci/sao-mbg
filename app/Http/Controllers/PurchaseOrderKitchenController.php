@@ -45,6 +45,8 @@ class PurchaseOrderKitchenController extends Controller
             'purchase_order_kitchen_koefisien' => $request->purchase_order_kitchen_koefisien ?? 0,
             'purchase_order_kitchen_budget' => $request->purchase_order_kitchen_budget ?? 0,
             'purchase_order_kitchen_budget_over' => $request->purchase_order_kitchen_budget_over ?? 0,
+            'yayasan_code' => $request->yayasan_code,
+            'yayasan_name' => $request->yayasan_name,
             'upduser' => Auth::user()->currentAccessToken()['namauser'],
         ];
 
@@ -152,6 +154,8 @@ class PurchaseOrderKitchenController extends Controller
             'purchase_order_kitchen_koefisien' => $request->purchase_order_kitchen_koefisien ?? 0,
             'purchase_order_kitchen_budget' => $request->purchase_order_kitchen_budget ?? 0,
             'purchase_order_kitchen_budget_over' => $request->purchase_order_kitchen_budget_over ?? 0,
+            'yayasan_code' => $request->yayasan_code,
+            'yayasan_name' => $request->yayasan_name,
             'upduser' => Auth::user()->currentAccessToken()['namauser'],
         ];
 

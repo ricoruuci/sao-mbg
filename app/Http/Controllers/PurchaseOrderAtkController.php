@@ -45,6 +45,8 @@ class PurchaseOrderAtkController extends Controller
             'purchase_order_atk_koefisien' => $request->purchase_order_atk_koefisien ?? 0,
             'purchase_order_atk_budget' => $request->purchase_order_atk_budget ?? 0,
             'purchase_order_atk_budget_over' => $request->purchase_order_atk_budget_over ?? 0,
+            'yayasan_code' => $request->yayasan_code,
+            'yayasan_name' => $request->yayasan_name,
             'upduser' => Auth::user()->currentAccessToken()['namauser'],
         ];
 
@@ -152,6 +154,8 @@ class PurchaseOrderAtkController extends Controller
             'purchase_order_atk_koefisien' => $request->purchase_order_atk_koefisien ?? 0,
             'purchase_order_atk_budget' => $request->purchase_order_atk_budget ?? 0,
             'purchase_order_atk_budget_over' => $request->purchase_order_atk_budget_over ?? 0,
+            'yayasan_code' => $request->yayasan_code,
+            'yayasan_name' => $request->yayasan_name,
             'upduser' => Auth::user()->currentAccessToken()['namauser'],
         ];
 

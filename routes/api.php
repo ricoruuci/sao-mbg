@@ -34,6 +34,7 @@ use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\PayrollController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\YayasanController;
 use App\Http\Controllers\PurchaseOrderKitchenController;
 use App\Http\Controllers\PurchaseOrderAtkController;
 use App\Http\Controllers\VolunteerSalaryController;
@@ -110,6 +111,12 @@ Route::get('customer-by-id', [CustomerController::class, 'getDataById'])->middle
 Route::post('customer', [CustomerController::class, 'insertData'])->middleware('auth:sanctum');
 Route::patch('customer', [CustomerController::class, 'updateData'])->middleware('auth:sanctum');
 Route::delete('customer', [CustomerController::class, 'deleteData'])->middleware('auth:sanctum');
+
+Route::get('yayasan', [YayasanController::class, 'getListData'])->middleware('auth:sanctum');
+Route::get('yayasan-by-id', [YayasanController::class, 'getDataById'])->middleware('auth:sanctum');
+Route::post('yayasan', [YayasanController::class, 'insertData'])->middleware('auth:sanctum');
+Route::patch('yayasan', [YayasanController::class, 'updateData'])->middleware('auth:sanctum');
+Route::delete('yayasan', [YayasanController::class, 'deleteData'])->middleware('auth:sanctum');
 
 Route::get('employee', [EmployeeController::class, 'getListData'])->middleware('auth:sanctum');
 Route::get('employee-by-id', [EmployeeController::class, 'getDataById'])->middleware('auth:sanctum');

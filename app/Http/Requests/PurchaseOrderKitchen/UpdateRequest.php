@@ -25,6 +25,8 @@ class UpdateRequest extends BaseRequest
             'purchase_order_kitchen_koefisien' => 'nullable|numeric|min:0',
             'purchase_order_kitchen_budget' => 'nullable|numeric|min:0',
             'purchase_order_kitchen_budget_over' => 'nullable|numeric|min:0',
+            'yayasan_code' => 'nullable|string',
+            'yayasan_name' => 'nullable|string',
             'detail' => 'required|array|min:1',
             'detail.*.purchase_order_kitchen_detail_itemid' => 'required|string',
             'detail.*.purchase_order_kitchen_detail_itemname' => 'required|string',

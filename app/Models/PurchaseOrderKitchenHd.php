@@ -23,8 +23,9 @@ class PurchaseOrderKitchenHd extends BaseModel
             purchase_order_kitchen_to, purchase_order_kitchen_address, purchase_order_kitchen_note, purchase_order_kitchen_discount, purchase_order_kitchen_tax,
             purchase_order_kitchen_tax_amount, purchase_order_kitchen_koefisien, purchase_order_kitchen_budget,
             purchase_order_kitchen_budget_over, purchase_order_kitchen_subtotal, purchase_order_kitchen_grandtotal,
+            yayasan_code, yayasan_name,
             upddate, upduser)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, getdate(), ?)",
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, getdate(), ?)",
             [
                 $params['purchase_order_kitchen_id'],
                 $params['purchase_order_kitchen_date'],
@@ -44,6 +45,8 @@ class PurchaseOrderKitchenHd extends BaseModel
                 $params['purchase_order_kitchen_budget_over'],
                 0, // purchase_order_kitchen_subtotal
                 0, // purchase_order_kitchen_grandtotal
+                $params['yayasan_code'],
+                $params['yayasan_name'],
                 $params['upduser'],
             ]
         );
@@ -68,6 +71,8 @@ class PurchaseOrderKitchenHd extends BaseModel
             purchase_order_kitchen_koefisien = ?,
             purchase_order_kitchen_budget = ?,
             purchase_order_kitchen_budget_over = ?,
+            yayasan_code = ?,
+            yayasan_name = ?,
             upddate = getdate(),
             upduser = ?
             WHERE purchase_order_kitchen_id = ?",
@@ -86,6 +91,8 @@ class PurchaseOrderKitchenHd extends BaseModel
                 $params['purchase_order_kitchen_koefisien'],
                 $params['purchase_order_kitchen_budget'],
                 $params['purchase_order_kitchen_budget_over'],
+                $params['yayasan_code'],
+                $params['yayasan_name'],
                 $params['upduser'],
                 $params['purchase_order_kitchen_id'],
             ]
@@ -208,6 +215,8 @@ class PurchaseOrderKitchenHd extends BaseModel
             ISNULL(s.bank_branch, '') AS purchase_order_kitchen_bank_branch,
             ISNULL(s.bank_account, '') AS purchase_order_kitchen_bank_account,
             ISNULL(s.bank_holder, '') AS purchase_order_kitchen_bank_holder,
+            a.yayasan_code,
+            a.yayasan_name,
             a.upddate,
             a.upduser
             FROM trpurchaseorderkitchenhd a
