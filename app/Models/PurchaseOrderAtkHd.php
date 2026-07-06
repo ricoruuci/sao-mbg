@@ -165,12 +165,18 @@ class PurchaseOrderAtkHd extends BaseModel
                 ISNULL(a.purchase_order_atk_id, '') LIKE ?
                 OR COALESCE(s.nmsupplier, a.purchase_order_atk_supplier_name, '') LIKE ?
             )
-            ORDER BY a.purchase_order_atk_id DESC",
+            ORDER BY
+            CASE
+                WHEN ? = 'new' THEN a.purchase_order_atk_date
+                ELSE NULL
+            END DESC,
+            a.purchase_order_atk_id DESC",
             [
                 $params['dari'],
                 $params['sampai'],
                 '%' . ($params['search_keyword'] ?? '') . '%',
                 '%' . ($params['search_keyword'] ?? '') . '%',
+                $params['sortby'] ?? '',
             ]
         );
     }

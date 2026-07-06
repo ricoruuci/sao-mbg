@@ -250,6 +250,7 @@ class PurchaseOrderKitchenController extends Controller
             'dari' => $request->dari,
             'sampai' => $request->sampai,
             'search_keyword' => $request->search_keyword,
+            'sortby' => $request->sortby,
         ]);
 
         $resultPaginated = $this->arrayPaginator($request, $result);
