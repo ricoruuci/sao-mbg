@@ -404,7 +404,7 @@ class PurchaseOrderKitchenHd extends BaseModel
             " . (!empty($params['supplier_id']) ? "AND a.purchase_order_kitchen_supplier_id = ? " : "") . "
             " . (!empty($params['customer_name']) ? "AND a.purchase_order_kitchen_to = ? " : "") . "
             " . (!empty($params['poid']) ? "AND a.purchase_order_kitchen_id = ? " : "") . "
-            ORDER BY a.purchase_order_kitchen_date DESC",
+            ORDER BY a.purchase_order_kitchen_date ASC",
             array_values(array_filter([
                 $params['dari'],
                 $params['sampai'],
