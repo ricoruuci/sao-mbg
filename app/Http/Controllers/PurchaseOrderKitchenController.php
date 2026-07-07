@@ -256,10 +256,12 @@ class PurchaseOrderKitchenController extends Controller
         ];
 
         $result = $model->getReportPurchaseOrderKitchen($params);
+        $detailModel = new PurchaseOrderKitchenDt();
 
         $grandtotal = 0;
         foreach ($result as $res) {
-            $grandtotal += (float)$res->grandtotal;
+            $grandtotal += (float) $res->grandtotal;
+            $res->details = $detailModel->getDataById($res->poid);
         }
 
         return response()->json([

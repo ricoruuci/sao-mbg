@@ -54,16 +54,14 @@ class PurchaseOrderAtkDt extends BaseModel
         return DB::select(
             "SELECT
             a.purchase_order_atk_id,
-            a.purchase_order_atk_detail_itemid,
-            a.purchase_order_atk_detail_itemname,
-            a.purchase_order_atk_detail_formula,
-            a.purchase_order_atk_detail_qty,
-            a.purchase_order_atk_detail_qty_invoice,
-            a.purchase_order_atk_detail_uom,
-            a.purchase_order_atk_detail_last_price,
-            a.purchase_order_atk_detail_price,
-            ISNULL(a.purchase_order_atk_detail_qty_invoice, 0) * ISNULL(a.purchase_order_atk_detail_price, 0) AS purchase_order_atk_detail_total,
-            a.purchase_order_atk_detail_send_date,
+            a.purchase_order_atk_detail_itemid AS itemid,
+            a.purchase_order_atk_detail_itemname AS itemname,
+            a.purchase_order_atk_detail_qty_invoice AS qty,
+            a.purchase_order_atk_detail_uom AS satuan,
+            a.purchase_order_atk_detail_price AS price,
+            ISNULL(a.purchase_order_atk_detail_qty_invoice, 0) * ISNULL(a.purchase_order_atk_detail_price, 0) AS total,
+            a.purchase_order_atk_detail_send_date AS senddate,
+            ISNULL(a.purchase_order_atk_detail_qty_invoice, 0) * ISNULL(a.purchase_order_atk_detail_price, 0) AS subtotal,
             a.upddate,
             a.upduser
             FROM trpurchaseorderatkdt a

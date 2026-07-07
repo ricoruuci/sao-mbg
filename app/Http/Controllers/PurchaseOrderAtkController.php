@@ -256,10 +256,12 @@ class PurchaseOrderAtkController extends Controller
         ];
 
         $result = $model->getReportPurchaseOrderAtk($params);
+        $detailModel = new PurchaseOrderAtkDt();
 
         $grandtotal = 0;
         foreach ($result as $res) {
-            $grandtotal += (float)$res->grandtotal;
+            $grandtotal += (float) $res->grandtotal;
+            $res->details = $detailModel->getDataById($res->poid);
         }
 
         return response()->json([
