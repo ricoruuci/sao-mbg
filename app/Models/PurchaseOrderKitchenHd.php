@@ -384,6 +384,37 @@ class PurchaseOrderKitchenHd extends BaseModel
         );
     }
 
+    public function getReportPurchaseOrderKitchen($params)
+    {
+        return DB::select(
+            "SELECT
+            a.purchase_order_kitchen_id AS poid,
+            a.purchase_order_kitchen_date AS transdate,
+            a.purchase_order_kitchen_date_costing AS transdate_costing,
+            a.purchase_order_kitchen_supplier_id AS supplier_id,
+            ISNULL(s.nmsupplier, a.purchase_order_kitchen_supplier_name) AS supplier_name,
+            a.purchase_order_kitchen_to AS customer_name,
+            a.purchase_order_kitchen_address AS sppg_address,
+            a.purchase_order_kitchen_note AS note,
+            a.purchase_order_kitchen_subtotal AS subtotal,
+            a.purchase_order_kitchen_grandtotal AS grandtotal
+            FROM trpurchaseorderkitchenhd a
+            LEFT JOIN mssupplier s ON CAST(a.purchase_order_kitchen_supplier_id AS VARCHAR(50)) = s.kdsupplier
+            WHERE convert(varchar(10), a.purchase_order_kitchen_date, 112) BETWEEN convert(varchar(10), ?, 112) AND convert(varchar(10), ?, 112)
+            " . (!empty($params['supplier_id']) ? "AND a.purchase_order_kitchen_supplier_id = ? " : "") . "
+            " . (!empty($params['customer_name']) ? "AND a.purchase_order_kitchen_to = ? " : "") . "
+            " . (!empty($params['poid']) ? "AND a.purchase_order_kitchen_id = ? " : "") . "
+            ORDER BY a.purchase_order_kitchen_date DESC",
+            array_values(array_filter([
+                $params['dari'],
+                $params['sampai'],
+                !empty($params['supplier_id']) ? $params['supplier_id'] : null,
+                !empty($params['customer_name']) ? $params['customer_name'] : null,
+                !empty($params['poid']) ? $params['poid'] : null,
+            ], fn($value) => !is_null($value)))
+        );
+    }
+
     private function buildInitial($name, $default = 'SUP')
     {
         $clean = preg_replace('/[^A-Za-z0-9\s]/', ' ', (string) $name);

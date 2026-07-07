@@ -188,12 +188,14 @@ Route::patch('invoice', [InvoiceController::class, 'updateData'])->middleware('a
 Route::delete('invoice', [InvoiceController::class, 'deleteData'])->middleware('auth:sanctum');
 
 Route::get('purchase-order-kitchen', [PurchaseOrderKitchenController::class, 'getListData'])->middleware('auth:sanctum');
+Route::get('purchase-order-kitchen-report', [PurchaseOrderKitchenController::class, 'getReportPurchaseOrderKitchen'])->middleware('auth:sanctum');
 Route::get('purchase-order-kitchen-by-id', [PurchaseOrderKitchenController::class, 'getDataById'])->middleware('auth:sanctum');
 Route::post('purchase-order-kitchen', [PurchaseOrderKitchenController::class, 'insertData'])->middleware('auth:sanctum');
 Route::patch('purchase-order-kitchen', [PurchaseOrderKitchenController::class, 'updateData'])->middleware('auth:sanctum');
 Route::delete('purchase-order-kitchen', [PurchaseOrderKitchenController::class, 'deleteData'])->middleware('auth:sanctum');
 
 Route::get('purchase-order-atk', [PurchaseOrderAtkController::class, 'getListData'])->middleware('auth:sanctum');
+Route::get('purchase-order-atk-report', [PurchaseOrderAtkController::class, 'getReportPurchaseOrderAtk'])->middleware('auth:sanctum');
 Route::get('purchase-order-atk-by-id', [PurchaseOrderAtkController::class, 'getDataById'])->middleware('auth:sanctum');
 Route::post('purchase-order-atk', [PurchaseOrderAtkController::class, 'insertData'])->middleware('auth:sanctum');
 Route::patch('purchase-order-atk', [PurchaseOrderAtkController::class, 'updateData'])->middleware('auth:sanctum');

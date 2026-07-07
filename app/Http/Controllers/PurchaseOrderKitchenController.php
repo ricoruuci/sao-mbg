@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\PurchaseOrderKitchenDt;
 use App\Models\PurchaseOrderKitchenHd;
@@ -240,6 +241,31 @@ class PurchaseOrderKitchenController extends Controller
             DB::rollBack();
             return $this->responseError($e->getMessage(), 400);
         }
+    }
+
+    public function getReportPurchaseOrderKitchen(Request $request)
+    {
+        $model = new PurchaseOrderKitchenHd();
+
+        $params = [
+            'dari' => $request->input('dari'),
+            'sampai' => $request->input('sampai'),
+            'supplier_id' => $request->input('supplier_id', ''),
+            'customer_name' => $request->input('customer_name', ''),
+            'poid' => $request->input('poid', '')
+        ];
+
+        $result = $model->getReportPurchaseOrderKitchen($params);
+
+        $grandtotal = 0;
+        foreach ($result as $res) {
+            $grandtotal += (float)$res->grandtotal;
+        }
+
+        return response()->json([
+            'grandtotal' => $grandtotal,
+            'data' => $result
+        ]);
     }
 
     public function getListData(GetRequest $request)
