@@ -67,7 +67,8 @@ class PurchaseOrderAtkDt extends BaseModel
             a.upddate,
             a.upduser
             FROM trpurchaseorderatkdt a
-            WHERE a.purchase_order_atk_id = ?",
+            WHERE a.purchase_order_atk_id = ?
+            ORDER BY a.purchase_order_atk_detail_send_date ASC",
             [$id]
         );
     }

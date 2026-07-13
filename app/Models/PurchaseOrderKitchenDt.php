@@ -67,7 +67,8 @@ class PurchaseOrderKitchenDt extends BaseModel
             a.upddate,
             a.upduser
             FROM trpurchaseorderkitchendt a
-            WHERE a.purchase_order_kitchen_id = ?",
+            WHERE a.purchase_order_kitchen_id = ?
+            ORDER BY a.purchase_order_kitchen_detail_send_date ASC",
             [$id]
         );
     }
