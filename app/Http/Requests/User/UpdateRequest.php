@@ -16,7 +16,8 @@ class UpdateRequest extends BaseRequest
         return [
             'userid' => 'required|string',
             'company_id' => 'required|string',
-            'group_user' => 'required|string|in:ADM,USR,LAP'
+            'group_user' => 'required|string|in:ADM,USR,LAP,AG',
         ];
     }
 }
+    
